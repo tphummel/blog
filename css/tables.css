@@ -1,0 +1,17 @@
+/* tom */
+table {
+  font-family: "courier new", courier, monospace;
+  border: 1px solid black;
+  padding: 5px;
+}
+th {
+  border: 1px solid black;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+td {
+  border: 1px solid black;
+  padding: 5px;
+  text-align: right;
+}
