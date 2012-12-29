@@ -71,3 +71,21 @@ text-align: center;
 margin-bottom: 5px;
 letter-spacing: 0.75px;
 }
+
+/* tom */
+table {
+  border: 1px solid black;
+  padding: 5px;
+  margin: 0 auto;
+}
+th {
+  border: 1px solid white;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+td {
+  border: 1px solid white;
+  padding: 5px;
+  text-align: right;
+}
