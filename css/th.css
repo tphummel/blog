@@ -1,0 +1,73 @@
+body {
+color: #FFF;
+font-family: courier new, courier, monospace;
+font-size: small;
+background-color: #000;
+text-align:center;
+}
+a:link 		{color:#FFF; text-decoration:underline; }
+a:visited 	{color:#FFF; text-decoration:underline; }
+a:hover 	{color:#FFF; text-decoration:none; }
+a:active 	{color:#FFF; text-decoration:underline; }
+a img {border: none;}
+
+#master-block{
+margin: 0pt auto;
+padding: 10px 25px 0px 25px;
+text-align: left;
+width: 760px;
+min-height: 600px;
+}
+
+#header{
+font-size: medium;
+margin-bottom: 10px;
+padding: 5px 0px 5px 5px;
+border: 1px solid #FFF;
+height: 20px;
+letter-spacing: 0.75px;
+}
+
+#header div { /* Header sections - left/right*/
+float:left;
+width: 50%;
+}
+
+#header span#main-title {
+font-size: medium;
+font-weight: bold;
+border-right: 2px solid #FFF;
+margin-right: 20px;
+}
+#header span{
+font-size: small;
+font-weight: normal;
+letter-spacing: 1px;
+padding: 1px 8px 1px 1px;
+}
+
+#body-area{
+/*width: 868px; */
+border: 1px solid #FFF;
+min-height: 475px;
+margin-bottom: 15px;
+/*padding: 25;*/
+padding: 10px;
+}
+
+#body-area div{
+padding: 15px;
+}
+
+div.page-title{
+font-weight: bolder;
+}
+
+#footer {
+width: 708px;
+border: 1px solid #FFF;
+padding: 5px 25px;
+text-align: center;
+margin-bottom: 5px;
+letter-spacing: 0.75px;
+}
