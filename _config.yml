@@ -12,6 +12,8 @@ pygments:    false
 markdown:    maruku
 permalink:   pretty
 
+exclude: ["sync.coffee"]
+
 # maruku:
 #   use_tex:    false
 #   use_divs:   false
