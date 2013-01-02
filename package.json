@@ -3,7 +3,10 @@
   "name": "blog",
   "description": "my blog data",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "walk": "~2.2.1",
+    "knox": "~0.4.6"
+  },
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
