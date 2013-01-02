@@ -12,7 +12,7 @@ pygments:    false
 markdown:    maruku
 permalink:   pretty
 
-exclude: ["sync.coffee"]
+exclude: ["sync.coffee", "package.json", "node_modules"]
 
 # maruku:
 #   use_tex:    false
