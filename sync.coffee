@@ -15,20 +15,20 @@ client = knox.createClient creds
 walker = walk.walk "_site/", {}
 
 walker.on "file", (root, stats, next) ->
-  # upload file
-  console.log "F #{root}#{stats.name}"
-  next()
-
-walker.on "directory", (root, stats, next) ->
-  # upload file
-  console.log "D #{root}#{stats.name}"
-  next()
+  
+  source = "#{root}/#{stats.name}"
+  tRoot = "/" + (root.split /_site\/{1,2}/)[1]
+  dest = "#{tRoot}/#{stats.name}"
+  
+  client.putFile source, dest, (err, res) ->
+    console.log "dest: ", dest
+    if err?
+      console.log "err: ", err 
+    else
+      console.log "OK!"
+      
+    next()
 
 walker.on "end", ->
   console.log "All Done!"
   
-  
-
-# client.putFile '_site/', '/', (err, res) ->
-#   console.log "err: ", err if err?
-#   console.log "res: ", res
