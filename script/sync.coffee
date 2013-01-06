@@ -29,5 +29,13 @@ sync_site = ->
   walker.on "end", ->
     console.log "All Done!"
 
+sync_bucket_policy = ->
+  console.log "sync_bucket_policy"
+  client.putFile "doc/bucket_policy", "/?policy", (err, res) ->
+    if err?
+      console.log "sync_bucket_policy", "err: ", err
+    else
+      console.log "sync_bucket_policy", "OK!"
 
 sync_site()
+sync_bucket_policy()
