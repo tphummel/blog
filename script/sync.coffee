@@ -1,8 +1,6 @@
 knox = require "knox"
 walk = require "walk"
 
-console.log "hello town"
-
 creds = 
   key: 'AKIAIL5OI3ZZWIYHMPKQ'
   secret: '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'
@@ -21,11 +19,10 @@ sync_site = ->
     dest = "#{tRoot}/#{stats.name}"
   
     client.putFile source, dest, (err, res) ->
-      console.log "dest: ", dest
       if err?
-        console.log "err: ", err 
+        console.log dest, "err: ", err 
       else
-        console.log "OK!"
+        console.log dest, "OK!"
       
       next()
 
