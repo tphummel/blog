@@ -7,7 +7,7 @@ tags: [baseball]
 2012 was a banner year for the Oakland Athletics and my fantasy teams. My best picks were Adam Laroche, Anthony Rizzo, Ryan Ludwick, Bryan LaHair, Wade Miley. Plus pretty much my entire pitching staff in 'Phil is King'. 
 
 
-## Oakland Athletics
+## [Oakland Athletics](#oakland_athletics)
 
 ### *2012 AL West Standings*
 
@@ -92,7 +92,7 @@ Notes:
 * * * *
 
 
-## Writer's Block
+## [Writer's Block](#writers_block)
 
 ### *Point Standings*
 
@@ -162,7 +162,7 @@ Notes:
 
 * * * *
 
-## Phil is King
+## [Phil is King](#phil_is_king)
 
 ### *Standings*
 
@@ -263,6 +263,7 @@ Notes:
     | Pitching Totals        | 1530.1 | 116 | 122 | 1429 | 3.33 | 1.17 | 3.27  |
     +------------------------+--------+-----+-----+------+------+------+-------+
 
+* * * *
 
 \* played on my team for partial season
 
