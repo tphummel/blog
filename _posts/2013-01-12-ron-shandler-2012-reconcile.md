@@ -101,4 +101,5 @@ Here is a comparison of projections and actual results from the 2012 Baseball Fo
     |                  | -130 |   25 | -20 |  -3 | -18 |   2 |
     | Neil Walker      |  565 |  269 |  69 |  14 |  77 |   8 |
     |                  |  472 |  280 |  62 |  14 |  69 |   7 |
+    |                  |  -93 |   11 |  -7 |   0 |  -8 |  -1 |
     +------------------+------+------+-----+-----+-----+-----+
