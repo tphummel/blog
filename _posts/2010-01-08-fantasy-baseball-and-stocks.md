@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Retirement Investing and Fantasy Baseball
-tags: [personal finance,baseball]
+tags: [personal finance, baseball]
 ---
 
 Financial Market Investing and Fantasy Baseball are two of my big passions. As I've read more and gained more experience with both I've gravitated toward a more hands-off approach. I've found that in many cases when you are overly active in either arena, people rescue defeat from the jaws of victory.
