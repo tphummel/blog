@@ -13,6 +13,12 @@ markdown:    maruku
 permalink:   pretty
 
 exclude:    ["package.json", "node_modules", "script", "doc", "assets", "bin", "log"]
+paginate:   5
+
+# gem install jekyll-tagging
+tag_page_layout: tag_page 
+tag_page_dir: tag
+
 
 # maruku:
 #   use_tex:    false
