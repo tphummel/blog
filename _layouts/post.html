@@ -4,5 +4,5 @@ layout: default
 
 <h2><a href="{{ page.url }}">{{ page.title }}</a></h2>
 <p id="date">committed: {{ page.date | date_to_string }}<br />
-tags: {{ page.tags | join ', '}}</p>
+tags: {{ page | tags }}</p>
 {{ content }}
