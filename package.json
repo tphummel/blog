@@ -7,6 +7,9 @@
     "walk": "~2.2.1",
     "knox": "~0.4.6"
   },
+  "scripts": {
+    "sync": "coffee script/sync.coffee"
+  },
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
