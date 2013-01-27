@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Why I Love Programming
-published: false
 ---
 
 - getting excited about projects I really care about

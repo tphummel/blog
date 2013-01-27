@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Pleasing Voices
-published: false
 ---
 
 Calming. Relaxing. Pleasing. Sleeping. Resting.

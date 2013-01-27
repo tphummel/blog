@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Fixed Width
-published: false
 ---
 
 
