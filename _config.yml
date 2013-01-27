@@ -12,7 +12,7 @@ pygments:    false
 markdown:    maruku
 permalink:   pretty
 
-exclude: ["package.json", "node_modules", "script", "doc"]
+exclude:    ["package.json", "node_modules", "script", "doc", "assets", "bin", "log"]
 
 # maruku:
 #   use_tex:    false
