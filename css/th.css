@@ -55,7 +55,7 @@ margin-bottom: 15px;
 padding: 10px;
 }
 
-#body-area div{
+#body-area div.content-wrapper{
 padding: 15px;
 }
 
@@ -87,5 +87,5 @@ th {
 td {
   border: 1px solid black;
   padding: 5px;
-  text-align: right;
+  /*text-align: right;*/
 }
