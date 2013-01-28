@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Benjamin Franklin's Plan For Future Conduct
-tags: [self help, us history]
+tags: [self-help, us-history]
 ---
 
 My dad bought me [Benjamin Franklin: An American Life][0] by Walter Isaacson last Christmas. Just now am I finally diving into it and Benjamin Franklin is quickly becoming one of my favorite historical figures. Ben was known for his entrepreneurial spirit, creativity, intelligence and pragmatism. During the latter half of 1726 during a boat trip from London to Philadelphia he set down to develop a credo by which he could "live in all respects like a rational creature".
