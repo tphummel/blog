@@ -27,5 +27,12 @@ product width = 34^2 + b^2 = 60^2 = 1156 + b^2 = 3600
 
 panasonic viera 55" LED. 30" high. 47 " wide
 
+### retro gaming considerations
+
+60 hz will avoid screen lag using composite(y/r/w) plugs?
+
+### wifi/apps
+
+would prefer to have a separate box but i have to admit apps on current vizio tv are pretty convenient
 
   [0]: http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000021501
