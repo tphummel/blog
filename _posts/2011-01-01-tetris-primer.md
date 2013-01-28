@@ -2,7 +2,6 @@
 layout: post
 title: Tetris Primer
 tags: [tetris]
-date: 2012-01-01
 ---
 
 In 2004, my college roommates and I started playing a multiplayer variation of tetris called [The New Tetris for Nintendo 64][0]. For the uninitiated this version of tetris hinges on building [monosquares and multisquares][4]
