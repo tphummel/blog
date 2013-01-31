@@ -12,7 +12,7 @@ pygments:    false
 markdown:    maruku
 permalink:   pretty
 
-exclude:    ["package.json", "node_modules", "script", "doc", "assets", "bin", "log", "_gist_cache"]
+exclude:    ["package.json", "node_modules", "script", "doc", "bin", "log", "_gist_cache"]
 paginate:   5
 
 # gem install jekyll-tagging
