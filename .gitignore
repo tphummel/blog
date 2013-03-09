@@ -2,3 +2,4 @@ _site/
 favicon.ico
 node_modules/
 _gist_cache/
+*.png
