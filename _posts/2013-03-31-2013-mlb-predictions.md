@@ -17,9 +17,9 @@ There is nothing systematic or scientific about these predictions. I'm shooting 
 ## NL Central
 
 1. Reds
-1. Pirates
-1. Cardinals
 1. Brewers
+1. Cardinals
+1. Pirates
 1. Cubs
 
 ## NL East
@@ -46,8 +46,8 @@ There is nothing systematic or scientific about these predictions. I'm shooting 
 
 ## AL Central
 1. Tigers
-1. Indians
 1. White Sox
+1. Indians
 1. Royals
 1. Twins
 
@@ -61,3 +61,41 @@ There is nothing systematic or scientific about these predictions. I'm shooting 
 ## AL Wild Card
 1. Athletics
 1. Blue Jays
+
+---
+
+## Playoffs
+
+### AL 
+Seeding: 
+1. Rays
+1. Angels
+1. Tigers
+1. Athletics
+1. Blue Jays
+
+AL WC: Athletics over Blue Jays
+
+ALDS: Athletics over Rays
+
+ALDS: Tigers over Angels
+
+ALCS: Tigers over Athletics
+
+### NL 
+Seeding: 
+1. Nationals
+1. Reds
+1. Giants
+1. Braves
+1. Dodgers
+
+NL WC: Dodgers over Braves
+
+NLDS: Nationals over Dodgers
+
+NLDS: Reds over Giants
+
+NLCS: Nationals over Reds
+
+WS: Nationals over Tigers
