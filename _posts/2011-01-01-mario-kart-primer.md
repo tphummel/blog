@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Kart Primer
-tags: [kart]
+tags: [kart, video-games]
 ---
 
 Our Kart version of choice is [Mario Kart: Double Dash!!! for Gamecube][0]. The vast majority of our play is at Baby Park, 9 laps with frantic items.
