@@ -10,7 +10,7 @@ I did a 12-team mixed mock draft (snake) this morning on Yahoo. 5x5 scoring, ros
 
 I normally run a modified LIMA draft plan. Depending on the league settings, I fill the dedicated SP slots with SP's and use all RP/P slots on relievers. 
 
-In the final five rounds SP were taken like Hisashi Iwakuma, Mark Buehrle, Wandy Rodriguez, Phil Hughes, Matt Harrison, Wei-Yin Chen, Clay Buchholz, Andy Pettite, and Tommy Malone. In four of those rounds, I took Ernesto Frieri, Vinnie Pestano, Luke Gregerson, and Jake McGee. 
+In the final five rounds SP were taken like Hisashi Iwakuma, Mark Buehrle, Wandy Rodriguez, Phil Hughes, Matt Harrison, Wei-Yin Chen, Clay Buchholz, Andy Pettite, and Tommy Milone. In four of those rounds, I took Ernesto Frieri, Vinnie Pestano, Luke Gregerson, and Jake McGee. 
 
 Frieri is the most likely of the group to get saves (and Pestano could back into some with Chris Perez doubtful for opening day) but that wasn't my intention. I'm looking for high DOM preferably with a groundball tilt among "non-closers".
 
