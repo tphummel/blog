@@ -167,12 +167,15 @@ Despite more recent versions, I feel the double item management coupled with the
 
 In August 2010 I began exploring the Google App Engine platform. I wrote a system to collect race results in Fall 2010.
 
-Check out a [live instance][1] or [view the code][2].
+Check out a <del>live instance</del> or [view the code][2].
 
 The basic structure of the site allows you to create a league. The league has login credentials which can be given out to allow access to the league. Within the league you create player, venue and season entities. And within a season there are clusters which are groupings of matches.
 
 As of 2012 the system has collected over 1000 races.
 
+EDIT: 2013-05-12. I've taken down the GAE app. I broke it while [extracting its historical data][3].
+
   [0]: http://en.wikipedia.org/wiki/Mario_Kart:_Double_Dash%E2%80%BC
   [1]: http://babyparkdd.appspot.com/
   [2]: https://github.com/tphummel/gaej-kart
+  [3]: /2013/05/12/exfiltrating-mario-kart-data-from-google-app-engine/
