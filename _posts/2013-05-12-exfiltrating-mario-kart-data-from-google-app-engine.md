@@ -14,11 +14,13 @@ In doing this, I realized that I haven't deployed any code to GAE since 2011. I 
 
 I found some application called GoogleAppEngineLauncher that is installed on my Mac. I have python 2.6 and apparently 2.7 is required. 
 
-    sudo brew install python
+{% highlight sh %}
+sudo brew install python
+{% endhighlight %}
 
 I feed the new python 2.7 binary into the app preferences. none of this is ringing a bell.
 
-Okay. I don't think i ever used GoogleAppEngineLauncher with java projects. Backpeddling, I see I have Eclipse installed from when i was trying some Android dev. Never installed the GAE SDK though. I now remember this how I used to develop and deploy java apps on windows though. 
+Okay. I don't think i ever used GoogleAppEngineLauncher with java projects. Backpedaling, I see I have Eclipse installed from when i was trying some Android dev. Never installed the GAE SDK though. I now remember this how I used to develop and deploy java apps on windows though. 
 
 Some docs i found useful:
 
@@ -28,9 +30,11 @@ Some docs i found useful:
 
 Then import my project. 
 
-    git clone https://github.com/tphummel/gaej-kart
+{% highlight sh %}
+git clone https://github.com/tphummel/gaej-kart
+{% endhighlight %}
 
-menu > file > import
+then in Eclipse: menu > file > import
 
 Eclipse shows red errors everywhere that external jar files are being used. Spin open ```{proj_root}/war/WEB-INF/lib```. Select all jar files, right-click, Build Path > add to path
 
@@ -44,7 +48,9 @@ And we're up on ```localhost:8888```. In my browser I try to load ```/app/home``
 
 Eclipse is showing an error. It was from before I got the local server up. Apparently not bad enough to prevent building.
 
-    Unbound classpath container: 'App Engine SDK [missing]'....
+{% highlight sh %}
+Unbound classpath container: 'App Engine SDK [missing]'....
+{% endhighlight %}
 
 Right-click the project folder and go to Build Path > Configure Build Path. In the Libraries tab I can see the list of files/dirs in my project build path. i can see all my external jars, the app engine sdk, and my system jre. but there is also a second app engine sdk entry which is red and says "unbound" or some such nonsense. I remove that one. relaunch the project and now /app/home loads correctly. whew. 
 
@@ -54,7 +60,9 @@ After two attempts ([using Extent and using the JDO cursor][8]) I can't seem to 
 
 In some cases I get a 500 error with this text: 
 
-    This means that it either hasnt been enhanced, or that the enhanced version of the file is not in the CLASSPATH (or is hidden by an unenhanced version), or the Meta-Data/annotations for the class are not found.
+{% highlight sh %}
+This means that it either hasnt been enhanced, or that the enhanced version of the file is not in the CLASSPATH (or is hidden by an unenhanced version), or the Meta-Data/annotations for the class are not found.
+{% endhighlight %}
 
 Ok. I think GAE has changed pretty drastically while I've been away. I'm sure the act of pushing alone has broken the app beyond saving at this point. I just need to get the data out. 
 
