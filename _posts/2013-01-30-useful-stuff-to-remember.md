@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Awesome Stuff to Remember
+title: Useful Stuff to Remember
 tags: [code]
 ---
 
