@@ -17,6 +17,6 @@ samo-over-venice, 12.5, 32 min
 [overglen]: http://goo.gl/maps/otg0F
 [sunset-405-90]: http://goo.gl/maps/BSZK3
 [90-laC-sanV]: http://goo.gl/maps/wfIPl
-samo-405-90: http://goo.gl/maps/3RI1O
-lacie-10-405-90: http://goo.gl/maps/mu6AV
+[samo-405-90]: http://goo.gl/maps/3RI1O
+[lacie-10-405-90]: http://goo.gl/maps/mu6AV
 http://goo.gl/maps/KUTlA
