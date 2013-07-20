@@ -7,16 +7,24 @@ plugins:     ./_plugins
 future:      false
 lsi:         false
 pygments:    true
-markdown:    redcarpet
+
+markdown: rdiscount
+rdiscount:
+  extensions: [smart]
+
 permalink:   pretty
 
-exclude:    ["package.json", "node_modules", "script", "doc", "bin", "log", "_gist_cache"]
+exclude:    ["package.json", "node_modules", "script", "doc", "bin", "log"]
 paginate:   5
 
 # gem install jekyll-tagging
 tag_page_layout: tag_page 
 tag_page_dir: tag
 
+name: Tom Hummel
+twitter: tphummel
+github: tphummel
+gravatar_url: http://www.gravatar.com/avatar/e773e8aca4e33a69be538a75d700ff30
 
 # maruku:
 #   use_tex:    false

@@ -1,8 +1,6 @@
 ---
 layout: post
 title: TV Shopping Guide
-tags: [baseball]
-published: false
 ---
 
 #### Viewing Distance & Size
