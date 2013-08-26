@@ -10,7 +10,7 @@ What began as a simple spreadsheet turned into an elaborate spreadsheet and fina
 
 As of March 2012 we had played 4000 matches accounting for 300 human hours of official gameplay time.
 
-An [instance is live][1] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Mysql Stored Procedures.
+An <del>[instance is live][1]</del> [instance is live][5] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Mysql Stored Procedures.
 
 ### Specifications
 
@@ -18,7 +18,25 @@ An [instance is live][1] or you can [look at the code][2]. I also dabbled with s
 
 + We play [The New Tetris for Nintendo 64][0] on marathon mode with directed garbage.
 + 2-4 players at a time.
-+ Matches which for any reason are lost prior to recording all stats are mucked.
++ Matches which for any reason are missed prior to recording all stats are thrown out.
+
+**Scoring**
+
+- 1 point per line cleared
+- 5 points per multi-square line
+- 10 points per mono-square line
+- 1 point tetris bonus
+
+<pre>
++---------+---------+---------+--------+-------+--------+
+|         | 1 multi | 2 multi | 1 mono | 1 & 1 | 2 mono |
++---------+---------+---------+--------+-------+--------+
+| 1 line  |       6 |      11 |     11 |    16 |     21 |
+| 2 lines |      12 |      22 |     22 |    32 |     42 |
+| 3 lines |      18 |      33 |     33 |    48 |     63 |
+| tetris  |      25 |      45 |     45 |    65 |     85 |
++---------+---------+---------+--------+-------+--------+
+</pre>
 
 **Useful Terms:**
 
@@ -93,3 +111,4 @@ Highest Lines per Second Ratio, 4P Only, All-Time (as of 3/3/2012)
   [2]: https://github.com/tphummel/tetris-db
   [3]: https://github.com/tphummel/tetris-report
   [4]: http://tetris.wikia.com/wiki/Square_Platforming
+  [5]: http://tnt.tphum.us
