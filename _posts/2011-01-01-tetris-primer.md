@@ -6,11 +6,11 @@ tags: [tetris, video-games]
 
 In 2004, my college roommates and I started playing a multiplayer variation of tetris called [The New Tetris for Nintendo 64][0]. For the uninitiated this version of tetris hinges on building [monosquares and multisquares][4]
 
-What began as a simple spreadsheet turned into an elaborate spreadsheet and finally into a PHP/MySQL web application.
+What began as a simple spreadsheet turned into an elaborate spreadsheet and finally into a PHP/<del>MySQL</del>MariaDB web application.
 
 As of March 2012 we had played 4000 matches accounting for 300 human hours of official gameplay time.
 
-An <del>[instance is live][1]</del> [instance is live][5] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Mysql Stored Procedures.
+An <del>[instance is live][1]</del> [instance is live][5] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Stored Procedures.
 
 ### Specifications
 
