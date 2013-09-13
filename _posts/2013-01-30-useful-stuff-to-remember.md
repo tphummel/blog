@@ -4,4 +4,4 @@ title: Useful Stuff to Remember
 tags: [code]
 ---
 
-<img src="/assets/img/awesome-stuff.jpg" height="388" width="648" />
+![Useful Stuff to Remember](http://i.imgur.com/j5Fxjor.jpg "Useful Stuff to Remember")
