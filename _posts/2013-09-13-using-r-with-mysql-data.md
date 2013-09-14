@@ -30,7 +30,9 @@ dbListTables(con)
 Create a dataframe from a sql query: 
 
 {% highlight s %}
-df1 <- dbGetQuery(con, "select p.* from playermatch p")
+df1 <- dbGetQuery(con, 
+  "select p.*, p.lines/p.time as ratio 
+  from playermatch p")
 {% endhighlight %}
 
 
@@ -45,6 +47,14 @@ plot(df1$time, df1$lines, pch=".",
 And the result:
 
 ![R Scatterplot](http://i.imgur.com/YpXUEDu.png "R Scatterplot")
+
+Do a histogram:
+{% highlight s %}
+hist(df1$ratio, 100, 
+  main="Tetris Lines/Sec Freq Dist", xlab="Ratio")
+{% endhighlight %}
+
+![R Histogram](http://i.imgur.com/KqmmL5w.png "R Histogram")
 
 
   [0]: /2011/01/01/tetris-primer/
