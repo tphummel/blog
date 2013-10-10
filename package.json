@@ -1,14 +1,11 @@
 {
   "author": "Tom Hummel",
   "name": "blog",
-  "description": "my blog data",
+  "description": "a blog",
   "version": "0.0.0",
   "dependencies": {
-    "walk": "~2.2.1",
-    "knox": "~0.4.6"
   },
   "scripts": {
-    "sync": "coffee script/sync.coffee",
     "dev": "jekyll serve --watch"
   },
   "devDependencies": {},
