@@ -22,7 +22,7 @@ The first client I made was a [d3][4] scatterplot.
 
 ![scatterplot](http://i.imgur.com/vHtZNHQ.png "scatterplot")
 
-Dots are added to the scatterplot in real time when they are submitted via the data entry app.
+Points are added to the scatterplot in real time when they are submitted via the data entry app.
 
 Check out the [project code][5]. 
 
