@@ -30,7 +30,7 @@ Check out the [project code][5].
 
 ### what would come next
 
-More web clients consuming the websocket channel. Or a dashboard of graphics each using the data in different ways.  
+More web clients consuming the websocket events. Or a dashboard of graphics each using the data in different ways or listening for subsets of the data.
 
 - A transcript showing the previous 10 matches.
 - Gathering context for the previous match. Run against a panel of db queries.
