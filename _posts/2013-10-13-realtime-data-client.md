@@ -22,7 +22,7 @@ The first client I made was a [d3][4] scatterplot.
 
 ![scatterplot](http://i.imgur.com/vHtZNHQ.png "scatterplot")
 
-Dots are added to the scatterplot in real time when they are submitted via the entry app.
+Dots are added to the scatterplot in real time when they are submitted via the data entry app.
 
 Check out the [project code][5]. 
 
@@ -37,6 +37,6 @@ More clients consuming the websocket channel for new data.
   [0]: https://github.com/tphummel/tetris-db
   [1]: /2011/01/01/tetris-primer/
   [2]: http://redis.io/topics/pubsub
-  [3]: http://d3js.org/
+  [3]: http://socket.io/
   [4]: http://d3js.org/
   [5]: https://github.com/tphummel/socket-viz
