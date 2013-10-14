@@ -6,11 +6,13 @@ tags: [code, tetris]
 
 ### what i've got
 
-An [old php app][0] for data entry to capture results of multiplayer [Tetris][1]
+An [old php app][0] for data entry to capture results of multiplayer [Tetris][1].
 
 ### what i wanted
 
 Realtime feedback, reports, visualizations while playing Tetris. It should be separate from the data entry application.
+
+These visualizations could be on a second screen or tablet for the group to see between matches.
 
 ### what i did
 
@@ -18,7 +20,7 @@ After a new match is validated and saved, I took each player's individual perfor
 
 When a new performance arrives I emit the details to any connected [socket.io][3] clients. 
 
-The first client I made was a [d3][4] scatterplot.
+The first web client I made was a [d3][4] scatterplot.
 
 ![scatterplot](http://i.imgur.com/vHtZNHQ.png "scatterplot")
 
@@ -28,7 +30,7 @@ Check out the [project code][5].
 
 ### what would come next
 
-More clients consuming the websocket channel for new data. 
+More web clients consuming the websocket channel. Or a dashboard of graphics each using the data in different ways.  
 
 - A transcript showing the previous 10 matches.
 - Gathering context for the previous match. Run against a panel of db queries.
