@@ -42,7 +42,8 @@ standings diff between two arbitrary dates:
 
 ### the final product
 
-[live version][13] and [code][14]
+<del>[live version][13]</del> and [code][14]
+<strong>**EDIT 11/20/2013: Took down the live version for the offseason</strong>
 
 ### what i used
 
