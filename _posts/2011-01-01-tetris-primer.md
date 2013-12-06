@@ -8,7 +8,7 @@ In 2004, my college roommates and I started playing a multiplayer variation of t
 
 What began as a simple spreadsheet turned into an elaborate spreadsheet and finally into a PHP/<del>MySQL</del>MariaDB web application.
 
-As of March 2012 we had played 4000 matches accounting for 300 human hours of official gameplay time.
+As of December 2013 we had played over 5500 matches accounting for over 380 human hours of official gameplay time.
 
 An <del>[instance is live][1]</del> [instance is live][5] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Stored Procedures.
 
@@ -65,22 +65,22 @@ An <del>[instance is live][1]</del> [instance is live][5] or you can [look at th
 <!-- SELECT m.matchdate as date, p.username as plyr, l.locationname as site, (select count(playerid) from playermatch where matchid = pm.matchid) as mode, pm.lines, concat("0:",pm.time) as time, pm.wrank as wrk, pm.erank as erk FROM playermatch pm, player p, tntmatch m, location l WHERE pm.matchid = m.matchid AND p.playerid = pm.playerid AND m.location = l.locationid AND pm.time < 60 AND (select count(playerid) from playermatch where matchid = pm.matchid) IN (4,3,2) ORDER BY pm.lines DESC LIMIT 10; -->
 
 <pre>
-Most Lines Under 1 Minute, All Time (as of 3/3/2012)
+Most Lines Under 1 Minute, All Time (as of 12/5/2013)
 
-+------------+------+-------------+------+-------+------+-----+-----+
-| date       | plyr | site        | mode | lines | time | wrk | erk |
-+------------+------+-------------+------+-------+------+-----+-----+
-| 2007-02-28 | Dan  | 1217        |    3 |   156 | 0:53 |   3 |   1 |
-| 2007-04-29 | Dan  | 1217        |    2 |   142 | 0:54 |   1 |   1 |
-| 2007-05-20 | Dan  | 1217        |    2 |   132 | 0:58 |   1 |   1 |
-| 2011-08-13 | Dan  | Mt. Johnson |    2 |   129 | 0:56 |   1 |   1 |
-| 2011-08-13 | JD   | Mt. Johnson |    2 |   121 | 0:59 |   1 |   1 |
-| 2007-03-21 | JD   | 1217        |    3 |   109 | 0:57 |   1 |   1 |
-| 2007-03-17 | JD   | 1217        |    3 |   109 | 0:57 |   1 |   1 |
-| 2007-03-22 | Dan  | 1217        |    2 |   109 | 0:53 |   1 |   1 |
-| 2007-03-30 | JD   | 1217        |    2 |   109 | 0:59 |   1 |   1 |
-| 2011-07-22 | Dan  | Mt. Johnson |    2 |   108 | 0:53 |   1 |   1 |
-+------------+------+-------------+------+-------+------+-----+-----+
++------------+-------+-------------+------+-------+------+-----+-----+
+| date       | plyr  | site        | mode | lines | time | wrk | erk |
++------------+-------+-------------+------+-------+------+-----+-----+
+| 2007-02-28 | Dan   | 1217        |    3 |   156 |   53 |   3 |   1 |
+| 2007-04-29 | Dan   | 1217        |    2 |   142 |   54 |   1 |   1 |
+| 2007-05-20 | Dan   | 1217        |    2 |   132 |   58 |   1 |   1 |
+| 2011-08-13 | Dan   | Mt. Johnson |    2 |   129 |   56 |   1 |   1 |
+| 2011-08-13 | JD    | Mt. Johnson |    2 |   121 |   59 |   1 |   1 |
+| 2007-03-21 | JD    | 1217        |    3 |   109 |   57 |   1 |   1 |
+| 2007-03-17 | JD    | 1217        |    3 |   109 |   57 |   1 |   1 |
+| 2007-03-22 | Dan   | 1217        |    2 |   109 |   53 |   1 |   1 |
+| 2007-03-30 | JD    | 1217        |    2 |   109 |   59 |   1 |   1 |
+| 2013-10-03 | Neela | Old Harbor  |    2 |   109 |   58 |   1 |   1 |
++------------+-------+-------------+------+-------+------+-----+-----+
 </pre>
     
 ---
@@ -88,7 +88,7 @@ Most Lines Under 1 Minute, All Time (as of 3/3/2012)
 <!-- SELECT m.matchdate as date, p.username as plyr, l.locationname as site, pm.lines, concat(floor(pm.time/60),":",lpad(mod(pm.time,60),2,"0")) as time, round(pm.lines/pm.time,3) as lps, pm.wrank as wrk, pm.erank as erk FROM playermatch pm, player p, tntmatch m, location l WHERE pm.matchid = m.matchid AND p.playerid = pm.playerid AND m.location = l.locationid AND pm.lines > 0 AND (select count(playerid) from playermatch where matchid = pm.matchid) IN (4) ORDER BY pm.lines/pm.time DESC LIMIT 10; -->
 
 <pre>
-Highest Lines per Second Ratio, 4P Only, All-Time (as of 3/3/2012)
+Highest Lines per Second Ratio, 4P Only, All-Time (as of 12/5/2013)
 
 +------------+------+-------------+-------+------+-------+-----+-----+
 | date       | plyr | site        | lines | time | lps   | wrk | erk |
