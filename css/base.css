@@ -35,14 +35,14 @@ a {
       font-weight: bold;
       letter-spacing: 1px;
       color: black; }
-  .sidebar .meta a {
+  .sidebar .metadata a {
     margin-left: 0px;
     color: black; }
-    .sidebar .meta a:hover {
+    .sidebar .metadata a:hover {
       color: #227ce8; }
-  .sidebar .meta {
+  .sidebar .metadata {
     margin-left: 4px; }
-  .sidebar .meta .icon {
+  .sidebar .metadata .icon {
     margin-right: 6px; }
   .sidebar .sections {
     margin: 15px 0 0 0; }
@@ -176,24 +176,24 @@ a {
       text-decoration: none; }
       .content .listing a:hover {
         text-decoration: underline; }
-  .content .meta {
+  .content .metadata {
     margin: 30px 0;
     padding: 10px 0;
     font-family: Helvetica, sans-serif; }
-    .content .meta p {
+    .content .metadata p {
       line-height: 1.4;
       font-size: 14px;
       margin-top: 0px; }
-    .content .meta img {
+    .content .metadata img {
       position: relative;
       float: left;
       margin-top: 0px;
       margin-right: 10px;
       margin-left: -60px;
       border-radius: 4px; }
-    .content .meta .copy {
+    .content .metadata .copy {
       padding-left: 60px; }
-    .content .meta iframe {
+    .content .metadata iframe {
       padding-left: 5px; }
   .content .talk-design .color div {
     float: left;
