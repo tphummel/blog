@@ -4,7 +4,7 @@ title: Firebase with NPM + Browserify
 tags: [code]
 ---
 
-Firebase [recently announced](https://www.firebase.com/blog/2014-05-13-introducing-firebase-hosting.html) static client web application hosting. This allows client-only apps which work directly with the firebase data and auth apis. The possibilities are very broad. Here is how I quickly got up and running.
+[Firebase](https://www.firebase.com/) [recently announced](https://www.firebase.com/blog/2014-05-13-introducing-firebase-hosting.html) static client web application hosting. This allows client-only apps which work directly with the firebase data and auth apis. The possibilities are very broad. Here is how I quickly got up and running.
 
 I start new browser apps with a client starter [repo](https://github.com/tphummel/node-bify-app) which contains some handy build scripts based on substack's task automation [post](http://substack.net/task_automation_with_npm_run):
 
