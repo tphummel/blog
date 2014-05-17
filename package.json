@@ -6,7 +6,7 @@
   "dependencies": {
   },
   "scripts": {
-    "dev": "jekyll serve --watch"
+    "dev": "jekyll serve --watch --drafts"
   },
   "devDependencies": {},
   "optionalDependencies": {},
