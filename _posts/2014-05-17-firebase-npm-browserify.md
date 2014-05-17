@@ -13,8 +13,6 @@ I start new browser apps with a client starter [repo](https://github.com/tphumme
     rm -rf .git/
     git init
 
-** warning: contains coffeescript
-
 You could also use a tool like [beefy](https://www.npmjs.org/package/beefy) to quickly set up local browserify development.
 
 Before getting into firebase, you can see our dev setup in action with:
