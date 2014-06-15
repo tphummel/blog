@@ -10,7 +10,7 @@ What began as a simple spreadsheet turned into an elaborate spreadsheet and fina
 
 As of December 2013 we had played over 5500 matches accounting for over 380 human hours of official gameplay time.
 
-An <del>[instance is live][1]</del> [instance is live][5] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Stored Procedures.
+An <del>[instance is live][1]</del> <del>[instance is live][5]</del> [instance is live][6] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Stored Procedures.
 
 ### Specifications
 
@@ -112,3 +112,4 @@ Highest Lines per Second Ratio, 4P Only, All-Time (as of 12/5/2013)
   [3]: https://github.com/tphummel/tetris-report
   [4]: http://tetris.wikia.com/wiki/Square_Platforming
   [5]: http://tnt.tphum.us
+  [6]: http://tetris.tomhummel.com
