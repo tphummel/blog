@@ -4,7 +4,7 @@ title: Javascript Inheritance
 tags: [javascript, code]
 ---
 
-There are [plenty][0] [of][1] [articles][2] [and][4] [docs][5] that describe the differences, strengths, and weaknesses of javascript prototypal inheritance compared to more traditional inheritance schemes in other languages. Goodness there are many ways to get it wrong. I saw a new one in a project recently. What happens when you do the following?
+There are [plenty][0] [of][1] [articles][2] [and][4] [docs][5] that describe the differences, strengths, and weaknesses of javascript prototypal inheritance compared to more traditional inheritance schemes in other languages. Goodness knows there are many ways to get it wrong. I saw a new one in a project recently. What happens when you do the following?
 
 ```javascript
 var Parent = function(){}
