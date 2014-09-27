@@ -60,6 +60,20 @@ An <del>[instance is live][1]</del> <del>[instance is live][5]</del> [instance i
 
 ----
 
+### monosquares
+
+<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/A4QWL/embed?background=f2f2f2&text=1a1a1a&link=4e76c9"></iframe>
+
+### multisquares
+
+<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/1jRv5/embed?background=f2f2f2&text=1a1a1a&link=4e76c9"></iframe>
+
+### scoring
+
+<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/l1vTK/embed?background=f2f2f2&text=1a1a1a&link=4e76c9"></iframe>
+
+----
+
 ### Example Reports
 
 <!-- SELECT m.matchdate as date, p.username as plyr, l.locationname as site, (select count(playerid) from playermatch where matchid = pm.matchid) as mode, pm.lines, concat("0:",pm.time) as time, pm.wrank as wrk, pm.erank as erk FROM playermatch pm, player p, tntmatch m, location l WHERE pm.matchid = m.matchid AND p.playerid = pm.playerid AND m.location = l.locationid AND pm.time < 60 AND (select count(playerid) from playermatch where matchid = pm.matchid) IN (4,3,2) ORDER BY pm.lines DESC LIMIT 10; -->
