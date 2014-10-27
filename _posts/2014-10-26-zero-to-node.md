@@ -9,17 +9,25 @@ A friend of mine wanted to mess around with programming. He has an apple laptop 
 
 open [nodejs.org](http://nodejs.org/) and click install. This will install both node.js itself and [npm](http://npmjs.org/), the package manager for the node ecosystem.
 
-### 2. open a terminal, test stuff out
-
-Choosing, configuring, and customizing a terminal is an important part of working on software because the terminal is so central to most workflows. However, it is beyond the scope of this writeup so we'll use the default terminal that comes with OSX.
+### 2. open a terminal
 
 Open the terminal app by clicking "Applications", then the subfolder for "Utilities", and finally the icon for "Terminal.app".
 
+Choosing, configuring, and customizing a terminal is an important part of working on software because the terminal is so central to most workflows. However, it is beyond the scope of this writeup so we'll use the default terminal that comes with OSX.
+
 Once the terminal window appears, type `node -v`. If the node.js installation succeeded you should see the version printed. You can see that npm was also installed by running `npm -v`.
 
-### 3. going to school
+### 3. open an editor
 
-There are a number of excellent, self-guided lessons or "workshoppers" available at [nodeschool](http://nodeschool.io/). Start with the lesson titled "javascripting". With steps 1 and 2 completed above, we've got everything we need to plunge in.
+Much like the terminal, developers spend a large portion of their time editing text files. Text editors are a personal and sometimes divisive topic across communities. Again, selecting and customizing an editor is outside the scope of what we're doing right now.
+
+A good one to start with would be [textmate](http://macromates.com/download) or [sublime](http://www.sublimetext.com/), or the default editor that comes with OSX, TextEdit, which is available in your "Applications" directory.
+
+These simple editors behave much like the office applications you may already be familiar with. Creating, opening, and saving files is what you will primarily be doing.
+
+### 4. going to school
+
+There are a number of excellent, self-guided lessons or "workshoppers" available at [nodeschool](http://nodeschool.io/). Start with the lesson titled "javascripting". With steps 1, 2, and 3 completed above, we've got everything we need to dive in.
 
 In your terminal, type `npm install -g javascripting` and press `return`. Once that completes, you'll have the `javascripting` command available in your terminal.
 
@@ -31,7 +39,7 @@ Following the javascripting lesson, other essential core lessons include:
 - learnyounode (`npm install -g learnyounode`)
 
 
-### 4. make something
+### 5. make something
 
 With the node.js and git skills from the nodeschool lessons above we have the minimum knowledge necessary to deploy a web app.
 
