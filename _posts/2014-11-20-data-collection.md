@@ -3,7 +3,7 @@ layout: post
 title: Data Collection Tradeoffs
 ---
 
-There are a few tradeoffs that exist when starting a new database that you expect will be longlived. The types of datasets I'm referring to here are results, observations, or events. Examples would be results of a sporting event, weather measurements, or the way I imagine courtroom activity might be recorded. Some choices are difficult to change once history exists. The key topics I will try to define and discuss are passive vs. active, progressive vs. reflective, and the role of the data recorder.
+There are a few tradeoffs that exist when starting a new database that you expect will be longlived. The types of datasets I'm referring to here are results, observations, or events. Examples would be results of a sporting event, weather measurements, or the way I imagine courtroom activity might be recorded. The key topics I will try to define and discuss are passive vs. active, progressive vs. reflective, and the role of the data recorder.
 
 ## terms
 
