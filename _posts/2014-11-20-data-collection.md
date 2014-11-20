@@ -13,8 +13,8 @@ There are a few tradeoffs that exist when starting a new database that you expec
 - *Passive Recording*: When results are pushed from the activity and recorded by a collection system, requiring zero human effort or intervention. This is the gold standard.
 - *Recorder*: When doing active recording, the person whose responsibility it is to collect and record the activity results.
 - *Participant-Recorder*: When doing active recording, a participant who concurrently acts as recorder.
-- *Progressive Recording*: The results of an activity as recorded while still in progress. Yields more detailed measurements but incurs a higher time/effort cost if using active recording. Sometimes, this is impossible with a participant-recorder.
-- *Reflective Recording*: The results of an activity as recorded upon completion. It offers lower detail and a lower time/effort cost with active recording. This is more conducive to using a participant-recorder.
+- *Progressive Recording*: The results of an activity as recorded while still in progress. Yields finer granularity but incurs a higher time/effort cost if using active recording. Sometimes, this is impossible with a participant-recorder.
+- *Reflective Recording*: The results of an activity as recorded upon completion. It offers coarser granularity and a lower time/effort cost with active recording. This is more conducive to using a participant-recorder.
 
 ## Data Collection Tradeoff
 
@@ -22,7 +22,7 @@ There are a few tradeoffs that exist when starting a new database that you expec
 
 Passive recording is always preferred as `Time, Effort` in the above graph is zero. This requires an embedded recording system within the activity or an external system tightly coupled to the outputs of the activity.
 
-If active, progressive recording with optimal granularity makes it impossible to use a participant-recorder, you may need to use a dedicated recorder, reduce granularity, and/or use reflective recording.
+If active, progressive recording with optimal granularity makes it impossible to use a participant-recorder, you may need to use a dedicated recorder, coarser granularity, and/or use reflective recording.
 
 ## Notes on Active Collection Systems
 
@@ -35,14 +35,14 @@ If active, progressive recording with optimal granularity makes it impossible to
 #### Good
 - If new active recorders can be onboarded quickly.
 - If active recording with acceptible granularity allows recorder to be a concurrent participant - unencumbered, unconflicted.
-- If higher granularity does not impact activity pace.
+- If finer granularity does not impact activity pace.
 
 ## Conclusion
 
 Data collection should never impact the activity itself.
 
-- *minimal*: active, reflective, coarse recording by one of the participants.
-- *good*: active, progressive, granular recording by a neutral third party.
-- *best*: passive, progressive, granular recording.
+- *minimal*: active, reflective, coarse-grained recording by one of the participants.
+- *good*: active, progressive, fine-grained recording by a neutral third party.
+- *best*: passive, progressive, fine-grained recording.
 
 The best time to start recording is at t₀, when history begins, even if it is an active system that needs to be migrated later. The second-best time to start is right now. If today is t₀, all the better.
