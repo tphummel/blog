@@ -14,7 +14,7 @@ There are a few tradeoffs that exist when starting a new database that you expec
 - *Recorder*: When doing active recording, the person whose responsibility it is to collect and record the activity results.
 - *Participant-Recorder*: When doing active recording, a participant who concurrently acts as recorder.
 - *Progressive Recording*: The results of an activity as recorded while still in progress. Yields more detailed measurements but incurs a higher time/effort cost if using active recording. Sometimes, this is impossible with a participant-recorder.
-- *Reflective Recording*: The results of an activity as recorded upon completion. It offers lower detail and a lower time/effort cost with active recording. It is more conducive when using a participant-recorder.
+- *Reflective Recording*: The results of an activity as recorded upon completion. It offers lower detail and a lower time/effort cost with active recording. This is more conducive to using a participant-recorder.
 
 ## Data Collection Tradeoff
 
