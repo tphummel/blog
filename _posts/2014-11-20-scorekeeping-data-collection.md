@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Data Collection Tradeoffs
+title: Scorekeeping and Data Collection
 ---
 Scorekeeping matters in the world. I think it might matter to me more than most people. Whether it is a notebook full of handwritten boardgame results or an information system tuned for throughput, I have some general thoughts.
 
