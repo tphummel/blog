@@ -42,8 +42,7 @@ standings diff between two arbitrary dates:
 
 ### the final product
 
-<del>[live version][13]</del> and [code][14]
-<strong>**EDIT 11/20/2013: Took down the live version for the offseason</strong>
+Check out the [code][14]. The site was originally hosted at: <del>http://roto.tphum.us</del>
 
 ### what i used
 
@@ -76,7 +75,6 @@ Support more sites such as Yahoo!, ESPN, CBS
   [10]: http://jade-lang.com/
   [11]: http://getbootstrap.com/
   [12]: http://www.mongodb.org/
-  [13]: http://roto.tphum.us
   [14]: https://github.com/tphummel/roto-scraper
   [15]: http://www.opscode.com/chef/
   [16]: http://en.wikipedia.org/wiki/Fantasy_baseball#Rotisserie_League_Baseball
