@@ -4,10 +4,9 @@ title: Baseball 2012 Post Mortem
 tags: [baseball]
 ---
 
-2012 was a banner year for the Oakland Athletics and my fantasy teams. My best picks were Adam Laroche, Anthony Rizzo, Ryan Ludwick, Bryan LaHair, Wade Miley. Plus pretty much my entire pitching staff in 'Phil is King'. 
+2012 was a banner year for the [Oakland Athletics](#oakland_athletics) and my fantasy teams. My best picks were Adam Laroche, Anthony Rizzo, Ryan Ludwick, Bryan LaHair, Wade Miley. Plus pretty much my entire pitching staff in [Phil is King](#phil_is_king).
 
-
-## [Oakland Athletics](#oakland_athletics)
+<h2><a name="oakland_athletics">Oakland Athletics</a></h2>
 
 ### *2012 AL West Standings*
 
@@ -92,7 +91,7 @@ Notes:
 * * * *
 
 
-## [Writer's Block](#writers_block)
+<h2><a name="writers_block">Writer's Block</a></h2>
 
 ### *Point Standings*
 
@@ -162,7 +161,7 @@ Notes:
 
 * * * *
 
-## [Phil is King](#phil_is_king)
+<h2><a name="phil_is_king">Phil is King</a></h2>
 
 ### *Standings*
 
