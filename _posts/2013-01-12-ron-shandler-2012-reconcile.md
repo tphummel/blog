@@ -6,8 +6,7 @@ tags: [baseball]
 
 Here is a comparison of projections and actual results from the [2012 Baseball Forecaster][0]. Listed are several NL players I relied on heavily in 2012. 
 
-
-### [Pitchers](#pitchers)
+<h3><a name="pitchers">Pitchers</a></h3>
 
     +------------------+--------+--------+-----+----+------+-------+-------+
     |       name       |        |   ip   |  w  | sv |  k   |  era  | whip  |
@@ -52,7 +51,7 @@ Here is a comparison of projections and actual results from the [2012 Baseball F
 
 * * * *
 
-### [Batters](#batters)
+<h3><a name="batters">Batters</a></h3>
 
     +------------------+--------+------+------+-----+-----+-----+-----+
     |       Name       |        |  AB  |  BA  |  R  | HR  | RBI | SB  |
