@@ -3,7 +3,7 @@ rvm:
   - 2.1
 
 # assumes gems in Gemfile have been installed already
-script: jekyll build && htmlproof ./_site --href-ignore /^http:\/\//
+script: jekyll build && htmlproof ./_site --href-ignore /^http:\/\/www\.baseball\-reference\.com/
 
 env:
   global:
