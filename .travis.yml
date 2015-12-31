@@ -8,3 +8,19 @@ script: jekyll build && htmlproof ./_site --href-ignore /^http:\/\/www\.baseball
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true # speeds up installation of html-proofer
+
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  local_dir: _site
+  bucket: "tomhummel.com"
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  slack:
+    rooms:
+      - "$SLACK_TOKEN#ops"
+    on_pull_requests: true
