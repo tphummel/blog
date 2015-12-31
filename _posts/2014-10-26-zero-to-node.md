@@ -121,4 +121,3 @@ https://glacial-sierra-6217.herokuapp.com/ deployed to Heroku
 Open the url in your browser to see your thing!
 
 Seeing results early and often can fuel learning and growth. Hopefully this simple workflow provides that foundation.
-

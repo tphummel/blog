@@ -4,7 +4,7 @@ title: Querying Waze Commute Data
 tags: [code, driving]
 ---    
 
-I noticed on the [Waze][0] web platform that I could see a listing of my Trips inside the "Edit Map" area. 
+I noticed on the [Waze][0] web platform that I could see a listing of my Trips inside the "Edit Map" area.
 
 ![waze drives list](http://i.imgur.com/TcR0GVV.png "waze drives list")
 

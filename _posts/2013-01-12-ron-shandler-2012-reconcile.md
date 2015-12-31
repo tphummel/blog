@@ -4,7 +4,7 @@ title: Reconciling Ron Shandler 2012
 tags: [baseball]
 ---
 
-Here is a comparison of projections and actual results from the [2012 Baseball Forecaster][0]. Listed are several NL players I relied on heavily in 2012. 
+Here is a comparison of projections and actual results from the [2012 Baseball Forecaster][0]. Listed are several NL players I relied on heavily in 2012.
 
 <h3><a name="pitchers">Pitchers</a></h3>
 
@@ -102,5 +102,5 @@ Here is a comparison of projections and actual results from the [2012 Baseball F
     |                  | actual |  472 |  280 |  62 |  14 |  69 |   7 |
     |                  | diff   |  -93 |   11 |  -7 |   0 |  -8 |  -1 |
     +------------------+--------+------+------+-----+-----+-----+-----+
-    
+
   [0]: http://www.amazon.com/2012-Baseball-Forecaster-Ron-Shandlers/dp/B008W3WJFQ

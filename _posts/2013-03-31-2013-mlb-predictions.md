@@ -4,7 +4,7 @@ title: 2013 Baseball Predictions
 tags: [baseball]
 ---
 
-There is nothing systematic or scientific about these predictions. I'm shooting from the hip. 
+There is nothing systematic or scientific about these predictions. I'm shooting from the hip.
 
 ## NL West
 
@@ -12,7 +12,7 @@ There is nothing systematic or scientific about these predictions. I'm shooting 
 1. Dodgers
 1. Diamondbacks
 1. Padres
-1. Rockies 
+1. Rockies
 
 ## NL Central
 
@@ -66,8 +66,8 @@ There is nothing systematic or scientific about these predictions. I'm shooting 
 
 ## Playoffs
 
-### AL 
-Seeding: 
+### AL
+Seeding:
 1. Rays
 1. Angels
 1. Tigers
@@ -82,8 +82,8 @@ ALDS: Tigers over Angels
 
 ALCS: Tigers over Athletics
 
-### NL 
-Seeding: 
+### NL
+Seeding:
 1. Nationals
 1. Reds
 1. Giants

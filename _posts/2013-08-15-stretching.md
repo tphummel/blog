@@ -5,7 +5,7 @@ tags: [running]
 ---
 
 ### DISCLAIMER
-I am not a doctor. I am not medically trained. I am not a physical therapist. I don't know anything other than what I know about myself from personal experience. The following are statements about my own body and my naive understanding of it. 
+I am not a doctor. I am not medically trained. I am not a physical therapist. I don't know anything other than what I know about myself from personal experience. The following are statements about my own body and my naive understanding of it.
 
 ---
 
@@ -69,7 +69,7 @@ It was a heart rending, pride swallowing process that led me down this road. It 
 
 ### Ice
 
-Ice. Early and often. Ice packs and bags will suffice but nothing felt more regenerative than sitting in an ice bath at 55 degrees for 15 minutes. 
+Ice. Early and often. Ice packs and bags will suffice but nothing felt more regenerative than sitting in an ice bath at 55 degrees for 15 minutes.
 
 ### Compression
 
@@ -85,5 +85,4 @@ Some Final Thoughts...
 ---
 
 
-Claustrophobia: I felt at times like my body would turn inside on itself. All of my muscles pulled taught, tendons pulled taught. Were it not for a concerted effort to keep these forces from pulling in on themselves I would certainly have been unable to move well. 
-
+Claustrophobia: I felt at times like my body would turn inside on itself. All of my muscles pulled taught, tendons pulled taught. Were it not for a concerted effort to keep these forces from pulling in on themselves I would certainly have been unable to move well.

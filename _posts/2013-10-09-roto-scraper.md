@@ -26,7 +26,7 @@ We get standings from an arbitrary date, set by the league commissioner, through
 
 Of primary concern was the need to preserve the state of the standings every day. At some point during each 24 hour window, I (or a script) needed to pull down the state of the standings.
 
-If I missed a day, those standings would be unavailable thereafter. My script would pull the standings 2-3 times per day in case they were unavailable or altered. 
+If I missed a day, those standings would be unavailable thereafter. My script would pull the standings 2-3 times per day in case they were unavailable or altered.
 
 Once I had the data I put together two initial reports.
 
@@ -53,8 +53,8 @@ Check out the [code][14]. The site was originally hosted at: <del>http://roto.tp
 
 ### what would come next
 
-Rotowire makes available raw performance numbers for each team, historically (including previous seasons). Retroactively, every team's daily totals could be collected and some interesting reports could be generated, such as: 
-  
+Rotowire makes available raw performance numbers for each team, historically (including previous seasons). Retroactively, every team's daily totals could be collected and some interesting reports could be generated, such as:
+
   - most/fewest X for a team in a single day
   - most/fewest X in in a Y-day span
   - best results at particular roster positions: 1B, SS, etc
@@ -78,4 +78,3 @@ Support more sites such as Yahoo!, ESPN, CBS
   [14]: https://github.com/tphummel/roto-scraper
   [15]: http://www.opscode.com/chef/
   [16]: http://en.wikipedia.org/wiki/Fantasy_baseball#Rotisserie_League_Baseball
-
