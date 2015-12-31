@@ -6,13 +6,14 @@ tags: [tetris, video-games]
 
 In 2004, my college roommates and I started playing a multiplayer variation of tetris called [The New Tetris for Nintendo 64][0]. For the uninitiated this version of tetris hinges on building [monosquares and multisquares][4]
 
-What began as a simple spreadsheet turned into an elaborate spreadsheet and finally into a PHP/<del>MySQL</del>MariaDB web application.
+What began as a simple spreadsheet turned into an elaborate spreadsheet and finally into a PHP/MySQL web application.
 
 As of December 2013 we had played over 5500 matches accounting for over 380 human hours of official gameplay time.
 
 An [instance is live][1] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Stored Procedures.
 
 The app had also been hosted in a few other places in the past:
+
 - <del>http://tphummel.byethost6.com/tnt/</del>
 - <del>http://tnt.tphum.us/</del>
 - <del>http://tetris.tomhummel.com/</del>
