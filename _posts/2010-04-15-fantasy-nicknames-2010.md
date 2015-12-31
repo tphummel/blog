@@ -4,11 +4,11 @@ title: Fantasy MLB Nicknames 2010
 tags: [baseball]
 ---
 
-I realized the other day that I have silly nicknames for players on my fantasy baseball teams.  Many of these are in common usage but some certainly are not. These nicknames sometimes exist only within my own brain. 
+I realized the other day that I have silly nicknames for players on my fantasy baseball teams.  Many of these are in common usage but some certainly are not. These nicknames sometimes exist only within my own brain.
 
-Every once in a while one of these names will escape my lips and are almost always followed by weird glances or bewilderment over who I'm talking about. I realize that in some cases I'm the only person who thinks of these players by these weird nicknames. There are certainly some general patterns I follow. 
+Every once in a while one of these names will escape my lips and are almost always followed by weird glances or bewilderment over who I'm talking about. I realize that in some cases I'm the only person who thinks of these players by these weird nicknames. There are certainly some general patterns I follow.
 
-My favorite pattern is guys whose first name begins with a consonant and last name begins with a vowel (mellis, duggla, etc). Players I've had for several seasons in a row have more established nicknames while newer guys may have a generic placeholder until something better comes along. In many cases below I spell out the phonetic pronunciation. 
+My favorite pattern is guys whose first name begins with a consonant and last name begins with a vowel (mellis, duggla, etc). Players I've had for several seasons in a row have more established nicknames while newer guys may have a generic placeholder until something better comes along. In many cases below I spell out the phonetic pronunciation.
 
 Here is the 2010 list, certainly incomplete:
 

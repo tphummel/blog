@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Realtime Data Client with Redis, Websockets, and D3 
+title: Realtime Data Client with Redis, Websockets, and D3
 tags: [code, tetris]
 ---
 
@@ -16,9 +16,9 @@ These visualizations could be on a second screen or tablet for the group to see 
 
 ### what i did
 
-After a new match is validated and saved, I took each player's individual performance and published the details to a [redis pub-sub][2] channel called "tetris:performances". This could allow for a range of consumers each reacting to new matches in different ways. 
+After a new match is validated and saved, I took each player's individual performance and published the details to a [redis pub-sub][2] channel called "tetris:performances". This could allow for a range of consumers each reacting to new matches in different ways.
 
-When a new performance arrives I emit the details to any connected [socket.io][3] clients. 
+When a new performance arrives I emit the details to any connected [socket.io][3] clients.
 
 The first web client I made was a [d3][4] scatterplot.
 
@@ -26,7 +26,7 @@ The first web client I made was a [d3][4] scatterplot.
 
 Points are added to the scatterplot in real time when they are submitted via the data entry app.
 
-Check out the [project code][5]. 
+Check out the [project code][5].
 
 ### what would come next
 

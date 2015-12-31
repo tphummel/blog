@@ -20,14 +20,14 @@ tags: [baseball]
     +--------------------+----+----+------+----+--------------+
 
 Notes:
- 
+
 + 15th A.L. West Title in A's history
 + 13 GB on June 30
 + 5 GB with nine games to play
 + 72-31 after June 2, .655 (1st MLB)
 + 14 Walkoff Wins (1st MLB)
 + 112 post-asb HR (1st MLB)
-+ 1387 bat K's (Most in MLB, All-Time) 
++ 1387 bat K's (Most in MLB, All-Time)
 + 54 rookie pitcher wins (Most in MLB, All-Time)
 
 ### *Batters*
@@ -58,7 +58,7 @@ Notes:
     | Brandon Hicks    |   70 |   8 |   11 |   3 |   7 |   1 | .172 | .243 | .391 |
     | Team Totals      | 6183 | 713 | 1315 | 195 | 676 | 122 | .238 | .310 | .404 |
     +------------------+------+-----+------+-----+-----+-----+------+------+------+
-    
+
 ### *Pitchers*
 
     +------------------+-----+-----+--------+----+----+----+------+------+-------+
@@ -238,7 +238,7 @@ Notes:
     +----------------------+-----------+------+-----+------+-----+------+-------+
 
 ### Pitchers
-    
+
     +------------------------+--------+-----+-----+------+------+------+-------+
     |          Name          |   IP   |  W  | SV  |  K   | ERA  | WHIP | K/BB  |
     +------------------------+--------+-----+-----+------+------+------+-------+
@@ -266,4 +266,4 @@ Notes:
 
 \* played on my team for partial season
 
-^ opening day payroll figures as reported by USA Today 
+^ opening day payroll figures as reported by USA Today

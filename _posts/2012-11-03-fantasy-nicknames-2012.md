@@ -4,7 +4,7 @@ title: Fantasy MLB Nicknames 2012
 tags: [baseball]
 ---
 
-Names from my [2010 season post]({% post_url 2010-04-15-fantasy-nicknames-2010 %}) have been left out. Here is the 2012 list: 
+Names from my [2010 season post]({% post_url 2010-04-15-fantasy-nicknames-2010 %}) have been left out. Here is the 2012 list:
 
 + Yadier Molina - “Yadie Mo”
 + Miguel Montero - “Monty”

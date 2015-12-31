@@ -19,7 +19,7 @@ The app had also been hosted in a few other places in the past:
 
 ### Specifications
 
-**Rules:** 
+**Rules:**
 
 + We play [The New Tetris for Nintendo 64][0] on marathon mode with directed garbage.
 + 2-4 players at a time.
@@ -101,7 +101,7 @@ Most Lines Under 1 Minute, All Time (as of 12/5/2013)
 | 2013-10-03 | Neela | Old Harbor  |    2 |   109 |   58 |   1 |   1 |
 +------------+-------+-------------+------+-------+------+-----+-----+
 </pre>
-    
+
 ---
 
 <!-- SELECT m.matchdate as date, p.username as plyr, l.locationname as site, pm.lines, concat(floor(pm.time/60),":",lpad(mod(pm.time,60),2,"0")) as time, round(pm.lines/pm.time,3) as lps, pm.wrank as wrk, pm.erank as erk FROM playermatch pm, player p, tntmatch m, location l WHERE pm.matchid = m.matchid AND p.playerid = pm.playerid AND m.location = l.locationid AND pm.lines > 0 AND (select count(playerid) from playermatch where matchid = pm.matchid) IN (4) ORDER BY pm.lines/pm.time DESC LIMIT 10; -->
