@@ -2,7 +2,7 @@ safe:        false
 
 source:      .
 destination: ./_site
-plugins:     ./_plugins
+plugins_dir:     ./_plugins
 
 future:      false
 lsi:         false
@@ -14,7 +14,7 @@ rdiscount:
 
 permalink:   pretty
 
-exclude:    ["package.json", "node_modules", "script", "doc", "bin", "log"]
+exclude:    ["vendor"]
 paginate:   5
 
 # gem install jekyll-tagging
@@ -32,3 +32,5 @@ gravatar_url: http://www.gravatar.com/avatar/e773e8aca4e33a69be538a75d700ff30
 #   png_engine: blahtex
 #   png_dir:    images/latex
 #   png_url:    /images/latex
+
+gems: ["jekyll-paginate"]
