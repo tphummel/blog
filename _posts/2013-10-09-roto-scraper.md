@@ -34,11 +34,11 @@ Once I had the data I put together two initial reports.
 
 standings through an arbitrary date:
 
-![standings thru date](http://i.imgur.com/gyW76gh.png "standings thru date")
+![standings thru date](https://i.imgur.com/gyW76gh.png "standings thru date")
 
 standings diff between two arbitrary dates:
 
-![standings diff](http://i.imgur.com/YgJOFHa.png "standings diff")
+![standings diff](https://i.imgur.com/YgJOFHa.png "standings diff")
 
 ### the final product
 

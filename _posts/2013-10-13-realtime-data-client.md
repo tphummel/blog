@@ -22,7 +22,7 @@ When a new performance arrives I emit the details to any connected [socket.io][3
 
 The first web client I made was a [d3][4] scatterplot.
 
-![scatterplot](http://i.imgur.com/vHtZNHQ.png "scatterplot")
+![scatterplot](https://i.imgur.com/vHtZNHQ.png "scatterplot")
 
 Points are added to the scatterplot in real time when they are submitted via the data entry app.
 
