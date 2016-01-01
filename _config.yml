@@ -35,4 +35,5 @@ gravatar_url: https://www.gravatar.com/avatar/e773e8aca4e33a69be538a75d700ff30
 
 gems:
   - jekyll-paginate
+  - jekyll-tagging
   - jekyll-sitemap
