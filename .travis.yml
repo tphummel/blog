@@ -1,9 +1,12 @@
 language: ruby
 rvm:
   - 2.1
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y tree
 
 # assumes gems in Gemfile have been installed already
-script: jekyll build && htmlproof ./_site --href-ignore /^http:\/\/www\.baseball\-/,/^http:\/\/substack\.net/ && ls -lah ./_site
+script: jekyll build && htmlproof ./_site --href-ignore /^http:\/\/www\.baseball\-/,/^http:\/\/substack\.net/ && tree ./_site
 
 env:
   global:
