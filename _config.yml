@@ -14,7 +14,7 @@ rdiscount:
 
 permalink:   pretty
 
-exclude:    ["vendor"]
+exclude:    ["vendor","Gemfile*"]
 paginate:   5
 
 # gem install jekyll-tagging
