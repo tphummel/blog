@@ -9,6 +9,14 @@ layout: layout
 
   <section class="byline">
     {{ page.date | date: "%B %e, %Y" }}
+    {% if page.tags.size > 0 %}
+    <p>
+      tags:
+      {% for tag in page.tags %}
+        <a href="{{site.url}}/tag/{{tag}}">{{tag}}</a>
+      {% endfor %}
+    </p>
+    {% endif %}
   </section>
 
   {{ content }}

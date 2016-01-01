@@ -17,7 +17,6 @@ permalink:   pretty
 exclude:    ["vendor","Gemfile*"]
 paginate:   5
 
-# gem install jekyll-tagging
 tag_page_layout: tag_page
 tag_page_dir: tag
 
@@ -32,7 +31,3 @@ gravatar_url: https://www.gravatar.com/avatar/e773e8aca4e33a69be538a75d700ff30
 #   png_engine: blahtex
 #   png_dir:    images/latex
 #   png_url:    /images/latex
-
-gems:
-  - jekyll-paginate
-  - jekyll-sitemap

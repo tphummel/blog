@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Going From Zero to Node.js
+tags: [javascript, code]
 ---
 
 Some friends of mine wanted to mess around with programming. They have an apple laptop and zero experience. I think Node.js is a good platform for beginners because of the ubiquity of javascript on the web today and the great tooling and resources for getting started.
