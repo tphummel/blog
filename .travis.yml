@@ -22,5 +22,5 @@ deploy:
 notifications:
   slack:
     rooms:
-      - "$SLACK_TOKEN#ops"
+      - "${SLACK_TOKEN}#ops"
     on_pull_requests: true
