@@ -1,21 +1,13 @@
 # a blog
 
-### fork
-fork this and replace the _post directory with your stuff
+### local
 
-also of interest would probably be assets/, _includes/, _layouts/
-
-## local dev
-
-  ./bin/dev
-
-open localhost:4000 in your browser
-
-## deploy
-
-set git remote to your [user].github.io repo.
-  
-  git push
+    # assumes /usr/local/bin is in your $PATH
+    brew install ruby
+    sudo gem install -n /usr/local/bin bundler
+    bundle install --path vendor/bundle
+    bundle exec jekyll serve
+    open http://localhost:4000
 
 ## theme
 
