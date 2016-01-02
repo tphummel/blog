@@ -6,7 +6,6 @@ plugins_dir:     ./_plugins
 
 future:      false
 lsi:         false
-highlighter:    pygments
 
 markdown: rdiscount
 rdiscount:
