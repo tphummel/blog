@@ -25,7 +25,7 @@ Our Kart version of choice is [Mario Kart: Double Dash!!! for Gamecube][0]. The 
 - on a cluster standings view, you read the column below a player's name. A positive number means the player whose name is the column title leads the player whose name is the row title. A negative number means the opposite.
 - ex: Player A finishes 1st and Player B finishes 3rd. Player A is credited with 2 Gap Points relative to Player B. Player B is debited 2 Gap Points relative to Player A.
 
-<table><caption>Example Standings</caption><tr><th>Rk</th><th>Nm</th><th>#</th><th>WP</th>
+<table class="table"><caption>Example Standings</caption><tr><th>Rk</th><th>Nm</th><th>#</th><th>WP</th>
 
  <th>1</th>
 
@@ -174,6 +174,8 @@ The basic structure of the site allows you to create a league. The league has lo
 As of 2012 the system has collected over 1000 races.
 
 EDIT: 2013-05-12. I've taken down the GAE app. I broke it while [extracting its historical data]({% post_url 2013-05-12-exfiltrating-mario-kart-data-from-google-app-engine %}).
+
+EDIT: 2016-01-04. I've done [some analysis]({% post_url 2016-01-04-double-dash-analysis-part-1 %}) on the extracted data.
 
   [0]: http://en.wikipedia.org/wiki/Mario_Kart:_Double_Dash%E2%80%BC
   [1]: http://babyparkdd.appspot.com/
