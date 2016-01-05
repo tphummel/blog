@@ -175,6 +175,8 @@ As of 2012 the system has collected over 1000 races.
 
 EDIT: 2013-05-12. I've taken down the GAE app. I broke it while [extracting its historical data]({% post_url 2013-05-12-exfiltrating-mario-kart-data-from-google-app-engine %}).
 
+EDIT: 2016-01-04. I've done [some analysis]({% post_url 2016-01-04-double-dash-analysis-part-1 %}) on the extracted data.
+
   [0]: http://en.wikipedia.org/wiki/Mario_Kart:_Double_Dash%E2%80%BC
   [1]: http://babyparkdd.appspot.com/
   [2]: https://github.com/tphummel/gaej-kart
