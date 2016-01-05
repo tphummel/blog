@@ -4,7 +4,7 @@ title: Double Dash Analysis 2010-2013 Part I
 tags: [code, sql, kart]
 ---
 
-I [successfully exported][0] the [results][1] of 1,101 [Mario Kart: Double Dash!!][2] races dating from the years 2010 through 2013. In this first post, I'll look at general findings that might be of interest to fans of the game.
+A few years ago, I [successfully exported][0] the [results][1] of 1,101 [Mario Kart: Double Dash!!][2] races dating from the years 2010 through 2013. In this first post, I'll look at general findings that might be of interest to fans of the game.
 
 ## Intro
 
@@ -21,7 +21,7 @@ With `q` installed and the csv files at hand, I could begin digging. The queries
 
 ## Overall
 
-There are 16 courses in MKDD. Here is the distribution of the 1,101 matches listed in order the courses appear in the game.
+There are 16 courses in MKDD. Here is the distribution of the 1,101 races listed in the order they appear in the game.
 
 __Course Distribution__
 
@@ -111,9 +111,9 @@ __Most Common Drivers__ (min. 100 races)
 {% endfor %}
 </tbody></table>
 
-**Toadette**, **Diddy Kong**, **Toad**, **Koopa**, **Browser Jr.**, and **Paratroopa** were picked in all 500 races. Beyond those, the strategies vary. It is interesting to see you were better off having the heavyweight **Waluigi** in your kart than lightweights Bowser Jr. or Paratroopa.
+**Toadette**, **Diddy Kong**, **Toad**, **Koopa**, **Browser Jr.**, and **Paratroopa** were picked in all 500 races. Beyond those, the strategies vary. It is interesting to see you may be better off having the heavyweight **Waluigi** in your kart than lightweights Bowser Jr. or Paratroopa.
 
-Double Dash's title feature is having two characters in each kart. Each could carry one item and they could be rotated between the front and rear seats. Looking at common combinations adds additional color.
+Double Dash's title feature is having two characters in each kart. Each character can carry one item and they are rotated between the front and rear seats. Looking at common combinations adds additional color.
 
 __Most Common Driver Pairs__ (min. 50 races)
 
