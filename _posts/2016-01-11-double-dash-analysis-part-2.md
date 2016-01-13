@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Double Dash 2010-13 Part 2
-tags: [code, sql, kart, video-games]
+tags: [kart, video-games]
 ---
 
 Following [part 1][0] last week, this writeup will mention the names of the friends I played the 1,101 races of [Mario Kart: Double Dash!!][1] with. With that, it probably isn't as generally interesting to Mario Kart fans, with the exception maybe of the scoring methodology. Also see [the previous post][0] for backstory on tooling and data.
