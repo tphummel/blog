@@ -1,5 +1,8 @@
 safe:        false
 
+url:                 https://tomhummel.com
+baseurl:             ''
+
 source:      .
 destination: ./_site
 plugins_dir:     ./_plugins
