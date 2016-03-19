@@ -6,7 +6,7 @@ before_install:
   - sudo apt-get install -y tree
 
 # assumes gems in Gemfile have been installed already
-script: bundle exec jekyll build && bundle exec htmlproof ./_site --href-ignore /^http:\/\/www\.baseball\-/,/^http:\/\/substack\.net/,/^https:\/\/.tomhummel.com\/tag/ && tree -a ./_site
+script: bundle exec jekyll build && bundle exec htmlproof ./_site --href-ignore /^http:\/\/www\.baseball\-/,/^http:\/\/substack\.net/,/^https:\/\/tomhummel\.com\/tag/ && tree -a ./_site
 
 env:
   global:
