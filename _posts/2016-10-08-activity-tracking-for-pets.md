@@ -21,7 +21,7 @@ There are some companies making activity trackers for dogs:
 - [whistle](http://www.whistle.com/): $80 + $95/year. 10-day battery
 - [voyce](http://voyce.com/): $200 + $95/year. 7-day battery
 
-The exact models, features, and pricing details aren't important. I'll summarize by saying the price points are higher than my budget, there are features beyond my scope, and maybe most importantly, the battery life is too short.
+The exact devices, features, and pricing details aren't important. I'll summarize by saying the price points are higher than my budget, there are features beyond my scope, and maybe most importantly, the battery life is too short.
 
 # My Solution
 
@@ -46,7 +46,7 @@ The following steps I did for **each** of my two dogs:
 - Fitbit devices are intended for humans. The step count for a dog isn't useful for comparing to the step count for a human. It is most useful for day to day comparisons for a single dog.
 - The Fitbit Zip states battery life is "up to six months". In my experience with my dogs, the battery life has been around two months per coin cell.
 - Put your computer in a central place where your dogs tend to hang out. This will improve the automatic data syncing.
-- Make sure if your computer loses power that you boot it once the power returns. Otherwise auto-syncing won't resume.
+- Make sure if your computer loses power that you boot it once the power returns. Otherwise auto-syncing won't continue
 - Fitbit will send you emails when a Zip battery is running low.
 - Using the Mac OSX Fitbit app, you can be logged in to two accounts at once. Feedback from the app isn't very clear about this. But it works.
 
@@ -58,4 +58,4 @@ With the steps above, I have my dogs tracking their own daily activity. They syn
 \* Creating and managing multiple accounts for the same service can be a little tricky. IFTTT doesn't allow you to invoke a single channel more than once, which is why we are creating multiple accounts. Two tips help smooth this out:
 
 1. Modern email providers will accept [address aliases](https://support.google.com/mail/answer/12096?hl=en). You can create multiple accounts for a service under distinct email addresses that all route to your single email inbox. An example would be tom@gmail.com, tom+spot@gmail.com, tom+fido@gmail.com.
-2. use a password management tool to help you manage these many accounts without repeating passwords, storing them insecurely, or choosing passwords that are too simple.
+2. use a password management tool to help you manage these accounts without repeating passwords, storing them insecurely, or choosing passwords that are too simple.
