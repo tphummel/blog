@@ -35,7 +35,7 @@ The following steps I did for **each** of my two dogs:
 
 1. sign up for a Fitbit user account on behalf* of your dog.
 1. power on and register a Zip device to this new account.
-1. sign up for an [IFTTT](https://ifttt.com) account on behalf of your dog.
+1. sign up for an [IFTTT](https://ifttt.com) account on behalf* of your dog.
 1. enable the [Google Drive Channel](https://ifttt.com/google_drive) on IFTTT.
 1. enable the [Fitbit Channel](https://ifttt.com/fitbit) on IFTTT.
 1. activate a [Fitbit -> Spreadsheet Recipe](https://ifttt.com/recipes/472840-log-dog-activity-to-google-sheets) on IFTTT.
