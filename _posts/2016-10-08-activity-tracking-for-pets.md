@@ -41,6 +41,12 @@ The following steps I did for **each** of my two dogs:
 1. activate a [Fitbit -> Spreadsheet Recipe](https://ifttt.com/recipes/472840-log-dog-activity-to-google-sheets) on IFTTT.
 1. duct tape the Fitbit Zip to your dog's collar
 
+# Results
+
+![Dog Activity Spreadsheet](https://i.imgur.com/gkktQa6l.png "Dog Activity Spreadsheet")
+
+![Fitbit Leaderboard](https://i.imgur.com/xgdSH1fl.png "Fitbit Leaderboard")
+
 # Caveats
 
 - Fitbit devices are intended for humans. The step count for a dog isn't useful for comparing to the step count for a human. It is most useful for day to day comparisons for a single dog.
@@ -53,10 +59,6 @@ The following steps I did for **each** of my two dogs:
 # Summary
 
 With the steps above, I have my dogs tracking their own daily activity. They sync the data to the internet whenever they sit in the living room for a few minutes. IFTTT sends daily summaries for each dog into a row in a Google Sheet. I get emailed whenever one of their batteries is running low. When that happens, I cut the duct tape, replace the coin battery, then re-tape it.
-
-![Dog Activity Spreadsheet](https://i.imgur.com/gkktQa6l.png "Dog Activity Spreadsheet")
-
-![Fitbit Leaderboard](https://i.imgur.com/xgdSH1fl.png "Fitbit Leaderboard")
 
 ---
 \* Creating and managing multiple accounts for the same service can be a little tricky. IFTTT doesn't allow you to invoke a single channel more than once, which is why we are creating multiple accounts. Two tips help smooth this out:
