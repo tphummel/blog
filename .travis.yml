@@ -8,6 +8,7 @@ addons:
       - jq
 
 before_script:
+  - jq --version
   - make build.json
 
 # assumes gems in Gemfile have been installed already
