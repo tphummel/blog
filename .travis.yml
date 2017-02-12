@@ -5,7 +5,8 @@ rvm:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -y tree
-  - sudo apt-get install jq
+  - sudo wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O /usr/local/bin/jq
+  - sudo chmod o+x /usr/local/bin/jq
 
 before_script:
   - jq --version
