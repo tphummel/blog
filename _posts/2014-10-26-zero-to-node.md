@@ -22,7 +22,7 @@ Once the terminal window appears, type `node -v`. If the node.js installation su
 
 Much like the terminal, developers spend a large portion of their time editing text files. Text editors are a personal and sometimes divisive topic across communities. Again, selecting and customizing an editor is outside the scope of what we're doing right now.
 
-A good one to start with would be [textmate](http://macromates.com/download) or [sublime](http://www.sublimetext.com/), or the default editor that comes with OSX, TextEdit, which is available in your "Applications" directory.
+A good one to start with would be [textmate](http://macromates.com/download) or [sublime](https://www.sublimetext.com/), or the default editor that comes with OSX, TextEdit, which is available in your "Applications" directory.
 
 These simple editors behave much like the office applications you may already be familiar with. Creating, opening, and saving files is what you will primarily be doing.
 
