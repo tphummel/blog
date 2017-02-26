@@ -19,7 +19,7 @@ There are some companies making activity trackers for dogs:
 
 - [fitbark](https://www.fitbark.com/): $60, no subscription. 14-day battery
 - [whistle](http://www.whistle.com/): $80 + $95/year. 10-day battery
-- [voyce](http://voyce.com/): $200 + $95/year. 7-day battery
+- voyce: $200 + $95/year. 7-day battery
 
 The exact devices, features, and pricing details aren't important. I'll summarize by saying the price points are higher than my budget, there are features beyond my scope, and maybe most importantly, the battery life is too short.
 
