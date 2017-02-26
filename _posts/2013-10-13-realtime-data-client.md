@@ -18,7 +18,7 @@ These visualizations could be on a second screen or tablet for the group to see 
 
 After a new match is validated and saved, I took each player's individual performance and published the details to a [redis pub-sub][2] channel called "tetris:performances". This could allow for a range of consumers each reacting to new matches in different ways.
 
-When a new performance arrives I emit the details to any connected [socket.io][3] clients.
+When a new performance arrives I emit the details to any connected socket.io clients.
 
 The first web client I made was a [d3][4] scatterplot.
 
@@ -39,6 +39,5 @@ More web clients consuming the websocket events. Or a dashboard of graphics each
   [0]: https://github.com/tphummel/tetris-db
   [1]: /2011/01/01/tetris-primer/
   [2]: http://redis.io/topics/pubsub
-  [3]: http://socket.io/
   [4]: http://d3js.org/
   [5]: https://github.com/tphummel/socket-viz
