@@ -30,4 +30,4 @@ I wrote an [npm][1] [module][2] for getting a list of these trips and the detail
   [0]: http://www.waze.com/
   [1]: http://npmjs.org/
   [2]: https://npmjs.org/package/waze
-  [3]: https://github.com/tphummel/node-waze/blob/master/example/top-speed.js
+  [3]: https://github.com/tphummel/junk/blob/master/node-waze/example/top-speed.js
