@@ -68,7 +68,7 @@ Support more sites such as Yahoo!, ESPN, CBS
   [3]: https://www.digitalocean.com/
   [4]: http://matschaffer.github.io/knife-solo/
   [5]: http://www.capistranorb.com/
-  [6]: https://github.com/tphummel/app-base-lnmn
+  [6]: https://github.com/tphummel/junk/tree/master/app-base-lnmn
   [7]: https://nodejs.org
   [8]: http://coffeescript.org
   [9]: http://browserify.org/
