@@ -10,7 +10,7 @@ before_install:
 
 before_script:
   - jq --version
-  - make build.json
+  - make ci.json
 
 # assumes gems in Gemfile have been installed already
 script:
