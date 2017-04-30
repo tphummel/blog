@@ -17,6 +17,7 @@ The app had also been hosted in a few other places in the past:
 - <del>http://tphummel.byethost6.com/tnt/</del>
 - <del>http://tnt.tphum.us/</del>
 - <del>http://tetris.tomhummel.com/</del>
+- <del>http://tetris.tmhmml.com/</del>
 
 ### Specifications
 
@@ -127,7 +128,7 @@ Highest Lines per Second Ratio, 4P Only, All-Time (as of 12/5/2013)
 </pre>
 
   [0]: http://en.wikipedia.org/wiki/The_New_Tetris
-  [1]: http://tetris.tmhmml.com/
+  [1]: https://tetris-db.tphum.com/
   [2]: https://github.com/tphummel/tetris-db
   [3]: https://github.com/tphummel/tetris-report
   [4]: http://tetris.wikia.com/wiki/Square_Platforming
