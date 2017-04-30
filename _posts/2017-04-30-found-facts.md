@@ -4,7 +4,7 @@ title: Found Facts
 tags: [qs]
 ---
 
-Everyday we leave a wake of data behind us. Generally, you would you would assume this data is digital: things like pageviews, dns queries, retweets. Data thrown off by the actions we take each day within the communities we belong to.
+Everyday we leave a wake of data behind us. Generally, you would assume this data is digital: things like pageviews, dns queries, retweets. Data thrown off by the actions we take each day within the communities we belong to.
 
 But people also leave a wake of physical data behind them, usually by accident.
 
@@ -31,4 +31,4 @@ The customer scanned the card's chip rather than swiping the magnetic strip. The
 
 ## Summary
 
-There is information swirling around us, everywhere we go. Sometimes it takes the form of radio waves and sometimes it is physical piece of paper under your shoe.
+There is information swirling around us, everywhere we go. Sometimes it takes the form of radio waves and sometimes it is a physical piece of paper under your shoe.
