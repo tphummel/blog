@@ -4,6 +4,13 @@ title: 2016 Personal Data Report
 tags: [year-report, qs]
 ---
 
+# edit: there is a newer version of this report.
+
+[https://data.tomhummel.com/report/2016/](https://data.tomhummel.com/report/2016/)
+
+
+---
+
 ## fitbit step tracking
 ### totals
 
