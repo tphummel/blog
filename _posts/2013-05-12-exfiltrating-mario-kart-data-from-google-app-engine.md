@@ -70,7 +70,7 @@ Looks like my only option is down to [appcfg.py bulkloader][9] ...
 
 Thank my lucky stars I'm able to deploy and get ```/remote_api``` working. I'm actually shocked that works for me at this point.
 
-The one tricky part about customizing the auto-generated ```bulkoader.yaml``` is dealing with the nested key objects which I used for primary keys and in a couple places as foreign keys. I found [some][12] [good][10] [links][11] on how to transform deep keys into their constituent pieces. My [final result][13] worked nicely.
+The one tricky part about customizing the auto-generated ```bulkoader.yaml``` is dealing with the nested key objects which I used for primary keys and in a couple places as foreign keys. I found some [good][12] [links][10] on how to transform deep keys into their constituent pieces. My [final result][13] worked nicely.
 
 And just like that I have the [data][14] out. I wish I had just started with appcfg.py from the beginning. There were 1101 total races made up of 3248 individual performances.
 
@@ -85,7 +85,6 @@ I think the lesson here is that if I'm going to use a PaaS I can't create someth
   [8]: https://developers.google.com/appengine/docs/java/datastore/jdo/queries
   [9]: https://developers.google.com/appengine/docs/python/tools/uploadingdata
   [10]: http://stackoverflow.com/questions/11542669/google-app-engine-bulkloader-deep-key
-  [11]: http://longsystemit.com/javablog/?p=23
   [12]: http://stackoverflow.com/questions/6817626/where-are-the-reference-pages-of-the-google-app-engine-bulkloader-transform
   [13]: https://github.com/tphummel/gaej-kart/blob/master/script/data/bulkloader.yaml
   [14]: https://github.com/tphummel/gaej-kart/tree/master/script/data/csv

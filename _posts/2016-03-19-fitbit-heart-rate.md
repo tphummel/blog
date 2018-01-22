@@ -4,7 +4,7 @@ title: Accessing Fitbit Heart Rate Data
 tags: [fitbit,oauth]
 ---
 
-In December 2015, I got a [Fitbit Charge HR](https://www.fitbit.com/chargehr) health tracker. It is a [great device](http://www.consumerreports.org/fitness-trackers/taking-the-pulse-of-fitbits-contested-heart-rate-monitors/) despite [people saying otherwise](http://www.theverge.com/2016/1/6/10724270/fitbit-lawsuit-charge-hr-surge-incomplete-heart-rate-tracking). I have enjoyed the reporting built into the Fitbit mobile and web apps. However, directly accessing your personal health data feels like a fundamental part of fitness trackers and wearable technology.
+In December 2015, I got a [Fitbit Charge HR](https://www.fitbit.com/chargehr) health tracker. It is a [great device](https://www.consumerreports.org/fitness-trackers/taking-the-pulse-of-fitbits-contested-heart-rate-monitors/) despite [people saying otherwise](http://www.theverge.com/2016/1/6/10724270/fitbit-lawsuit-charge-hr-surge-incomplete-heart-rate-tracking). I have enjoyed the reporting built into the Fitbit mobile and web apps. However, directly accessing your personal health data feels like a fundamental part of fitness trackers and wearable technology.
 
 ## Problem
 I want to take possession of the intraday heart rate time series data from my fitness tracker.
