@@ -27,7 +27,7 @@ I wrote an [npm][1] [module][2] for getting a list of these trips and the detail
     | 2013-11-11 19:21:17 19:22:34 a minute      I-405 S,Culver City                            1478   69   |
     +-------------------------------------------------------------------------------------------------------+
 
-  [0]: http://www.waze.com/
-  [1]: http://npmjs.org/
+  [0]: https://www.waze.com/
+  [1]: https://npmjs.org/
   [2]: https://npmjs.org/package/waze
   [3]: https://github.com/tphummel/junk/blob/master/node-waze/example/top-speed.js

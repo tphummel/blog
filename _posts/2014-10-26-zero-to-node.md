@@ -28,7 +28,7 @@ These simple editors behave much like the office applications you may already be
 
 ### 4. going to school
 
-There are a number of excellent, self-guided lessons or "workshoppers" available at [nodeschool](http://nodeschool.io/). Start with the lesson titled "javascripting". With steps 1, 2, and 3 completed above, we've got everything we need to dive in.
+There are a number of excellent, self-guided lessons or "workshoppers" available at [nodeschool](https://nodeschool.io/). Start with the lesson titled "javascripting". With steps 1, 2, and 3 completed above, we've got everything we need to dive in.
 
 In your terminal, type `npm install -g javascripting` and press `return`. Once that completes, you'll have the `javascripting` command available in your terminal.
 
