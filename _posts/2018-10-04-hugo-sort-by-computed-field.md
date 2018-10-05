@@ -54,6 +54,7 @@ $.Scratch.Add "enriched" (slice (dict "page" . "speed" $speed))
 As we iterate over each page in my site, I compute the `$speed` value and then assemble a [slice](https://gohugo.io/functions/slice/) of [dicts](https://gohugo.io/functions/dict/). Each dict in the slice has two fields: `page` and `speed`. Page holds the entire page object so we can access it later once we've sorted the slice. More information on the context dot `.` can be found on [another excellent post](https://regisphilibert.com/blog/2018/02/hugo-the-scope-the-context-and-the-dot/).
 
 Then we range over the sorted slice:
+
 ```
 range sort ($.Scratch.Get "enriched") ".speed" "desc"
 ```
