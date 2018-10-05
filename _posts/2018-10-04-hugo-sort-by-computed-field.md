@@ -39,6 +39,7 @@ Most complex things in Hugo I've found can be solved with [scratch](https://gohu
 
 my list template:
 
+{% raw %}
 ```
 {{ define "main" }}
 <h2>{{.Title}}</h2>
@@ -90,6 +91,7 @@ Then we range over the sorted slice:
 ```
 {{ range sort ($.Scratch.Get "enriched") ".speed" "desc"}}
 ```
+{% endraw %}
 
 This `($.Scratch.Get "enriched")` accesses the slice containing all of the dicts we built above. And we are sorting by a field on the dict `.speed`, which contains the computed speed value.
 
