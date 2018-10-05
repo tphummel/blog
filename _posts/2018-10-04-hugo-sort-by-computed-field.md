@@ -37,61 +37,26 @@ Most complex things in Hugo I've found can be solved with [scratch](https://gohu
 
 ## Solution
 
-my list template:
-
-{% raw %}
-```
-{{ define "main" }}
-<h2>{{.Title}}</h2>
-
-<div>{{.Content}}</div>
-
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Distance (miles)</th>
-    <th>Time (minutes)</th>
-    <th>Speed (miles/min)</th>
-  </tr>
-
-{{ range .Data.Pages }}
-  {{ $speed := div .Params.distance_miles .Params.time_minutes }}
-  {{ $.Scratch.Add "enriched" (slice (dict "page" . "speed" $speed)) }}
-{{ end }}
-
-{{ range sort ($.Scratch.Get "enriched") ".speed" "desc"}}
-  <tr>
-    <td><a href="{{ .page.RelPermalink }}">{{ .page.Title }}</a></td>
-    <td>{{ .page.Params.distance_miles }}</td>
-    <td>{{ .page.Params.time_minutes }}</td>
-    <td>{{ lang.NumFmt 2 .speed }}</td>
-  </tr>
-{{ end }}
-
-</table>
-{{ end }}
-```
-
-This template renders an HTML table with a row per page. I'll cover the key parts of the solution.
+My [list template](https://github.com/tphummel/laps.run/blob/order-by-computed-poc/order-by-computed-poc/layouts/_default/list.html) renders an HTML table with a row per page. I'll cover the key parts of the solution.
 
 My speed calculation:
-```
-{{ $speed := div .Params.distance_miles .Params.time_minutes }}
-```
-
-My intermediate structure to hold all pages, each with a computed speed value.
 
 ```
-{{ $.Scratch.Add "enriched" (slice (dict "page" . "speed" $speed)) }}
+$speed := div .Params.distance_miles .Params.time_minutes
+```
+
+My intermediate structure to hold all pages, each with a computed speed value:
+
+```
+$.Scratch.Add "enriched" (slice (dict "page" . "speed" $speed))
 ```
 
 As we iterate over each page in my site, I compute the `$speed` value and then assemble a [slice](https://gohugo.io/functions/slice/) of [dicts](https://gohugo.io/functions/dict/). Each dict in the slice has two fields: `page` and `speed`. Page holds the entire page object so we can access it later once we've sorted the slice. More information on the context dot `.` can be found on [another excellent post](https://regisphilibert.com/blog/2018/02/hugo-the-scope-the-context-and-the-dot/).
 
 Then we range over the sorted slice:
 ```
-{{ range sort ($.Scratch.Get "enriched") ".speed" "desc"}}
+range sort ($.Scratch.Get "enriched") ".speed" "desc"
 ```
-{% endraw %}
 
 This `($.Scratch.Get "enriched")` accesses the slice containing all of the dicts we built above. And we are sorting by a field on the dict `.speed`, which contains the computed speed value.
 
