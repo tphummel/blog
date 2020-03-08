@@ -4,12 +4,29 @@ title: Things I Look Up
 tags: [reference]
 ---
 
+# bash script boilerplate
+
+```
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+IFS=$'\n\t'
+
+main(){
+
+}
+
+main
+```
+
 # cheatsheets
-- k8s: https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/kubernetes.sh
-- Nodejs: https://github.com/LeCoupa/awesome-cheatsheets/blob/master/backend/node.js
-- Docker: https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/docker.sh
-- Php: https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/php.php
-- Bash: https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/bash.sh
+- [k8s](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/kubernetes.sh)
+- [Nodejs](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/backend/node.js)
+- [Docker](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/docker.sh)
+- [Php](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/php.php)
+- [Bash](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/bash.sh)
 
 # vpn route issue
 ```
@@ -114,7 +131,7 @@ journalctl -f -u docker --since=1hr
 
 # Tar, untar
 
-https://tarball.guru/
+[https://tarball.guru/](https://tarball.guru/)
 
 # create tarball of single file
 
@@ -198,8 +215,7 @@ EOF
 - 2NF: 1NF and every non-key column depends on the entire candidate key. 
 - 3NF: 2NF and every non-key column must not provide a fact about another non-key column
 
-Sql join reference. Venn diagrams:
-https://twitter.com/davidcrawshaw/status/976525292096446464/photo/1
+Sql join reference. [Venn diagrams](https://twitter.com/davidcrawshaw/status/976525292096446464/photo/1)
 
 # restart mcafee endpoint protection
 ```
@@ -208,7 +224,7 @@ for i in $(ps aux | grep "[M]cAfee" | awk '{print $2}'); do sudo kill -9 $i; don
 
 # more links
 
-- https://explainshell.com/
-- https://crontab.guru/
-- https://chmod-calculator.com/
-- http://www.dpriver.com/pp/sqlformat.htm
+- [https://explainshell.com/](https://explainshell.com/)
+- [https://crontab.guru/](https://crontab.guru/)
+- [https://chmod-calculator.com/](https://chmod-calculator.com/)
+- [http://www.dpriver.com/pp/sqlformat.htm](http://www.dpriver.com/pp/sqlformat.htm)
