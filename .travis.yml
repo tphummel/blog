@@ -1,6 +1,6 @@
 before_install:
-  - wget https://github.com/gohugoio/hugo/releases/download/v0.66/hugo_0.66_Linux-64bit.tar.gz
-  - tar xzvf hugo_0.66_Linux-64bit.tar.gz
+  - wget https://github.com/gohugoio/hugo/releases/download/v0.66.0/hugo_0.66.0_Linux-64bit.tar.gz
+  - tar xzvf hugo_0.66.0_Linux-64bit.tar.gz
   - sudo mv hugo /usr/local/bin/
   - sudo wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O /usr/local/bin/jq
   - sudo chmod o+x /usr/local/bin/jq
