@@ -1,31 +1,23 @@
-language: ruby
-rvm:
-  - 2.1
-
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y tree
+  - wget https://github.com/gohugoio/hugo/releases/download/v0.34/hugo_0.34_Linux-64bit.tar.gz
+  - tar xzvf hugo_0.34_Linux-64bit.tar.gz
+  - sudo mv hugo /usr/local/bin/
   - sudo wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O /usr/local/bin/jq
   - sudo chmod o+x /usr/local/bin/jq
 
 before_script:
+  - hugo version
   - jq --version
-  - make ci.json
 
-# assumes gems in Gemfile have been installed already
 script:
-  - bundle exec jekyll build
-  - tree -a ./_site
-
-env:
-  global:
-  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true # speeds up installation of html-proofer
+  - hugo
+  - make ci.json
 
 deploy:
   provider: s3
   access_key_id: $AWS_ACCESS_KEY_ID
   secret_access_key: $AWS_SECRET_ACCESS_KEY
-  local_dir: _site
+  local_dir: public
   bucket: "tomhummel.com"
   skip_cleanup: true
   on:

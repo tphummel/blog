@@ -10,4 +10,4 @@ ci.json:
 			git_pull_request: env.TRAVIS_PULL_REQUEST, \
 			git_pull_request_branch: env.TRAVIS_PULL_REQUEST_BRANCH, \
 			git_pull_request_sha: env.TRAVIS_PULL_REQUEST_SHA, \
-			git_pull_request_slug: env.TRAVIS_PULL_REQUEST_SLUG}" > ci.json
+			git_pull_request_slug: env.TRAVIS_PULL_REQUEST_SLUG}" > public/ci.json
