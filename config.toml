@@ -60,16 +60,12 @@ googleAnalytics = "UA-23840969-1"
     url = "https://twitter.com/tphummel"
 
   [[params.social]]
-    name = "instagram"
-    url = "https://instagram.com/tphummel"
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/tomphummel/"
 
   [[params.social]]
     name = "github"
-    url = "https://github.com/tphummel"
-
-  [[params.social]]
-    name = "linkedin"
-    url = "https://github.com/tphummel"
+    url = "https://github.com/tphummel/"
 
 [menu]
 
