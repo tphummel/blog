@@ -36,7 +36,7 @@ googleAnalytics = "UA-23840969-1"
   # images = [""]
   themeColor = "#494f5c"
 
-  homeSubtitle = "Subtitle"
+  homeSubtitle = ""
   footerCopyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   # bgImg = ""  # Homepage background-image URL
 
@@ -77,4 +77,9 @@ googleAnalytics = "UA-23840969-1"
   [[menu.main]]
     name = "About"
     url = "about/"
+    weight = 30
+
+  [[menu.main]]
+    name = "Data"
+    url = "https://data.tomhummel.com"
     weight = 20
