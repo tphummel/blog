@@ -12,7 +12,7 @@ An excerpt from [Once a Runner by John L. Parker, Jr.][0]:
 
 > Then he would simply turn and face them. He would take on anyone like that, he thought. He would take on Muhammad Ali, so long as he could direct the preliminaries.
 
-> Cassidy knew very well that he could take men, otherwise strong and brave men, to places they had never been before. Places where life and death overlapped in surreal valleys of muscle gloom and heart despair, where one begins to realize once more that nothing really matters at all and that stopping (death?) is all; where all men finally get the slick skin of civilization off and see that soft pink glow inside that tells you - in both cunnilingus and bullet wounds - that there are no secrets.
+> Cassidy knew very well that he could take men, otherwise strong and brave men, to places they had never been before. Places where life and death overlapped in surreal valleys of muscle gloom and heart despair, where one begins to realize once more that nothing really matters at all and that stopping (death?) is all; where all men finally get the slick skin of civilization off and see that soft pink glow inside that tells you - in both c------- and bullet wounds - that there are no secrets.
 
   [0]: http://en.wikipedia.org/wiki/Once_a_Runner
   [1]: http://en.wikipedia.org/wiki/Frank_Shorter
