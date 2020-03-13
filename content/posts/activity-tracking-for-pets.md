@@ -1,5 +1,8 @@
 ---
-layout: post
+date: 2016-10-08T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Activity Tracking for Pets
 tags: [fitbit,ifttt,qs]
 ---
