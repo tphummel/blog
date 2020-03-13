@@ -1,9 +1,3 @@
 # License
 
-The following directories and their contents are Copyright Tom Hummel. You may not reuse anything therein without my permission:
-
-- _posts/
-- _drafts/
-- assets/
-
-All other directories and files are MIT Licensed.
+The directories: content/, _posts/, and _drafts/ are Copyright Tom Hummel and licensed [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). All other directories and files are MIT Licensed.
