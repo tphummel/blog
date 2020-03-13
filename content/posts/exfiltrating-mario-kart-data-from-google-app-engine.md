@@ -1,7 +1,10 @@
 ---
-layout: post
-title: Exfiltrating Mario Kart Data from Google App Engine
-tags: [code, kart, video-games]
+title: "Exfiltrating Mario Kart Data from Google App Engine"
+date: 2013-05-12T16:03:13-07:00
+draft: false
+toc: false
+images:
+tags: [kart, video-games]
 ---
 
 In our most recent [Mario Kart][3] multiplayer session, there was a data error in which one round didn't save correctly. If this happens in [tetris][0] it is a non-issue as I just go into sql and correct it (normally user error). The data for Mario Kart however is stored in the Google App Engine datastore. This data is very cumbersome to query and update by comparison.
@@ -14,9 +17,9 @@ In doing this, I realized that I haven't deployed any code to GAE since 2011. I 
 
 I found some application called GoogleAppEngineLauncher that is installed on my Mac. I have python 2.6 and apparently 2.7 is required.
 
-{% highlight sh %}
+```
 sudo brew install python
-{% endhighlight %}
+```
 
 I feed the new python 2.7 binary into the app preferences. none of this is ringing a bell.
 
@@ -30,9 +33,9 @@ Some docs i found useful:
 
 Then import my project.
 
-{% highlight sh %}
+```
 git clone https://github.com/tphummel/gaej-kart
-{% endhighlight %}
+```
 
 then in Eclipse: menu > file > import
 
@@ -48,9 +51,9 @@ And we're up on ```localhost:8888```. In my browser I try to load ```/app/home``
 
 Eclipse is showing an error. It was from before I got the local server up. Apparently not bad enough to prevent building.
 
-{% highlight sh %}
+```
 Unbound classpath container: 'App Engine SDK [missing]'....
-{% endhighlight %}
+```
 
 Right-click the project folder and go to Build Path > Configure Build Path. In the Libraries tab I can see the list of files/dirs in my project build path. i can see all my external jars, the app engine sdk, and my system jre. but there is also a second app engine sdk entry which is red and says "unbound" or some such nonsense. I remove that one. relaunch the project and now /app/home loads correctly. whew.
 
@@ -60,9 +63,9 @@ After two attempts ([using Extent and using the JDO cursor][8]) I can't seem to 
 
 In some cases I get a 500 error with this text:
 
-{% highlight sh %}
+```
 This means that it either hasnt been enhanced, or that the enhanced version of the file is not in the CLASSPATH (or is hidden by an unenhanced version), or the Meta-Data/annotations for the class are not found.
-{% endhighlight %}
+```
 
 Ok. I think GAE has changed pretty drastically while I've been away. I'm sure the act of pushing alone has broken the app beyond saving at this point. I just need to get the data out.
 
@@ -76,8 +79,8 @@ And just like that I have the [data][14] out. I wish I had just started with app
 
 I think the lesson here is that if I'm going to use a PaaS I can't create something, walk away from it for two years, and expect everything to be peachy when I try to make a change (however small I may think it is). And I don't think I will be choosing to use Java anytime soon, given the option. All the same adios GAE we had a good run.
 
-  [0]: /2011/01/01/tetris-primer/
-  [3]: /2011/01/01/mario-kart-primer/
+  [0]: {{< ref tetris-primer >}}
+  [3]: {{< ref mario-kart-primer >}}
   [4]: https://developers.google.com/appengine/docs/java/gettingstarted/installing
   [5]: https://developers.google.com/appengine/docs/java/tools/eclipse
   [6]: https://developers.google.com/eclipse/docs/existingprojects
@@ -86,5 +89,5 @@ I think the lesson here is that if I'm going to use a PaaS I can't create someth
   [9]: https://developers.google.com/appengine/docs/python/tools/uploadingdata
   [10]: http://stackoverflow.com/questions/11542669/google-app-engine-bulkloader-deep-key
   [12]: http://stackoverflow.com/questions/6817626/where-are-the-reference-pages-of-the-google-app-engine-bulkloader-transform
-  [13]: https://github.com/tphummel/gaej-kart/blob/master/script/data/bulkloader.yaml
-  [14]: https://github.com/tphummel/gaej-kart/tree/master/script/data/csv
+  [13]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/bulkloader.yaml
+  [14]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/csv

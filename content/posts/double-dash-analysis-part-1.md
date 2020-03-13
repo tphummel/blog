@@ -1,6 +1,9 @@
 ---
-layout: post
-title: Double Dash 2010-13 Part 1
+title: "Double Dash 2010-13 Part 1"
+date: 2016-01-04T16:03:13-07:00
+draft: false
+toc: false
+images:
 tags: [sql, kart, video-games]
 ---
 
@@ -25,20 +28,24 @@ There are 16 courses in MKDD. Here is the distribution of the 1,101 races listed
 
 __Course Distribution__
 
-<table class="table"><tbody>
-<tr>
-  {% for head in site.data.mkdd_global_course_dist[0] %}
-    <th>{{ head[0] }}</th>
-  {% endfor %}
-</tr>
-{% for row in site.data.mkdd_global_course_dist %}
-  <tr>
-  {% for cell in row %}
-    <td>{{ cell[1] }}</td>
-  {% endfor %}
-  </tr>
-{% endfor %}
-</tbody></table>
+|Course|Race Count|
+|--- |--- |
+|Luigi Circuit|37|
+|Peach Beach|37|
+|Baby Park|554|
+|Dry Dry Desert|37|
+|Mushroom Bridge|37|
+|Mario Circuit|37|
+|Daisy Cruiser|36|
+|Waluigi Stadium|36|
+|Sherbet Land|36|
+|Mushroom City|36|
+|Yoshi Circuit|36|
+|DK Mountain|36|
+|Wario Colosseum|37|
+|Dino Dino Jungle|37|
+|Bowser Castle|36|
+|Rainbow Road|36|
 
 ---
 
@@ -46,20 +53,25 @@ The 33 rounds (528 races) of two-player, grand prix, all-cup present an interest
 
 __Most Chaotic Courses__
 
-<table class="table"><tbody>
-<tr>
-  {% for head in site.data.mkdd_global_course_difficulty[0] %}
-    <th>{{ head[0] }}</th>
-  {% endfor %}
-</tr>
-{% for row in site.data.mkdd_global_course_difficulty %}
-  <tr>
-  {% for cell in row %}
-    <td>{{ cell[1] }}</td>
-  {% endfor %}
-  </tr>
-{% endfor %}
-</tbody></table>
+|Course|Races|1st|2nd|3rd|4th|5th|6th|7th|8th|Points|
+|--- |--- |--- |--- |--- |--- |--- |--- |--- |--- |--- |
+|Rainbow Road|66|30|14|8|5|6|1|1|1|501|
+|Waluigi Stadium|66|32|21|9|2|1|0|0|1|553|
+|Baby Park|66|31|24|6|3|2|0|0|0|556|
+|Mario Circuit|66|31|24|9|1|1|0|0|0|563|
+|Sherbet Land|66|30|28|6|1|1|0|0|0|567|
+|Dry Dry Desert|66|33|28|0|2|1|1|1|0|568|
+|DK Mountain|66|33|25|6|1|0|1|0|0|572|
+|Luigi Circuit|66|33|27|2|4|0|0|0|0|574|
+|Wario Colosseum|66|32|29|3|2|0|0|0|0|578|
+|Peach Beach|66|33|27|5|1|0|0|0|0|580|
+|Dino Dino Jungle|66|33|30|1|0|2|0|0|0|582|
+|Bowser Castle|66|32|30|4|0|0|0|0|0|584|
+|Mushroom Bridge|66|32|31|3|0|0|0|0|0|586|
+|Yoshi Circuit|66|33|31|1|0|1|0|0|0|587|
+|Mushroom City|66|33|30|3|0|0|0|0|0|588|
+|Daisy Cruiser|66|33|32|0|1|0|0|0|0|590|
+
 
 **Rainbow Road** is the most difficult course in the game. It has many naked turns and big jumps that can cause large time penalties particularly if you get caught back in the pack.
 
@@ -75,20 +87,15 @@ Unlike Drivers, Karts can appear multiple times in a single race. The **Barrel T
 
 __Most Frequent Kart Usage__ (min. 20 races)
 
-<table class="table"><tbody>
-<tr>
-  {% for head in site.data.mkdd_baby_kart_dist[0] %}
-    <th>{{ head[0] }}</th>
-  {% endfor %}
-</tr>
-{% for row in site.data.mkdd_baby_kart_dist %}
-  <tr>
-  {% for cell in row %}
-    <td>{{ cell[1] }}</td>
-  {% endfor %}
-  </tr>
-{% endfor %}
-</tbody></table>
+|Kart|Races|1st|2nd|3rd|4th|Points|Pts/Race|
+|--- |--- |--- |--- |--- |--- |--- |--- |
+|Barrel Train|889|299|236|190|164|2448|2.7537|
+|Toad Kart|556|104|141|166|145|1316|2.3669|
+|Green Fire|169|20|32|47|70|340|2.0118|
+|Waluigi Racer|113|21|24|23|45|247|2.1858|
+|Red Fire|109|29|33|30|17|292|2.6789|
+|Turbo Yoshi|60|7|11|14|28|117|1.95|
+|Toadette Kart|45|9|12|19|5|115|2.5556|
 
 ---
 
@@ -96,20 +103,17 @@ Since Drivers are unique in a given race, there is plenty of contention over who
 
 __Most Common Drivers__ (min. 100 races)
 
-<table class="table"><tbody>
-<tr>
-  {% for head in site.data.mkdd_baby_driver_dist[0] %}
-    <th>{{ head[0] }}</th>
-  {% endfor %}
-</tr>
-{% for row in site.data.mkdd_baby_driver_dist %}
-  <tr>
-  {% for cell in row %}
-    <td>{{ cell[1] }}</td>
-  {% endfor %}
-  </tr>
-{% endfor %}
-</tbody></table>
+|Driver|Races|1st|2nd|3rd|4th|Points|Pts/Race|
+|--- |--- |--- |--- |--- |--- |--- |--- |
+|Toadette|500|190|127|101|82|1425|2.85|
+|Diddy Kong|500|168|137|103|92|1381|2.762|
+|Toad|500|140|126|118|116|1290|2.58|
+|Koopa|500|124|123|127|126|1245|2.49|
+|Bowser Jr.|500|92|126|148|134|1176|2.352|
+|Paratroopa|500|92|122|156|130|1176|2.352|
+|Waluigi|300|60|80|72|88|712|2.3733|
+|Baby Luigi|241|51|56|63|71|569|2.361|
+|Baby Mario|238|57|65|56|60|595|2.5|
 
 **Toadette**, **Diddy Kong**, **Toad**, **Koopa**, **Browser Jr.**, and **Paratroopa** were picked in all 500 races. Beyond those, the strategies vary. It is interesting to see you may be better off having the heavyweight **Waluigi** in your kart than lightweights Bowser Jr. or Paratroopa.
 
@@ -117,26 +121,29 @@ Double Dash's title feature is having two characters in each kart. Each characte
 
 __Most Common Driver Pairs__ (min. 50 races)
 
-<table class="table"><tbody>
-<tr>
-  {% for head in site.data.mkdd_baby_drivers_dist[0] %}
-    <th>{{ head[0] }}</th>
-  {% endfor %}
-</tr>
-{% for row in site.data.mkdd_baby_drivers_dist %}
-  <tr>
-  {% for cell in row %}
-    <td>{{ cell[1] }}</td>
-  {% endfor %}
-  </tr>
-{% endfor %}
-</tbody></table>
+|Driver 1|Driver 2|Races|1st|2nd|3rd|4th|Points|Avg|
+|--- |--- |--- |--- |--- |--- |--- |--- |--- |
+|Bowser Jr.|Koopa|166|31|43|52|40|397|2.3916|
+|Diddy Kong|Toadette|145|63|45|19|18|443|3.0552|
+|Diddy Kong|Paratroopa|130|33|32|38|27|331|2.5462|
+|Diddy Kong|Koopa|124|40|31|30|23|336|2.7097|
+|Bowser Jr.|Paratroopa|95|11|22|37|25|209|2.2|
+|Baby Mario|Toadette|90|31|20|18|21|241|2.6778|
+|Baby Luigi|Toad|85|20|20|25|20|210|2.4706|
+|Toad|Waluigi|80|19|23|16|22|199|2.4875|
+|Bowser Jr.|Toadette|76|27|18|20|11|213|2.8026|
+|Koopa|Toad|75|22|26|14|13|207|2.76|
+|Bowser Jr.|Toad|65|17|16|16|16|164|2.5231|
+|Baby Mario|Paratroopa|58|5|17|22|14|129|2.2241|
+|Paratroopa|Toadette|56|18|16|14|8|156|2.7857|
+|Baby Mario|Toad|55|19|18|12|6|160|2.9091|
+|Baby Luigi|Toadette|50|19|11|10|10|139|2.78|
 
 Diddy Kong and Toadette were a monster team, finishing 1st or 2nd in 108 of 145 races they started.
 
-  [0]: {% post_url 2013-05-12-exfiltrating-mario-kart-data-from-google-app-engine %}
-  [1]: https://github.com/tphummel/gaej-kart/tree/master/script/data/csv
-  [2]: {% post_url 2011-01-01-mario-kart-primer %}
-  [3]: https://github.com/tphummel/gaej-kart/blob/master/script/data/README.md
+  [0]: {{< ref exfiltrating-mario-kart-data-from-google-app-engine >}}
+  [1]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/csv
+  [2]: {{< ref mario-kart-primer >}}
+  [3]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/README.md
   [4]: https://harelba.github.io/q/
-  [5]: https://github.com/tphummel/gaej-kart/blob/master/script/data/reports/README.md
+  [5]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/reports/README.md

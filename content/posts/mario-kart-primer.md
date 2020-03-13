@@ -1,6 +1,9 @@
 ---
-layout: post
-title: Kart Primer
+title: "Kart Primer"
+date: 2011-01-01T16:03:13-07:00
+draft: false
+toc: false
+images:
 tags: [kart, video-games]
 ---
 
@@ -25,139 +28,13 @@ Our Kart version of choice is [Mario Kart: Double Dash!!! for Gamecube][0]. The 
 - on a cluster standings view, you read the column below a player's name. A positive number means the player whose name is the column title leads the player whose name is the row title. A negative number means the opposite.
 - ex: Player A finishes 1st and Player B finishes 3rd. Player A is credited with 2 Gap Points relative to Player B. Player B is debited 2 Gap Points relative to Player A.
 
-<table class="table"><caption>Example Standings</caption><tr><th>Rk</th><th>Nm</th><th>#</th><th>WP</th>
-
- <th>1</th>
-
- <th>2</th>
-
- <th>3</th>
-
- <th>4</th>
-
- <th>Jer</th>
-
- <th>Tom</th>
-
- <th>Dan</th>
-
- <th>Nic</th>
-
- <th>JD</th>
-
- </tr>
-
- <tr> <td>1</td> <td>Jer</td> <td>40</td> <td>118</td>
-
- <td > 18 </td>
-
- <td > 9 </td>
-
- <td > 6 </td>
-
- <td > 7 </td>
-
- <td>na</td>
-
- <td>-16</td>
-
- <td>-10</td>
-
- <td>-26</td>
-
- <td>-20</td>
-
- </tr>
-
- <tr> <td>2</td> <td>Tom</td> <td>40</td> <td>108</td>
-
- <td > 12 </td>
-
- <td > 11 </td>
-
- <td > 10 </td>
-
- <td > 7 </td>
-
- <td>+16</td>
-
- <td>na</td>
-
- <td>-2</td>
-
- <td>-21</td>
-
- <td>-25</td>
-
- </tr>
-
- <tr> <td>3</td> <td>Dan</td> <td>40</td> <td>104</td>
-
- <td > 9 </td>
-
- <td > 12 </td>
-
- <td > 13 </td>
-
- <td > 6 </td>
-
- <td>+10</td>
-
- <td>+2</td>
-
- <td>na</td>
-
- <td>-11</td>
-
- <td>-17</td>
-
- </tr>
-
- <tr> <td>4</td> <td>Nic</td> <td>40</td> <td>89</td>
-
- <td > 6 </td>
-
- <td > 10 </td>
-
- <td > 11 </td>
-
- <td > 13 </td>
-
- <td>+26</td>
-
- <td>+21</td>
-
- <td>+11</td>
-
- <td>na</td>
-
- <td>-14</td>
-
- </tr>
-
- <tr> <td>5</td> <td>JD</td> <td>40</td> <td>81</td>
-
- <td > 5 </td>
-
- <td > 8 </td>
-
- <td > 10 </td>
-
- <td > 17 </td>
-
- <td>+20</td>
-
- <td>+25</td>
-
- <td>+17</td>
-
- <td>+14</td>
-
- <td>na</td>
-
- </tr>
-
-</table>
+|Rk|Nm|#|WP|1|2|3|4|Jer|Tom|Dan|Nic|JD|
+|--- |--- |--- |--- |--- |--- |--- |--- |--- |--- |--- |--- |--- |
+|1|Jer|40|118|18|9|6|7|na|-16|-10|-26|-20|
+|2|Tom|40|108|12|11|10|7|+16|na|-2|-21|-25|
+|3|Dan|40|104|9|12|13|6|+10|+2|na|-11|-17|
+|4|Nic|40|89|6|10|11|13|+26|+21|+11|na|-14|
+|5|JD|40|81|5|8|10|17|+20|+25|+17|+14|na|
 
 ### Software
 
@@ -173,12 +50,12 @@ The basic structure of the site allows you to create a league. The league has lo
 
 As of 2012 the system has collected over 1000 races.
 
-EDIT: 2013-05-12. I've taken down the GAE app. I broke it while [extracting its historical data]({% post_url 2013-05-12-exfiltrating-mario-kart-data-from-google-app-engine %}).
+EDIT: 2013-05-12. I've taken down the GAE app. I broke it while [extracting its historical data]({{< ref exfiltrating-mario-kart-data-from-google-app-engine >}}).
 
-EDIT: 2016-01-04. I've done [some analysis]({% post_url 2016-01-04-double-dash-analysis-part-1 %}) on the extracted data.
+EDIT: 2016-01-04. I've done [some analysis]({{< ref double-dash-analysis-part-1 >}}) on the extracted data.
 
-EDIT: 2016-01-11. I've done [even more analysis]({% post_url 2016-01-11-double-dash-analysis-part-2 %}) on the extracted data.
+EDIT: 2016-01-11. I've done [even more analysis]({{< ref double-dash-analysis-part-2 >}}) on the extracted data.
 
   [0]: http://en.wikipedia.org/wiki/Mario_Kart:_Double_Dash%E2%80%BC
   [1]: http://babyparkdd.appspot.com/
-  [2]: https://github.com/tphummel/gaej-kart
+  [2]: https://github.com/tphummel/junk/blob/master/gaej-kart/

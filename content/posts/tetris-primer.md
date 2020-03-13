@@ -1,6 +1,9 @@
 ---
-layout: post
-title: Tetris Primer
+title: "Tetris Primer"
+date: 2011-01-01T16:03:13-07:00
+draft: false
+toc: false
+images:
 tags: [tetris, video-games]
 ---
 
@@ -10,15 +13,16 @@ What began as a simple spreadsheet turned into an elaborate spreadsheet and fina
 
 As of December 2013 we had played over 5500 matches accounting for over 380 human hours of official gameplay time.
 
-An [instance is live][1] or you can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Stored Procedures.
+You can [look at the code][2]. I also dabbled with some [standalone python scripting][3] with Stored Procedures.
 
-The app had also been hosted in a few other places in the past:
+The app had been hosted in a few places in the past:
 
-- <del>http://tphummel.byethost6.com/tnt/</del>
-- <del>http://tnt.tphum.us/</del>
-- <del>http://tetris.tomhummel.com/</del>
-- <del>http://tetris.tmhmml.com/</del>
-- <del>https://tetris-db.tphum.com/</del>
+- http://tphummel.byethost6.com/tnt/
+- http://tnt.tphum.us/
+- http://tetris.tomhummel.com/
+- http://tetris.tmhmml.com/
+- https://tetris-db.tphum.com/
+- https://tetris-db.tmhmml.com/
 
 ### Specifications
 
@@ -35,7 +39,6 @@ The app had also been hosted in a few other places in the past:
 - 10 points per mono-square line
 - 1 point tetris bonus
 
-<pre>
 +---------+---------+---------+--------+-------+--------+
 |         | 1 multi | 2 multi | 1 mono | 1 & 1 | 2 mono |
 +---------+---------+---------+--------+-------+--------+
@@ -44,7 +47,6 @@ The app had also been hosted in a few other places in the past:
 | 3 lines |      18 |      33 |     33 |    48 |     63 |
 | tetris  |      25 |      45 |     45 |    65 |     85 |
 +---------+---------+---------+--------+-------+--------+
-</pre>
 
 **Useful Terms:**
 
@@ -67,18 +69,18 @@ The app had also been hosted in a few other places in the past:
 *"S" Round:* A round in which a player averages 1.0 line per second played (ex: 100+ lines in 1:40, 55 lines in 0:50).
 
 ----
-
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/A4QWL"><a href="//imgur.com/a/A4QWL">the new tetris - monosquares</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 ### monosquares
 
-<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/A4QWL/embed?background=f2f2f2&text=1a1a1a&link=4e76c9"></iframe>
+{{< figure src="https://imgur.com/a/A4QWL" >}}
 
 ### multisquares
 
-<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/1jRv5/embed?background=f2f2f2&text=1a1a1a&link=4e76c9"></iframe>
+{{< figure src="https://imgur.com/a/1jRv5" >}}
 
 ### scoring
 
-<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/l1vTK/embed?background=f2f2f2&text=1a1a1a&link=4e76c9"></iframe>
+{{< figure src="https://imgur.com/a/l1vTK" >}}
 
 ----
 
@@ -86,7 +88,6 @@ The app had also been hosted in a few other places in the past:
 
 <!-- SELECT m.matchdate as date, p.username as plyr, l.locationname as site, (select count(playerid) from playermatch where matchid = pm.matchid) as mode, pm.lines, concat("0:",pm.time) as time, pm.wrank as wrk, pm.erank as erk FROM playermatch pm, player p, tntmatch m, location l WHERE pm.matchid = m.matchid AND p.playerid = pm.playerid AND m.location = l.locationid AND pm.time < 60 AND (select count(playerid) from playermatch where matchid = pm.matchid) IN (4,3,2) ORDER BY pm.lines DESC LIMIT 10; -->
 
-<pre>
 Most Lines Under 1 Minute, All Time (as of 12/5/2013)
 
 +------------+-------+-------------+------+-------+------+-----+-----+
@@ -103,13 +104,11 @@ Most Lines Under 1 Minute, All Time (as of 12/5/2013)
 | 2007-03-30 | JD    | 1217        |    2 |   109 |   59 |   1 |   1 |
 | 2013-10-03 | Neela | Old Harbor  |    2 |   109 |   58 |   1 |   1 |
 +------------+-------+-------------+------+-------+------+-----+-----+
-</pre>
 
 ---
 
 <!-- SELECT m.matchdate as date, p.username as plyr, l.locationname as site, pm.lines, concat(floor(pm.time/60),":",lpad(mod(pm.time,60),2,"0")) as time, round(pm.lines/pm.time,3) as lps, pm.wrank as wrk, pm.erank as erk FROM playermatch pm, player p, tntmatch m, location l WHERE pm.matchid = m.matchid AND p.playerid = pm.playerid AND m.location = l.locationid AND pm.lines > 0 AND (select count(playerid) from playermatch where matchid = pm.matchid) IN (4) ORDER BY pm.lines/pm.time DESC LIMIT 10; -->
 
-<pre>
 Highest Lines per Second Ratio, 4P Only, All-Time (as of 12/5/2013)
 
 +------------+------+-------------+-------+------+-------+-----+-----+
@@ -126,10 +125,8 @@ Highest Lines per Second Ratio, 4P Only, All-Time (as of 12/5/2013)
 | 2011-03-19 | Tom  | 14211       |   133 | 1:21 | 1.642 |   4 |   1 |
 | 2007-03-20 | Dan  | 1217        |    90 | 0:55 | 1.636 |   4 |   1 |
 +------------+------+-------------+-------+------+-------+-----+-----+
-</pre>
 
-  [0]: http://en.wikipedia.org/wiki/The_New_Tetris
-  [1]: https://tetris-db.tmhmml.com/
+  [0]: https://en.wikipedia.org/wiki/The_New_Tetris
   [2]: https://github.com/tphummel/tetris-db
   [3]: https://github.com/tphummel/tetris-report
-  [4]: http://tetris.wikia.com/wiki/Square_Platforming
+  [4]: https://tetris.fandom.com/wiki/Square_Platforming
