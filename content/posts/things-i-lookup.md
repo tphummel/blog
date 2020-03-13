@@ -1,8 +1,13 @@
 ---
-layout: post
-title: Things I Look Up
-tags: [reference]
+title: "Things I Lookup"
+date: 2020-02-14T16:03:13-07:00
+draft: false
+toc: true
+images:
+tags:
+  - reference
 ---
+
 
 # bash script boilerplate
 
