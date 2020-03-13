@@ -1,7 +1,12 @@
 ---
-layout: post
-title: Trains
-tags: [trains, instagram]
+title: "Trains"
+date: 2018-06-24T16:03:13-07:00
+draft: false
+toc: false
+images:
+tags:
+  - trains
+  - instagram
 ---
 
 Since [September of last year](https://www.instagram.com/p/BZHA7rjnu77/), [my instagram profile](https://www.instagram.com/tphummel/) has been almost entirely filled with pictures of model wooden trains my son and I have built.
