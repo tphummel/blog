@@ -1,7 +1,13 @@
 ---
-layout: post
-title: Aurora Serverless
-tags: [serverless, sql]
+title: "Aurora Serverless"
+date: 2018-09-01T16:03:13-07:00
+draft: false
+toc: false
+images:
+tags:
+  - serverless
+  - sql
+  - aws
 ---
 
 ## goal
