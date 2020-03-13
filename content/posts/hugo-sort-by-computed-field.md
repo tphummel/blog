@@ -1,7 +1,12 @@
 ---
-layout: post
-title: Sort by Computed Field in Hugo
-tags: [hugo, static-site]
+title: "Sort by Computed Field in Hugo"
+date: 2018-10-04T16:03:13-07:00
+draft: false
+toc: true
+images:
+tags:
+  - hugo
+  - static-site
 ---
 
 ## Goal
@@ -25,7 +30,7 @@ I wanted to divide `distance_miles` by `time_minutes` and then sort my pages by 
 
 There is plenty of documentation on how to [order content](https://gohugo.io/templates/lists/#order-content), and also how to [sort data structures](https://gohugo.io/functions/sort/) in Hugo. Hugo's documentation is generally excellent. There is also a very active [discourse](https://discourse.gohugo.io/) with lots of question and answer content.
 
-You can range of pages sorted by common metadata like [last modified date](https://gohugo.io/templates/lists/#by-last-modified-date), [title](https://gohugo.io/templates/lists/#by-title), or [length](https://gohugo.io/templates/lists/#by-length). And you can also [sort by arbitrary parameters](https://gohugo.io/templates/lists/#by-parameter) in your content front matter.
+You can get a range of pages sorted by common metadata like [last modified date](https://gohugo.io/templates/lists/#by-last-modified-date), [title](https://gohugo.io/templates/lists/#by-title), or [length](https://gohugo.io/templates/lists/#by-length). And you can also [sort by arbitrary parameters](https://gohugo.io/templates/lists/#by-parameter) in your content front matter.
 
 However, none of these usages were what I needed. I wanted to compute a dynamic value based on some static values in page front matter, then sort the list of pages by the computed value.
 
