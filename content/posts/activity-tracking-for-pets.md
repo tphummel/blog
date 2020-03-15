@@ -9,16 +9,16 @@ aliases:
   - /2016/10/08/activity-tracking-for-pets/
 ---
 
-# Problem
+## Problem
 I want to see how active my dogs are when I'm at work and generally how much exercise they are getting each day.
 
-# Goals / Constraints
+## Goals / Constraints
 - Minimize cost. Avoid subscriptions.
 - Devices should automatically upload data.
 - Prefer devices with long battery life.
 - Own the raw activity data.
 
-# Existing Options
+## Existing Options
 
 There are some companies making activity trackers for dogs:
 
@@ -28,7 +28,7 @@ There are some companies making activity trackers for dogs:
 
 The exact devices, features, and pricing details aren't important. I'll summarize by saying the price points are higher than my budget, there are features beyond my scope, and maybe most importantly, the battery life is too short.
 
-# My Solution
+## My Solution
 
 Fitbit makes a tracker device called [Zip](https://www.fitbit.com/zip). It does calorie, step, distance tracking for humans. It claims to run for up to 6 months on a CR2025 coin battery. It syncs data to a bluetooth enabled phone or to a PC using a USB radio dongle.
 
@@ -46,13 +46,13 @@ The following steps I did for **each** of my two dogs:
 1. activate a [Fitbit -> Spreadsheet Recipe](https://ifttt.com/recipes/472840-log-dog-activity-to-google-sheets) on IFTTT.
 1. duct tape the Fitbit Zip to your dog's collar
 
-# Results
+## Results
 
 ![Dog Activity Spreadsheet](https://i.imgur.com/gkktQa6l.png "Dog Activity Spreadsheet")
 
 ![Fitbit Leaderboard](https://i.imgur.com/xgdSH1fl.png "Fitbit Leaderboard")
 
-# Caveats
+## Caveats
 
 - Fitbit devices are intended for humans. The step count for a dog isn't useful for comparing to the step count for a human. It is most useful for day to day comparisons for a single dog.
 - The Fitbit Zip states battery life is "up to six months". In my experience with my dogs, the battery life has been around two months per coin cell.
@@ -61,7 +61,7 @@ The following steps I did for **each** of my two dogs:
 - Fitbit will send you emails when a Zip battery is running low.
 - Using the Mac OSX Fitbit app, you can be logged in to two accounts at once. Feedback from the app isn't very clear about this. But it works.
 
-# Summary
+## Summary
 
 With the steps above, I have my dogs tracking their own daily activity. They sync the data to the internet whenever they sit in the living room for a few minutes. IFTTT sends daily summaries for each dog into a row in a Google Sheet. I get emailed whenever one of their batteries is running low. When that happens, I cut the duct tape, replace the coin battery, then re-tape it.
 
