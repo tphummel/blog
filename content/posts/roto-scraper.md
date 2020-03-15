@@ -1,7 +1,12 @@
 ---
-layout: post
+date: 2013-10-09T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Roto-Scraper
 tags: [code, baseball]
+aliases:
+  - /2013/10/09/roto-scraper/
 ---
 
 ### the league
@@ -11,11 +16,11 @@ I play in an NL-only [rotisserie baseball][16], modified ultra league that has b
 
 We get standings updated through the most recent day's action:
 
-![daily standings](http://i.imgur.com/rDbKTSW.png "daily standings")
+![daily standings](https://i.imgur.com/rDbKTSW.png "daily standings")
 
 We get standings from an arbitrary date, set by the league commissioner, through the most recent day's action:
 
-![historical standings](http://i.imgur.com/KOCEJ26.png "historical standings")
+![historical standings](https://i.imgur.com/KOCEJ26.png "historical standings")
 
 ### what i wanted
 
@@ -63,18 +68,18 @@ Rotowire makes available raw performance numbers for each team, historically (in
 Support more sites such as Yahoo!, ESPN, CBS
 
 
-  [0]: http://www.rotowire.com/
+  [0]: https://www.rotowire.com/
   [1]: https://github.com/tphummel/roto-scraper/blob/master/lib/server/scrape_loop.coffee#L51
   [3]: https://www.digitalocean.com/
-  [4]: http://matschaffer.github.io/knife-solo/
-  [5]: http://www.capistranorb.com/
+  [4]: https://matschaffer.github.io/knife-solo/
+  [5]: https://www.capistranorb.com/
   [6]: https://github.com/tphummel/junk/tree/master/app-base-lnmn
   [7]: https://nodejs.org
-  [8]: http://coffeescript.org
-  [9]: http://browserify.org/
-  [10]: http://jade-lang.com/
-  [11]: http://getbootstrap.com/
-  [12]: http://www.mongodb.org/
-  [14]: https://github.com/tphummel/roto-scraper
-  [15]: http://www.opscode.com/chef/
-  [16]: http://en.wikipedia.org/wiki/Fantasy_baseball#Rotisserie_League_Baseball
+  [8]: https://coffeescript.org
+  [9]: https://browserify.org/
+  [10]: https://jade-lang.com/
+  [11]: https://getbootstrap.com/
+  [12]: https://www.mongodb.org/
+  [14]: https://github.com/tphummel/onroto-standings-scraper
+  [15]: https://www.opscode.com/chef/
+  [16]: https://en.wikipedia.org/wiki/Fantasy_baseball#Rotisserie_League_Baseball

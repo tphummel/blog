@@ -1,12 +1,17 @@
 ---
-layout: post
+date: 2013-11-17T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Querying Waze Commute Data
 tags: [code, driving]
----    
+aliases:
+  - /2013/11/17/waze-commute-data/
+---
 
 I noticed on the [Waze][0] web platform that I could see a listing of my Trips inside the "Edit Map" area.
 
-![waze drives list](http://i.imgur.com/TcR0GVV.png "waze drives list")
+![waze drives list](https://i.imgur.com/TcR0GVV.png "waze drives list")
 
 I wrote an [npm][1] [module][2] for getting a list of these trips and the detailed information about each. In an [example script][3], I looked at my highest measured speeds.
 

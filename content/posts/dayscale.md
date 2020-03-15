@@ -1,7 +1,12 @@
 ---
-layout: post
+date: 2012-01-01T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Day Scale
 tags: [scraping, day-scale]
+aliases:
+  - /2012/01/01/dayscale/
 ---
 
 First conceived in December 2010, dayscale was a data aggregation and analysis website. The server is written in Java for the Google App Engine platform. The system collects weather, stock, and sport (MLB/NBA) information throughout the day and runs a faux competition between imaginary characters based on the collected data.
@@ -43,4 +48,4 @@ A typical day of the app (pacific time):
 You can see [the code][0] I used for the scrapers. And some [blog commentary][3].
 
   [0]: https://github.com/tphummel/junk/tree/master/gaej-scrapers
-  [3]: http://dayscale.blogspot.com/
+  [3]: https://dayscale.blogspot.com/

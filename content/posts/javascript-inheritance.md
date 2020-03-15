@@ -1,7 +1,12 @@
 ---
-layout: post
-title: Javascript Inheritance
+date: 2014-08-13T16:03:13-07:00
+draft: false
+toc: false
+images:
+title: JavaScript Inheritance
 tags: [javascript, code]
+aliases:
+  - /2014/08/13/javascript-inheritance/
 ---
 
 There are [plenty][0] [of][1] [articles][2] [and][4] [docs][5] that describe the differences, strengths, and weaknesses of javascript prototypal inheritance compared to more traditional inheritance schemes in other languages. Goodness knows there are many ways to get it wrong. I saw a new one in a project recently. What happens when you do the following?
@@ -59,8 +64,8 @@ util.inherits(Child, Parent)
 
 [0]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain
 [1]: https://alexsexton.com/blog/2013/04/understanding-javascript-inheritance/
-[2]: http://javascript.crockford.com/prototypal.html
+[2]: https://javascript.crockford.com/prototypal.html
 [4]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript
 [5]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Classical_inheritance_with_Object.create
 [6]: https://github.com/joyent/node/blob/v0.10.30-release/lib/util.js#L554
-[7]: http://nodejs.org/docs/latest/api/util.html#util_util_inherits_constructor_superconstructor
+[7]: https://nodejs.org/docs/latest/api/util.html#util_util_inherits_constructor_superconstructor

@@ -1,7 +1,12 @@
 ---
-layout: post
+date: 2013-10-13T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Realtime Data Client with Redis, Websockets, and D3
 tags: [code, tetris]
+aliases:
+  - /2013/10/13/realtime-data-client/
 ---
 
 ### what i've got
@@ -37,7 +42,7 @@ More web clients consuming the websocket events. Or a dashboard of graphics each
 
 
   [0]: https://github.com/tphummel/tetris-db
-  [1]: /2011/01/01/tetris-primer/
-  [2]: http://redis.io/topics/pubsub
+  [1]: {{< ref tetris-primer >}}
+  [2]: https://redis.io/topics/pubsub
   [4]: https://d3js.org/
-  [5]: https://github.com/tphummel/socket-viz
+  [5]: https://github.com/tphummel/junk/tree/master/socket-viz
