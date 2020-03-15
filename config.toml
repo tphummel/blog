@@ -1,29 +1,50 @@
-baseURL = "https://tomhummel.com"
-languageCode = "en-us"
-defaultContentLanguage = "en"
-title = "Tom Hummel"
-theme = "hermit"
-# enableGitInfo = true
-pygmentsCodefences  = true
-pygmentsUseClasses  = true
-# hasCJKLanguage = true  # If Chinese/Japanese/Korean is your main content language, enable this to make wordCount works right.
-rssLimit = 10  # Maximum number of items in the RSS feed.
+baseURL = "https://example.com"
+title   = "Tom Hummel"
+
+DefaultContentLanguage = "en"
+
+theme = "hello-friend-ng"
+
+PygmentsCodeFences = true
+PygmentsStyle = "monokai"
+
+rssLimit  = 0  # Maximum number of items in the RSS feed.
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License." # This message is only used by the RSS template.
-enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/functions/emojify/
-googleAnalytics = "UA-23840969-1"
-# disqusShortname = "yourdiscussshortname"
+
+# googleAnalytics = ""
+# disqusShortname = ""
+
+archetypeDir = "archetypes"
+contentDir   = "content"
+dataDir      = "data"
+layoutDir    = "layouts"
+publishDir   = "public"
+
+buildDrafts  = false
+buildFuture  = false
+buildExpored = false
+canonifyURLs = true
+
+enableRobotsTXT = true
+enableGitInfo   = true
+enableEmoji     = true
+enableMissingTranslationPlaceholders = false
+disableRSS     = false
+disableSitemap = false
+disable404     = false
+disableHugoGeneratorInject = false
+
+[permalinks]
+  posts = "/posts/:title/"
 
 [author]
   name = "Tom Hummel"
 
 [blackfriday]
-  # hrefTargetBlank = true
-  # noreferrerLinks = true
-  # nofollowLinks = true
+  hrefTargetBlank = true
 
 [taxonomies]
-  tag = "tags"
-  # Categories are disabled by default.
+  tag      = "tags"
 
 [params]
   dateform        = "Jan 2, 2006"
@@ -32,29 +53,50 @@ googleAnalytics = "UA-23840969-1"
   dateformNumTime = "2006-01-02 15:04 -0700"
 
   # Metadata mostly used in document's head
-  # description = ""
-  # images = [""]
-  themeColor = "#494f5c"
+  description = "Tom Hummel's Blog"
+  keywords = ""
+  images = [""]
 
-  homeSubtitle = ""
-  footerCopyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
-  # bgImg = ""  # Homepage background-image URL
+  homeSubtitle = "Software Engineer in Los Angeles, CA"
 
   # Prefix of link to the git commit detail page. GitInfo must be enabled.
-  # gitUrl = "https://github.com/username/repository/commit/"
+  # gitUrl = ""
 
-  # Toggling this option needs to rebuild SCSS, requires Hugo extended version
-  justifyContent = false  # Set "text-align: justify" to `.content`.
+  # Set disableReadOtherPosts to true in order to hide the links to other posts.
+  disableReadOtherPosts = true
 
-  relatedPosts = false  # Add a related content section to all single posts page
+  # Integrate Javascript files or stylesheets by adding the url to the external assets or by
+  # linking local files with their path relative to the static folder, e.g. "css/styles.css"
+  customCSS = []
+  customJS  = []
 
-  code_copy_button = true # Turn on/off the code-copy-button for code-fields
+  # Toggle this option need to rebuild SCSS, requires extended version of Hugo
+  justifyContent = false  # Set "text-align: justify" to .content.
 
-  # Add custom css
-  # customCSS = ["css/foo.css", "css/bar.css"]
+  # Directory name of your blog content (default is `content/posts`)
+  contentTypeName = "posts"
 
-  # Social Icons
-  # Check https://github.com/Track3/hermit#social-icons for more info.
+  # Default theme "light" or "dark"
+  defaultTheme = "dark"
+  themeColor = "#252627"
+
+  # Colors for favicons
+  [params.favicon.color]
+    mask = "#252627"
+    msapplication = "#252627"
+    theme = "#252627"
+
+  [params.logo]
+    logoText     = "Tom Hummel"
+    logoHomeLink = "/"
+    # Set true to remove the logo cursor entirely.
+    logoCursorDisabled = true
+    # Set to a valid CSS color to change the cursor in the logo.
+    # logoCursorColor    = "#67a2c9"
+    # Set to a valid CSS time value to change the animation duration, "0s" to disable.
+    # logoCursorAnimate  = "2s"
+
+  # Social icons
   [[params.social]]
     name = "twitter"
     url = "https://twitter.com/tphummel"
@@ -67,19 +109,18 @@ googleAnalytics = "UA-23840969-1"
     name = "github"
     url = "https://github.com/tphummel/"
 
+[languages]
+  [languages.en]
+    # subtitle  = "Hello Friend NG Theme"
+    weight    = 1
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+
 [menu]
-
   [[menu.main]]
-    name = "Posts"
-    url = "posts/"
-    weight = 10
-
+    identifier = "about"
+    name       = "About"
+    url        = "about/"
   [[menu.main]]
-    name = "About"
-    url = "about/"
-    weight = 30
-
-  [[menu.main]]
-    name = "Data"
-    url = "https://data.tomhummel.com"
-    weight = 20
+    identifier = "posts"
+    name       = "Posts"
+    url        = "posts/"
