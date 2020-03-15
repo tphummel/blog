@@ -1,10 +1,15 @@
 ---
-layout: post
+date: 2013-04-03T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Super Mario Bros 3
-tags: [video-games]
+tags: [video-games, mario-3]
+aliases:
+  - /2013/04/03/mario-3-run/
 ---
 
-Across two sessions on March 5 and March 9, [Nick][0] and I ran through Super Mario Bros 3. What was done differently this time is we wanted to rate the difficulty of each stage (1 easiest -> 10 hardest).  
+Across two sessions on March 5 and March 9, 2013, [Nick][0] and I ran through Super Mario Bros 3. What was done differently this time is we wanted to rate the difficulty of each stage (1 easiest -> 10 hardest).  
 
 Overall the average diffulty on the 90 levels was 3.6 / 10. (I hope there are 90 levels total, i didn't count).
 

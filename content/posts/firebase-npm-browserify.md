@@ -1,7 +1,12 @@
 ---
-layout: post
+date: 2014-05-17T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Firebase with NPM + Browserify
-tags: [code]
+tags: [code, static-site]
+aliases:
+  - /2014/05/17/firebase-npm-browserify/
 ---
 
 [Firebase](https://www.firebase.com/) [recently announced](https://www.firebase.com/blog/2014-05-13-introducing-firebase-hosting.html) static client web application hosting. This lowers the bar for client-only apps which work closely with the firebase data and auth apis. The possibilities are very broad. Here is how I quickly got up and running.
@@ -32,7 +37,7 @@ From here, we can see both scripts in action with a few lines added to `lib/entr
 
 Note: you'll need to have created an app on [firebase.com](http://firebase.com) and have enabled anonymous authentication in the project web console for this next bit to work. See the firebase docs for more detail.
 
-{% highlight coffeescript %}
+```coffeescript
 ...
 
 Firebase = require 'firebase-client'
@@ -54,7 +59,7 @@ dbRef.on 'value', (snapshot) -> console.log 'heard value', snapshot
 dbRef.set 'hello world!', (err) ->
   console.error err if err
   console.log 'set a value!'
-{% endhighlight %}
+```
 
 Save `lib/entry.coffee` and the watch script will automatically rebuild the browserify bundle. Reload your browser window and you should see logging for the api activity in the browser console.
 

@@ -1,7 +1,12 @@
 ---
-layout: post
+date: 2013-09-13T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Using R with MySQL Data
-tags: [code, tetris]
+tags: [code, tetris, r]
+aliases:
+  - /2013/09/13/using-r-with-mysql-data/
 ---
 
 I wanted to start visualizing some of the [Tetris][0] data at hand. So I figured I'd give [R][1] a whirl.
@@ -16,46 +21,46 @@ To load RMySQL, type ```library(RMySQL)```. Now we're ready to connect to our da
 
 To connect:
 
-{% highlight s %}
+```
 con <- dbConnect(MySQL(), user="root", dbname="tnt", host="localhost")
-{% endhighlight %}
+```
 
 A quick test of the connection:
 
-{% highlight s %}
+```
 dbListTables(con)
 [1] "location"    "player"      "playermatch" "tntmatch"
-{% endhighlight %}
+```
 
 Create a dataframe from a sql query:
 
-{% highlight s %}
+```
 df1 <- dbGetQuery(con,
   "select p.*, p.lines/p.time as ratio
   from playermatch p")
-{% endhighlight %}
+```
 
 
 Do a scatterplot:
 
-{% highlight s %}
+```
 plot(df1$time, df1$lines, pch=".",
   main="Tetris Performances All-Time",
   xlab="Time (s)", ylab="Lines")
-{% endhighlight %}
+```
 
 And the result:
 
 ![R Scatterplot](https://i.imgur.com/YpXUEDu.png "R Scatterplot")
 
 Do a histogram:
-{% highlight s %}
+```
 hist(df1$ratio, 100,
   main="Tetris Lines/Sec Freq Dist", xlab="Ratio")
-{% endhighlight %}
+```
 
 ![R Histogram](https://i.imgur.com/KqmmL5w.png "R Histogram")
 
 
-  [0]: /2011/01/01/tetris-primer/
-  [1]: http://cran.r-project.org/
+  [0]: {{< ref tetris-primer >}}
+  [1]: https://cran.r-project.org/
