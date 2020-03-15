@@ -5,6 +5,8 @@ draft: false
 toc: false
 images:
 tags: [sql, kart, video-games]
+aliases:
+  - /2016/01/04/double-dash-analysis-part-1/
 ---
 
 A few years ago, I [successfully exported][0] the [results][1] of 1,101 [Mario Kart: Double Dash!!][2] races dating from the years 2010 through 2013. In this first post, I'll look at general findings that might be of interest to fans of the game.

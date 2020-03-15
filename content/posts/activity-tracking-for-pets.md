@@ -5,6 +5,8 @@ toc: false
 images:
 title: Activity Tracking for Pets
 tags: [fitbit,ifttt,qs]
+aliases:
+  - /2016/10/08/activity-tracking-for-pets/
 ---
 
 # Problem

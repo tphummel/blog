@@ -7,6 +7,8 @@ images:
 tags:
   - serverless
   - aws
+aliases:
+  - /2017/09/10/athena-hive/
 ---
 
 ## Problem

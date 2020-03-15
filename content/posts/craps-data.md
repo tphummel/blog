@@ -1,14 +1,19 @@
 ---
-layout: post
-title: Craps Data
-tags: [craps]
+title: "Craps Data"
+date: 2012-01-01T16:03:13-07:00
+draft: false
+toc: false
+images:
+tags: [craps, scorekeeping]
+aliases:
+  - /2012/01/01/craps/
 ---
 
 I wrote a [python cli][0] which captures the outcome of dice rolls in craps. From there I popped out some fun reports. The information is mainly for entertainment value rather than to aid decision making.
 
 For example:
 
-<pre>
+```
 Most Consecutive Rolls in a Single Turn
 +----------+-------+----------------+--------+
 | date     | shoot | location       | throws |
@@ -25,7 +30,7 @@ Most Consecutive Rolls in a Single Turn
 | 05/04/10 | Tom   | 4 Queens       |     20 |
 +----------+-------+----------------+--------+
 (updated 4/21/11)
-</pre>
+```
 
 ---
 

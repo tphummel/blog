@@ -7,6 +7,8 @@ images:
 tags:
   - hugo
   - static-site
+aliases:
+  - /2018/10/04/hug-sort-by-computed-field/
 ---
 
 ## Goal
