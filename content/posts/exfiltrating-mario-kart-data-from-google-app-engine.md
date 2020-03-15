@@ -5,6 +5,8 @@ draft: false
 toc: false
 images:
 tags: [kart, video-games]
+aliases:
+  - /2013/05/12/exfiltrating-mario-kart-data-from-google-app-engine/
 ---
 
 In our most recent [Mario Kart][3] multiplayer session, there was a data error in which one round didn't save correctly. If this happens in [tetris][0] it is a non-issue as I just go into sql and correct it (normally user error). The data for Mario Kart however is stored in the Google App Engine datastore. This data is very cumbersome to query and update by comparison.

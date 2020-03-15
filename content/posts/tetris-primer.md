@@ -5,6 +5,8 @@ draft: false
 toc: false
 images:
 tags: [tetris, video-games]
+aliases:
+  - /2011/01/01/tetris-primer/
 ---
 
 In 2004, my college roommates and I started playing a multiplayer variation of tetris called [The New Tetris for Nintendo 64][0]. For the uninitiated this version of tetris hinges on building [monosquares and multisquares][4]

@@ -8,6 +8,8 @@ tags:
   - serverless
   - sql
   - aws
+aliases:
+  - /2018/09/01/aurora-serverless/
 ---
 
 ## goal

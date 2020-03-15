@@ -6,6 +6,8 @@ toc: false
 images:
 tags:
   - qs
+aliases:
+  - /2017/04/30/found-facts/
 ---
 
 Everyday we leave a wake of data behind us. Generally, you would you would assume this data is digital: things like pageviews, dns queries, retweets. Data thrown off by the actions we take each day within the communities we belong to.

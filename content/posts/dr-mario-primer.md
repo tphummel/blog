@@ -5,6 +5,8 @@ toc: false
 images:
 title: Doctor Mario Primer
 tags: [dr-mario, video-games]
+aliases:
+  - /2011/01/01/dr-mario-primer/
 ---
 
 The iteration of choice is [Dr. Mario 64 for Nintendo 64][0]. We play local multiplayer with 2-4 players. When playing with fewer than 4, you are forced to fill the vacancies with bots. The game imposes a format which crowns the winner as the first player to reach three wins. We ignore this for the most part.

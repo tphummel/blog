@@ -6,6 +6,8 @@ toc: true
 images:
 tags:
   - reference
+aliases:
+  - /2020/02/14/things-i-lookup/
 ---
 
 

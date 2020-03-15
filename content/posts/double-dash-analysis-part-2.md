@@ -5,6 +5,8 @@ draft: false
 toc: false
 images:
 tags: [kart, video-games]
+aliases:
+  - /2016/01/11/double-dash-analysis-part-2/
 ---
 
 Following [part 1][0] last week, this writeup will mention the names of the friends I played the 1,101 races of [Mario Kart: Double Dash!!][1] with. With that, it probably isn't as generally interesting to Mario Kart fans, with the exception maybe of the scoring methodology. Also see [the previous post][0] for backstory on tooling and data.

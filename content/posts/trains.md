@@ -7,6 +7,8 @@ images:
 tags:
   - trains
   - instagram
+aliases:
+  - /2018/06/24/trains/
 ---
 
 Since [September of last year](https://www.instagram.com/p/BZHA7rjnu77/), [my instagram profile](https://www.instagram.com/tphummel/) has been almost entirely filled with pictures of model wooden trains my son and I have built.
