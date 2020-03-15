@@ -1,7 +1,12 @@
 ---
-layout: post
+date: 2014-10-26T16:03:13-07:00
+draft: false
+toc: false
+images:
 title: Going From Zero to Node.js
 tags: [javascript, code]
+aliases:
+  - /2014/10/26/zero-to-node/
 ---
 
 Some friends of mine wanted to mess around with programming. They have an apple laptop and zero experience. I think Node.js is a good platform for beginners because of the ubiquity of javascript on the web today and the great tooling and resources for getting started.
