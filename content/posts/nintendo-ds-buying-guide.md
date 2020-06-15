@@ -6,6 +6,27 @@ tags:
 toc: true
 ---
 
+# TLDR
+
+Here is a list of Nintendo DS games of high quality and as of June 2020 can be had at a good value:
+
+1. Mario Kart DS
+1. Mario & Luigi: Bowser's Inside Story
+1. Legend of Zelda: Phantom Hourglass
+1. Meteos
+1. Planet Puzzle League
+1. The World Ends with You
+1. New Super Mario Bros
+1. Advance Wars: Days of Ruin
+1. Mario & Luigi: Partners in Time
+1. Elite Beat Agents
+1. Professor Layton and the Curious Village
+1. Professor Layton and the Unwound Future
+1. Kirby: Canvas Curse
+1. Final Fantasy IV
+1. Super Mario 64 DS
+1. Animal Crossing: Wild World
+
 # Background
 
 I'm a patient gamer. I'm currently playing games in the Wii, Game Boy Advance, Nintendo DS, and Nintendo 3DS generations. I'm not smug about this, I just fell behind modern gaming around 2005 and have never really recovered.
@@ -14,11 +35,16 @@ As video game platforms are discontinued and are no longer available in retail s
 
 As of June 2020, it seems likely we are at the bottom of the Nintendo DS market as a whole before the library becomes more collectible, more scarce, and thus more expensive in coming years (as we'll see, there are already Nintendo DS games which are highly collectible and expensive, but I'll be ignoring them because there is little value due to their already high price.)
 
-I want to buy games at cheaper price so I can play them when I get the time. Instead of waiting until I have the time and then buying them when their price will be likely be higher.
+I want to buy games now at cheaper price so I can play them when I get the time. Instead of waiting until I have the time and then buying them when their price will likely be higher.
 
 # Market Overview
 
-Here is a overview of the 296 Nintendo DS games rated 70 or above by [Metacritic](https://metacritic.com) (minimum 7 reviews) and the price to buy the game loose (no box or manual), used on secondary markets according to [Video Game Price Charts](https://pricecharting.com). This gives a sense of the overall shape of Nintendo DS loose cartridge market, ignoring mediocre and low quality games.
+Here is an overview of the 296 Nintendo DS games rated 70 or above by [Metacritic](https://www.metacritic.com) (minimum 7 reviews) and the price to buy the game loose (no box or manual), used on secondary markets according to [Video Game Price Charts](https://www.pricecharting.com). This gives a sense of the overall shape of Nintendo DS loose cartridge market, ignoring mediocre and low quality games.
+
+- Avg Price: $14.56
+- Median Price: $10.12
+- Avg Score: 77.3
+- Median Score: 76.5
 
 *Prices accurate as of June 9, 2020.*
 
@@ -42,18 +68,7 @@ Here is a overview of the 296 Nintendo DS games rated 70 or above by [Metacritic
 
 Within the table above, we can dig into specific pockets/cells to find the top values: the highest quality games for the most affordable prices.
 
-### Games with Metascores of 90-94
-
-#### $15.00-19.99
-
-- The Legend of Zelda: Phantom Hourglass
-
-#### $10.00-14.99
-
-- Mario Kart DS
-- Mario & Luigi: Bowser's Inside Story
-
-### Games with Metascores of 85-89, Under $20
+### Games with Metascores of 85+, Under $20
 
 | price & rating | 85-89pts                                 | 90-94pts                               |
 |----------------|------------------------------------------|----------------------------------------|
