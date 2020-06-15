@@ -6,7 +6,7 @@ tags:
 toc: true
 ---
 
-# TLDR
+## TLDR
 
 Here is a list of Nintendo DS games of high quality and as of June 2020 can be had at a good value:
 
@@ -27,7 +27,7 @@ Here is a list of Nintendo DS games of high quality and as of June 2020 can be h
 1. Super Mario 64 DS
 1. Animal Crossing: Wild World
 
-# Background
+## Background
 
 I'm a patient gamer. I'm currently playing games in the Wii, Game Boy Advance, Nintendo DS, and Nintendo 3DS generations. I'm not smug about this, I just fell behind modern gaming around 2005 and have never really recovered.
 
@@ -37,7 +37,7 @@ As of June 2020, it seems likely we are at the bottom of the Nintendo DS market 
 
 I want to buy games now at cheaper price so I can play them when I get the time. Instead of waiting until I have the time and then buying them when their price will likely be higher.
 
-# Market Overview
+## Market Overview
 
 Here is an overview of the 296 Nintendo DS games rated 70 or above by [Metacritic](https://www.metacritic.com) (minimum 7 reviews) and the price to buy the game loose (no box or manual), used on secondary markets according to [Video Game Price Charts](https://www.pricecharting.com). This gives a sense of the overall shape of Nintendo DS loose cartridge market, ignoring mediocre and low quality games.
 
@@ -128,7 +128,7 @@ Finally we can scrape the bargain bin for a few games which might be worth playi
 - LEGO Rock Band
 - LEGO Indiana Jones: The Original Adventures
 
-# Methodology
+## Methodology
 
 - Browse a metacritic page of results like: [All-Time Nintendo DS Reviews](https://www.metacritic.com/browse/games/score/metascore/all/ds/filtered)
 - Open developer tools > Console
@@ -136,13 +136,13 @@ Finally we can scrape the bargain bin for a few games which might be worth playi
 - Execute the javascript
 - the exported json is now in your clipboard. paste the json into a file and save.
 
-## Notes
+### Notes
 
 - You can get 100 results per page so it isn't too bad doing it this way.
 - My purposes were to export top reviews for discontinued video game platforms. This is a one time operation so I didn't need further automation.
 - metacritic by default only shows games with 7 or more reviews. i left this limit in place in general.
 
-## Metacritic Browser Script
+### Metacritic Browser Script
 ```
 let items = Array.from(document.querySelectorAll('li.game_product div.product_wrap')).map((d) => {
   let url = d.children[0].children[0].href
@@ -205,7 +205,7 @@ cat combined.json | jq -r '.[] | [.platform, .title, .hardware_compatibility, .l
 
 import the file into a google sheet for further analysis
 
-## Price Charting Script
+### Price Charting Script
 
 - browse the [Nintendo DS price guide](https://www.pricecharting.com/console/nintendo-ds)
 - sort all games alphabetically
@@ -225,7 +225,7 @@ let items = Array.from(document.querySelectorAll('tr')).slice(1).map(i => {
 copy(items)
 ```
 
-## Price Charting Workflow
+### Price Charting Workflow
 
 get all of the individual system files, one per platform using the price charting script
 need to add platform column still
@@ -240,6 +240,6 @@ build final csv
 cat nintendo-ds-prices.json | jq -r '.[] | [.title, .loose_price] | @csv' > nintendo-ds-prices.csv
 ```
 
-## Joining Datasets
+### Joining Datasets
 
 I assigned an id to each game in price charting download. i used that id to map to the metacritic records. This allowed discretion to choose between particular variants, focusing on the least expensive way to acquire a game.
