@@ -3,6 +3,7 @@ title: "Nintendo DS Buying Guide"
 date: 2020-06-13T06:03:13-07:00
 tags:
   - video-games
+  - video-game-buying-guide
 toc: true
 ---
 
