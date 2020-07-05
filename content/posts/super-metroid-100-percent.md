@@ -143,3 +143,7 @@ It might even be too streamlined. If so, you should switch to one of the many ot
 | 100    | Missile                        | ET:14 RT:4, M:230, SM:50, PB:50 | same as missile but do door on left this time. rising lava room, left morph slot                                                                  |
 | 100    | save at ship                   | ET:14 RT:4, M:230, SM:50, PB:50 | up to brinstar to maridia top left (like you're looping to sand drops but up door instead. no express elevator) roll into brinstar up to crateria |
 | 100    | Zebes Escape                   | ET:14 RT:4, M:230, SM:50, PB:50 |                                                                                                                                                   |
+
+## Files
+
+- Download checklist as [xlsx](/files/super-metroid-100-checklist.xlsx), [csv](/files/super-metroid-100-checklist.csv).
