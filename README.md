@@ -1,27 +1,32 @@
-# a blog
+# tomhummel.com
 
-### local
+## what? why?
 
-    # assumes /usr/local/bin is in your $PATH
-    brew install ruby
-    sudo gem install -n /usr/local/bin bundler
-    bundle install --path vendor/bundle
-    bundle exec jekyll serve
-    open http://localhost:4000
+This repo is the code and content behind [tomhummel.com](https://tomhummel.com). This blog exists to publish posts on technology and any other projects or topics I'm interested in.
 
-## theme
+Posts about personal data exfiltration and analysis belong at [data.tomhummel.com](https://data.tomhummel.com).
 
-props to [zach holman][0] for the [theme][1]
+Posts about the speed of Track and Field venues belong at [laps.run](https://laps.run).
 
-# License
+## setup
 
-The following directories and their contents are Copyright Tom Hummel. You may not reuse anything therein without my permission:
+```
+brew update
+brew install hugo
 
-- _posts/
-- _drafts/
-- assets/
+git clone git@github.com:tphummel/blog.git tomhummel.com
+```
 
-All other directories and files are MIT Licensed.
+## dev
 
-  [0]: http://zachholman.com/
-  [1]: http://zachholman.com/posts/left/
+```
+hugo server -D -w
+```
+
+## publish
+
+```
+rm -rf public/
+hugo
+aws s3 sync --delete public/ s3://my-bucket/
+```
