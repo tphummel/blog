@@ -71,15 +71,21 @@ Stay aware of the health of the modules you depend on and be ready to make other
 
 ## Modules
 
-- https://www.npmjs.com/package/simple-get
-- https://www.npmjs.com/package/minimist
-- https://github.com/louischatriot/nedb
+### dates, ids, tokens, types, numbers 
 - https://github.com/date-fns/date-fns
 - https://github.com/ai/nanoid
+- https://www.npmjs.com/package/uuid
+- https://www.npmjs.com/package/ms
+- https://www.npmjs.com/package/semver
+- https://github.com/auth0/node-jsonwebtoken
+- https://github.com/sindresorhus/is
+- https://github.com/sindresorhus/round-to
 
 ### logging
 - https://github.com/watson/console-log-level
 - https://www.npmjs.com/package/call-log
+- https://github.com/visionmedia/debug
+- https://www.npmjs.com/package/morgan
 
 ### flow control
 - https://www.npmjs.com/package/run-waterfall
@@ -88,11 +94,25 @@ Stay aware of the health of the modules you depend on and be ready to make other
 - https://caolan.github.io/async/v3/
 - https://www.npmjs.com/package/neo-async
 
-### testing
+### network
+- https://www.npmjs.com/package/simple-get
+- https://www.npmjs.com/package/ws
+- https://github.com/jshttp
+- https://www.npmjs.com/package/basic-auth
+- https://www.npmjs.com/package/etag
+
+### testing/build/style
 - https://github.com/volument/baretest
 - https://www.npmjs.com/package/standard
 - https://www.npmjs.com/package/sepia
+- https://www.npmjs.com/package/uglify-js
+
+### misc
+- https://www.npmjs.com/package/lodash
+- https://www.npmjs.com/package/minimist
+- https://github.com/louischatriot/nedb
 
 ## Related Work
 
+- lists of modules: https://github.com/sindresorhus/awesome-nodejs
 - James Halliday [wrote about useful heuristics for finding npm modules in 2014](https://web.archive.org/web/20140518090110/http://substack.net/finding_modules).
