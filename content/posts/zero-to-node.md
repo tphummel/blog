@@ -4,7 +4,7 @@ draft: false
 toc: false
 images:
 title: Going From Zero to Node.js
-tags: [javascript, code]
+tags: [javascript, code, node.js]
 aliases:
   - /2014/10/26/zero-to-node/
 ---
