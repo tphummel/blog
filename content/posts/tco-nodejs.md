@@ -69,6 +69,30 @@ There have been high profile deprecations of keystone npm modules. [Request](htt
 
 Stay aware of the health of the modules you depend on and be ready to make other plans if a module is withering or reaches end of life. Small scoped modules are easier to replace than frameworks or cure-all modules.
 
+## Modules
+
+- https://www.npmjs.com/package/simple-get
+- https://www.npmjs.com/package/minimist
+- https://github.com/louischatriot/nedb
+- https://github.com/date-fns/date-fns
+- https://github.com/ai/nanoid
+
+### logging
+- https://github.com/watson/console-log-level
+- https://www.npmjs.com/package/call-log
+
+### flow control
+- https://www.npmjs.com/package/run-waterfall
+- https://www.npmjs.com/package/run-series
+- https://www.npmjs.com/package/run-parallel
+- https://caolan.github.io/async/v3/
+- https://www.npmjs.com/package/neo-async
+
+### testing
+- https://github.com/volument/baretest
+- https://www.npmjs.com/package/standard
+- https://www.npmjs.com/package/sepia
+
 ## Related Work
 
 - James Halliday [wrote about useful heuristics for finding npm modules in 2014](https://web.archive.org/web/20140518090110/http://substack.net/finding_modules).
