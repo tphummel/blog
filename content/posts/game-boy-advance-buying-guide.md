@@ -30,12 +30,10 @@ Here is a list of Game Boy Advance games of high quality and as of June 2020 can
 
 ## Market Overview
 
-Here is an overview of the ___ Nintendo Game Boy Advance games rated 70 or above by [Metacritic](https://www.metacritic.com) (minimum 7 reviews) and the price to buy the game loose (no box or manual), used on secondary markets according to [Video Game Price Charts](https://www.pricecharting.com). This gives a sense of the overall shape of GBA loose cartridge market, ignoring mediocre and low quality games.
+Here is an overview of the 228 Nintendo Game Boy Advance games rated 70 or above by [Metacritic](https://www.metacritic.com) (minimum 7 reviews) and the price to buy the game loose (no box or manual), used on secondary markets according to [Video Game Price Charts](https://www.pricecharting.com). This gives a sense of the overall shape of GBA loose cartridge market, ignoring mediocre and low quality games.
 
-- Avg Price:
-- Median Price:
-- Avg Score:
-- Median Score:
+- Avg Price: $19.85
+- Avg Score: 78.5
 
 *Prices accurate as of June 21, 2020.*
 
@@ -63,7 +61,17 @@ Here is an overview of the ___ Nintendo Game Boy Advance games rated 70 or above
 
 ### Games with Metascores of 85+, Under $20
 
-
+| price & rating | 85-89pts                          | 90-94pts                                   | 95-99pts                                |
+|----------------|-----------------------------------|--------------------------------------------|-----------------------------------------|
+| $15.00-19.99   | WarioWare, Inc.: Mega Microgame$! | Super Mario World: Super Mario Advance 2   | The Legend of Zelda: A Link to the Past |
+|                | Final Fantasy Tactics Advance     | Mario & Luigi: Superstar Saga              |                                         |
+|                | Final Fantasy IV Advance          |                                            |                                         |
+| $10.00-14.99   | Sonic Advance                     | Super Mario Advance 4: Super Mario Bros. 3 |                                         |
+|                | F-Zero: Maximum Velocity          | Mario Kart Super Circuit                   |                                         |
+|                |                                   | Yoshi's Island: Super Mario Advance 3      |                                         |
+| $5.00-9.99     | Tony Hawk's Pro Skater 4          | Tony Hawk's Pro Skater 3                   | Tony Hawk's Pro Skater 2                |
+|                | Tony Hawk's Underground           |                                            |                                         |
+| $0.00-4.99     | Dave Mirra Freestyle BMX 2        |                                            |                                         |
 
 ### 13 Games 80-84 Points, Under $10
 
