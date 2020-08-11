@@ -36,8 +36,8 @@ Most Consecutive Rolls in a Single Turn
 
 EDIT: 2013-11-22 - dug up these old reports
 
-![Nick](https://i.imgur.com/UxszcSg.png "Nick")
-![Tom](https://i.imgur.com/mLukrFd.png "Tom")
-![JD](https://i.imgur.com/o0me20D.png "JD")
+{{< figure src=/img/UxszcSg.png title="Nick" >}}
+{{< figure src=/img/mLukrFd.png title="Tom" >}}
+{{< figure src=/img/o0me20D.png title="JD" >}}
 
   [0]: https://github.com/tphummel/dice-collector
