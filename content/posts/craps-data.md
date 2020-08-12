@@ -4,7 +4,7 @@ date: 2012-01-01T16:03:13-07:00
 draft: false
 toc: false
 images:
-tags: [craps, scorekeeping]
+tags: [craps, scorekeeping, second-screen]
 aliases:
   - /2012/01/01/craps/
 ---

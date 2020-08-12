@@ -3,6 +3,7 @@ title: "Super Metroid 100 Percent"
 date: 2020-07-04T06:03:13-07:00
 tags:
   - video-games
+  - second-screen
 toc: true
 ---
 

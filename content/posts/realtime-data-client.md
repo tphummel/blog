@@ -4,7 +4,7 @@ draft: false
 toc: false
 images:
 title: Realtime Data Client with Redis, Websockets, and D3
-tags: [code, tetris]
+tags: [code, tetris, second-screen]
 aliases:
   - /2013/10/13/realtime-data-client/
 ---

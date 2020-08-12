@@ -4,7 +4,7 @@ draft: false
 toc: false
 images:
 title: Super Mario Bros 3
-tags: [video-games, mario-3]
+tags: [video-games, mario-3, second-screen]
 aliases:
   - /2013/04/03/mario-3-run/
 ---
