@@ -51,7 +51,7 @@ plot(df1$time, df1$lines, pch=".",
 
 And the result:
 
-![R Scatterplot](https://i.imgur.com/YpXUEDu.png "R Scatterplot")
+{{< figure src=/img/YpXUEDu.png title="R Scatterplot" alt="R Scatterplot" >}}
 
 Do a histogram:
 ```
@@ -59,7 +59,7 @@ hist(df1$ratio, 100,
   main="Tetris Lines/Sec Freq Dist", xlab="Ratio")
 ```
 
-![R Histogram](https://i.imgur.com/KqmmL5w.png "R Histogram")
+{{< figure src=/img/KqmmL5w.png title="R Histogram" alt="R Histogram" >}}
 
 
   [0]: {{< ref tetris-primer >}}
