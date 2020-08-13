@@ -11,7 +11,7 @@ aliases:
 
 I noticed on the [Waze][0] web platform that I could see a listing of my Trips inside the "Edit Map" area.
 
-![waze drives list](https://i.imgur.com/TcR0GVV.png "waze drives list")
+{{< figure src=/img/TcR0GVV.png title="waze drives list" alt="waze drives list" >}}
 
 I wrote an [npm][1] [module][2] for getting a list of these trips and the detailed information about each. In an [example script][3], I looked at my highest measured speeds.
 

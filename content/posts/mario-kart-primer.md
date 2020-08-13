@@ -4,7 +4,7 @@ date: 2011-01-01T16:03:13-07:00
 draft: false
 toc: false
 images:
-tags: [kart, video-games]
+tags: [kart, video-games, second-screen]
 aliases:
   - /2011/01/01/mario-kart-primer/
 ---

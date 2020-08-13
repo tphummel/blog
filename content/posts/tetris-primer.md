@@ -2,12 +2,14 @@
 title: "Tetris Primer"
 date: 2011-01-01T16:03:13-07:00
 draft: false
-toc: false
+toc: true
 images:
 tags: [tetris, video-games]
 aliases:
   - /2011/01/01/tetris-primer/
 ---
+
+## Intro
 
 In 2004, my college roommates and I started playing a multiplayer variation of tetris called [The New Tetris for Nintendo 64][0]. For the uninitiated this version of tetris hinges on building [monosquares and multisquares][4]
 
@@ -26,20 +28,22 @@ The app had been hosted in a few places in the past:
 - https://tetris-db.tphum.com/
 - https://tetris-db.tmhmml.com/
 
-### Specifications
-
-**Rules:**
+## Game Settings
 
 + We play [The New Tetris for Nintendo 64][0] on marathon mode with directed garbage.
 + 2-4 players at a time.
 + Matches which for any reason are missed prior to recording all stats are thrown out.
 
-**Scoring**
+## Scoring
+
+### Definitions
 
 - 1 point per line cleared
-- 5 points per multi-square line
-- 10 points per mono-square line
+- 5 points per multisquare line
+- 10 points per monosquare line
 - 1 point tetris bonus
+
+### Permutations
 
 ```
 +---------+---------+---------+--------+-------+--------+
@@ -52,7 +56,27 @@ The app had been hosted in a few places in the past:
 +---------+---------+---------+--------+-------+--------+
 ```
 
-**Useful Terms:**
+### Single Multisquare Tetris
+
+{{< figure src="/img/tetris/score-single-multi.gif" >}}
+
+### Single Monosquare Tetris
+
+{{< figure src="/img/tetris/score-single-mono.gif" >}}
+
+### Double Multisquare Tetris
+
+{{< figure src="/img/tetris/score-double-multi.gif" >}}
+
+### Multisquare and Monosquare Tetris
+
+{{< figure src="/img/tetris/score-mixed.gif" >}}
+
+### Double Monosquare Tetris
+
+{{< figure src="/img/tetris/score-double-mono.gif" >}}
+
+## Useful Terms
 
 *Win Rank:* Rank as determined by longevity. "#1" was the last player standing. Ties for 2nd or 3rd are possible. (aka "Wrank")
 
@@ -73,22 +97,45 @@ The app had been hosted in a few places in the past:
 *"S" Round:* A round in which a player averages 1.0 line per second played (ex: 100+ lines in 1:40, 55 lines in 0:50).
 
 ----
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/A4QWL"><a href="//imgur.com/a/A4QWL">the new tetris - monosquares</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
-### monosquares
 
-{{< figure src="https://imgur.com/a/A4QWL" >}}
+## Monosquares
 
-### multisquares
+### O
 
-{{< figure src="https://imgur.com/a/1jRv5" >}}
+{{< figure src="/img/tetris/mono-o.gif" >}}
 
-### scoring
+### J
 
-{{< figure src="https://imgur.com/a/l1vTK" >}}
+{{< figure src="/img/tetris/mono-j-spiral.gif" >}}
+
+### T
+
+{{< figure src="/img/tetris/mono-t.gif" >}}
+
+### I
+
+{{< figure src="/img/tetris/mono-i.gif" >}}
+
+### L
+
+{{< figure src="/img/tetris/mono-l-spiral.gif" >}}
+
+## Multisquares
+
+### jjoo
+{{< figure src="/img/tetris/multi-jjoo.gif" >}}
+
+### ijls
+{{< figure src="/img/tetris/multi-ijls.gif" >}}
+
+### ittz
+{{< figure src="/img/tetris/multi-ittz.gif" >}}
+
+There are many more ways to make multisquares...
 
 ----
 
-### Example Reports
+## Example Reports
 
 <!-- SELECT m.matchdate as date, p.username as plyr, l.locationname as site, (select count(playerid) from playermatch where matchid = pm.matchid) as mode, pm.lines, concat("0:",pm.time) as time, pm.wrank as wrk, pm.erank as erk FROM playermatch pm, player p, tntmatch m, location l WHERE pm.matchid = m.matchid AND p.playerid = pm.playerid AND m.location = l.locationid AND pm.time < 60 AND (select count(playerid) from playermatch where matchid = pm.matchid) IN (4,3,2) ORDER BY pm.lines DESC LIMIT 10; -->
 
@@ -133,6 +180,10 @@ Highest Lines per Second Ratio, 4P Only, All-Time (as of 12/5/2013)
 | 2007-03-20 | Dan  | 1217        |    90 | 0:55 | 1.636 |   4 |   1 |
 +------------+------+-------------+-------+------+-------+-----+-----+
 ```
+
+## Miscellanea
+
+{{< figure src="/img/tetris/xmas-tree-stand.gif" title="Christmas Tree Stand" >}}
 
   [0]: https://en.wikipedia.org/wiki/The_New_Tetris
   [2]: https://github.com/tphummel/tetris-db

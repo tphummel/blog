@@ -48,9 +48,9 @@ The following steps I did for **each** of my two dogs:
 
 ## Results
 
-![Dog Activity Spreadsheet](https://i.imgur.com/gkktQa6l.png "Dog Activity Spreadsheet")
+{{< figure src=/img/gkktQa6l.png title="Dog Activity Spreadsheet" >}}
 
-![Fitbit Leaderboard](https://i.imgur.com/xgdSH1fl.png "Fitbit Leaderboard")
+{{< figure src=/img/xgdSH1fl.jpeg title="Fitbit Leaderboard" >}}
 
 ## Caveats
 
