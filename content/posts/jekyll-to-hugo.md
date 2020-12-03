@@ -44,7 +44,7 @@ In evaluating themes, i also ran across a [helpful article][9] on migrating from
 
 I started with choosing a [hugo port of Hermit][16]. The theme includes support for [Subresource Integrity][17] for stylesheets and javascript files, which is really cool. However, I ran into an issue with [Cloudflare][18] CDN, in which the hash of the files changed between build time and when the files were served. The hash of the file didn't match the hash in the built website which caused loading the stylesheet to fail in modern browsers which support the SRI recommendation.
 
-I evaluated the options in the free tier of cloudflare's CDN and couldn't find anything to fix or customize the issue. If I turned off the CDN cache altogether, allowing requests to flow directly to the origin, SRI would be succeed.
+I evaluated the options in the free tier of cloudflare's CDN and couldn't find anything to fix or customize the issue. If I turned off the CDN cache altogether, allowing requests to flow directly to the origin, SRI would succeed.
 
 In researching SRI further, it really wasn't meant for my usecase, where a stylesheet was being served from my own site. It is meant to prevent an XSS attack when loading a common library from a public CDN you don't control. It is meant to ensure the content of the file you are loading was not changed or compromised.
 
