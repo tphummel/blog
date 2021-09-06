@@ -15,24 +15,22 @@ Since [September of last year](https://www.instagram.com/p/BZHA7rjnu77/), [my in
 
 ## Basic
 
+{{< figure src="/img/trains/26867767_146611146051622_8287056453223579648_n_17906411596127969.jpg" >}}
 
-{{< instagram BelDGZQHVaz hidecaption >}}
-
-{{< instagram BfFEjZtn6Ew hidecaption >}}
-
+{{< figure src="/img/trains/27573729_144448409559984_2854092152869224448_n_17899600237143128.jpg" >}}
 
 ## Intermediate
 
-{{< instagram BegBv8JHP_j hidecaption >}}
+{{< figure src="/img/trains/26867972_479309669132479_6834959325052534784_n_17921335102041490.jpg" >}}
 
-{{< instagram BedX24BnHsi hidecaption >}}
+{{< figure src="/img/trains/26185048_398219507283481_7337304077291749376_n_17913894445078768.jpg" >}}
 
 
 ## Advanced
 
-{{< instagram BkFukBNnm2Z hidecaption >}}
+{{< figure src="/img/trains/35000530_400276030454457_7435944890371932160_n_17863897642255785.jpg" >}}
 
-{{< instagram Bf04Q_eH25z hidecaption >}}
+{{< figure src="/img/trains/28153443_156695145031829_1593892342417326080_n_17900757058176929.jpg" >}}
 
 ## Constraints
 
@@ -59,14 +57,14 @@ Since [September of last year](https://www.instagram.com/p/BZHA7rjnu77/), [my in
 
 A special division of track designs are ramps. They often don't conform to the goals of normal designs. But they are are awesome for other reasons like racing and launching trains.
 
-{{< instagram Bh1y7uvnrq0 hidecaption >}}
+{{< figure src="/img/trains/30590905_193330244799450_3993621348151721984_n_17938895899054388.jpg" >}}
 
-{{< instagram Bh47pnEntK1 hidecaption >}}
+{{< figure src="/img/trains/30602013_232803390610422_4243849372632088576_n_17926435561116979.jpg" >}}
 
-{{< instagram BjPzvK7HoCR hidecaption >}}
+{{< figure src="/img/trains/33428188_211323892981243_4993307649522008064_n_17948501917052849.jpg" >}}
 
 ## Action Shots!
 
-{{< instagram BiBDINEnML6 hidecaption >}}
+{{< video mp4="/img/trains/31278317_1977319679187326_6859593165939803126_n_17929096537108046.mp4" label="train ramp 1" >}}
 
-{{< instagram BjH8_iWHS4B hidecaption >}}
+{{< video mp4="/img/trains/32864218_230583567698696_6484609053340138769_n.mp4" label="train ramp 2" >}}
