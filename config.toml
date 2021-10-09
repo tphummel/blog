@@ -117,10 +117,18 @@ disableHugoGeneratorInject = false
 
 [menu]
   [[menu.main]]
+    identifier = "posts"
+    name       = "Posts 📝"
+    url        = "posts/"
+  [[menu.main]]
     identifier = "about"
-    name       = "About"
+    name       = "About 💁‍♂️"
     url        = "about/"
   [[menu.main]]
-    identifier = "posts"
-    name       = "Posts"
-    url        = "posts/"
+    identifier = "lapsrun"
+    name       = "Laps.run 🏃‍♂️"
+    url        = "https://laps.run"
+  [[menu.main]]
+    identifier = "data"
+    name       = "Data 🏦"
+    url        = "https://data.tomhummel.com"
