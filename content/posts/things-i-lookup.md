@@ -28,6 +28,48 @@ main(){
 main
 ```
 
+## jq examples
+
+```
+cat stars-captured.json| jq -r '.[] | select((.stars >= 1000) and (.updated >= "2021-08-01") and (.lang == "JavaScript") and ((.license == "mit") or (.license == "apache-2.0") or (.license == "isc") or (.license == "bsd-2-clause") or (.license == "bsd-3-clause")))' | jq -n '[inputs]' | jq 'sort_by(-.stars)' | jq 'length'
+
+cat stars-captured.json| jq 'select(.stars >= 1000 and .updated >= "2021-08-01")'
+
+cat stars-captured.json| jq -r 'length'
+
+cat *.json | jq --slurp '. | flatten | .[]' > combined.json
+
+cat combined.json | jq '.[] .platform' | awk '{ FS="\n" count[$1]++}END{for(j in count) print j","count[j]}' | sort -t "," -k2 -nr
+
+cat combined.json | jq -r '.[] | [.platform, .title, .hardware_compatibility, .link, .metascore, .user_score, .release_date] | @csv' > all.csv
+```
+
+## harelba/q examples
+
+```
+for i in $(seq 0 6); do echo "--$i--" && q -H -d "," "select date, count from ./year-two-sneezes-daily.csv where strftime('%w', date) = '$i' order by count desc" | (echo 'date,sneezes' && cat) | head -n 10; done
+
+q -H -d "," "select count(*) from ./year-two-sneezes.csv"
+
+q -H -d "," "select timestamp,type,lat,lon from ./year-two-sneezes.csv"
+
+q -H -d "," "select min(b.date), max(b.date), sum(b.count) as sneezes from ./year-two-sneezes-daily.csv a JOIN ./year-two-sneezes-daily.csv b ON (b.date < date(a.date, '+5 day') and b.date >= a.date) group by a.date order by sneezes desc"  | (echo 'start,end,sneezes' && cat) | csvlook | head -n 10
+
+q -H -d "," "select outcome,death_reason from ./games.csv where outcome = "loss""
+
+q -H -d "," "select death_reason,count(game_id) from ./games.csv where outcome = 'loss' group by death_reason order by count(game_id) desc"
+```
+
+## xargs examples
+
+```
+docker volume ls -qf dangling=true | xargs -r docker volume rm
+terraform state list | grep aws_route53_record | xargs "terraform state show {}"
+
+cat face-pics-2017-inprog.csv| csvcut -c 5 | head -n1 | xargs -I {} sh -c "wget -q -O- {} | grep -o 'https.*shared\_content\/.*\.jpg' | head -n 1 | wget -q -O- -i- > ./2017/$(python -c 'import time; print time.time()').jpg
+
+```
+
 ## cheatsheets
 - [k8s](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/kubernetes.sh)
 - [Nodejs](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/backend/node.js)
