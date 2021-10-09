@@ -11,7 +11,7 @@ aliases:
 ---
 
 
-# bash script boilerplate
+## bash script boilerplate
 
 ```
 #!/usr/bin/env bash
@@ -28,31 +28,31 @@ main(){
 main
 ```
 
-# cheatsheets
+## cheatsheets
 - [k8s](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/kubernetes.sh)
 - [Nodejs](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/backend/node.js)
 - [Docker](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/docker.sh)
 - [Php](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/php.php)
 - [Bash](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/bash.sh)
 
-# vpn route issue
+## vpn route issue
 ```
 sudo route flush
 ```
 
-# traceroute
+## traceroute
 
 ```
 traceroute -T -p 80 -n 10.0.5.4
 ```
 
 
-# ansible: add authorized key(s) to host(s)
+## ansible: add authorized key(s) to host(s)
 ```
 ANSIBLE_HOST_KEY_CHECKING=false ansible all -b -u ec2-user -i 10.23.1.41,10.23.1.108,10.23.1.175, -m authorized_key -a "key=https://github.com/tphummel.keys user=ec2-user"
 ```
 
-# CIDR
+## CIDR
 - /8: 10.x.x.x. 16.7MM usable IPs
 - /16: 10.0.x.x. 65,500 usable
 - /24: 10.0.0.x. 254 usable
@@ -64,7 +64,7 @@ ANSIBLE_HOST_KEY_CHECKING=false ansible all -b -u ec2-user -i 10.23.1.41,10.23.1
 
 [ref](http://droptips.com/cidr-subnet-masks-and-usable-ip-addresses-quick-reference-guide-cheat-sheet)
 
-# Chrome Screenshot of entire window 
+## Chrome Screenshot of entire window 
 
 (including below the vertical scroll - not all pages will work. SPAs which do clever viewport optimizations sometimes don't work)
 
@@ -72,100 +72,100 @@ ANSIBLE_HOST_KEY_CHECKING=false ansible all -b -u ec2-user -i 10.23.1.41,10.23.1
 command+option+j. command+shift+p # then type "Capture full size screenshot"
 ```
 
-# sed global find/replace
+## sed global find/replace
 ```
 sed -i -e 's/few/asd/g' hello.txt
 ```
 
-# useful `curl` flags
+## useful `curl` flags
 - `-s` silence progress info
 - Curl with redirects: `-L`
 - curl headers only: `-I -X GET`
 - curl insecure: `-k`
 - curl: `--max-redirs`
 
-# start ssh agent
+## start ssh agent
 
 ```
 eval "$(ssh-agent -s)"
 ```
 
-# add key to ssh agent
+## add key to ssh agent
 
 ```
 ssh-add -K ~/.ssh/id_rsa
 ```
 
-# remove host from known hosts
+## remove host from known hosts
 ```
 ssh-keygen -R <hostname>
 ssh-keygen -R myhost.mydomain.com
 ```
 
-# find things listening on 8800
+## find things listening on 8800
 ```
 netstat -anp | grep -i 8800
 ps -ef | grep -i 8800
 ```
 
-# systemd
+## systemd
 ```
 systemctl stop docker
 journalctl -f -u docker --since=1hr
 ```
 
-# find files by size
+## find files by size
 
 	find / -size +1G
 
 
-# find files by name
+## find files by name
 
 	find . -name test.png
 
 
-# recursively search files for a word
+## recursively search files for a word
 
 	grep -nir "ldap" .
 
-# combine stdout, stderr
+## combine stdout, stderr
 
 	2>&1
 
-# awk print field space delimited
+## awk print field space delimited
 
 	awk '{print $5}'
 
-# Tar, untar
+## Tar, untar
 
 [https://tarball.guru/](https://tarball.guru/)
 
-# create tarball of single file
+## create tarball of single file
 
 	tar -zcvf date-range-osx64.tar.gz date-range-osx64
 
 
-# Show merged pull requests between two SHAs
+## Show merged pull requests between two SHAs
 
 ```
 git log --oneline  8da11b6c32..ad5d336f1 | grep Merg
 git log --oneline  8da11b6c32..HEAD | grep Merg
 ```
 
-# git delete remote branch
+## git delete remote branch
 
 	git push -d origin my-branc
 
 
-# git delete local branch
+## git delete local branch
 
 	git branch -D my-branc
 
 
-# mac osx keyboard commands
+## mac osx keyboard commands
 apple+f2 # focus apple menu
 
-# set macosx wifi without a mouse
+## set macosx wifi without a mouse
 
 ```
 networksetup -listallhardwareports
@@ -173,18 +173,18 @@ networksetup -setairportnetwork en1 SSID password
 networksetup -getairportnwor
 ```
 
-# list all consul services
+## list all consul services
 ```
 curl -k -L host:8500/v1/catalog/services | jq
 curl -k -L host:8500/v1/agent/services | jq
 ```
 
-# deregister consul service
+## deregister consul service
 
 	curl -k -L -X PUT host:8500/v1/agent/services | jq
 
 
-# heredoc cat to file
+## heredoc cat to file
 
 ```
 cat > outfile.txt <<EOF
@@ -212,24 +212,24 @@ hello
 EOF
 ```
 
-# signaling
+## signaling
 
 	sudo kill -SIGUSR1 <pid>
 
 
-# data normalization
+## data normalization
 - 1NF: All columns contain only a single value (no sets). 
 - 2NF: 1NF and every non-key column depends on the entire candidate key. 
 - 3NF: 2NF and every non-key column must not provide a fact about another non-key column
 
 Sql join reference. [Venn diagrams](https://twitter.com/davidcrawshaw/status/976525292096446464/photo/1)
 
-# restart mcafee endpoint protection
+## restart mcafee endpoint protection
 ```
 for i in $(ps aux | grep "[M]cAfee" | awk '{print $2}'); do sudo kill -9 $i; done
 ```
 
-# more links
+## more links
 
 - [https://explainshell.com/](https://explainshell.com/)
 - [https://crontab.guru/](https://crontab.guru/)
