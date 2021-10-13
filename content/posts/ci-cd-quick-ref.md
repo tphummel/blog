@@ -1,5 +1,5 @@
 ---
-title: "CI/CD Quick Reference"
+title: "CI CD Quick Reference"
 date: 2021-10-01T10:03:13-07:00
 draft: false
 toc: true
@@ -12,6 +12,7 @@ tags:
   - build
   - deploy
   - reference
+alias: "posts/ci/cd-quick-reference/"
 ---
 
 ## Intro
