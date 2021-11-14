@@ -244,3 +244,7 @@ cat nintendo-ds-prices.json | jq -r '.[] | [.title, .loose_price] | @csv' > nint
 ### Joining Datasets
 
 I assigned an id to each game in price charting download. i used that id to map to the metacritic records. This allowed discretion to choose between particular variants, focusing on the least expensive way to acquire a game.
+
+### Data 
+
+- [metacritic dataset (gen 5,6,7 + wii u)](/files/metacritic-gen5-6-7.csv)
