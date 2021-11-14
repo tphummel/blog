@@ -121,6 +121,11 @@ We are using the 400 highest rated Nintendo Gamecube games from [metacritic][2].
 
 See [Nintendo DS Buying Guide][1] for background and methodology. It applies equally here.
 
+### Data
+
+- [metacritic dataset (gen 5,6,7 + wii u)](/files/metacritic-gen5-6-7.csv)
+
+
   [0]: {{< ref game-boy-advance-buying-guide >}}
   [1]: {{< ref nintendo-ds-buying-guide >}}
   [2]: https://metacritic.com
