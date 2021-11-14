@@ -1,0 +1,18 @@
+{{ $scratch := newScratch }}
+{{ range .Site.RegularPages }}
+    {{ $scratch.Add "wordcount" .WordCount }}
+{{ end }}
+
+<div>
+    <p>Posts: <a href="posts/">{{ len .Site.RegularPages }}</a>, Words: {{ $scratch.Get "wordcount" | lang.NumFmt 0 }}</p>
+</div>
+<div>
+    <p>
+{{range $name, $taxonomy := .Site.Taxonomies.tags}} {{ $cnt := .Count }}
+    {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+        <a href={{ .RelPermalink }} title="All pages with tag {{$name}}">{{ $name }}</a>
+        <sup>{{ $cnt }}</sup> /
+    {{end}}
+{{end}}
+    </p>
+</div>
