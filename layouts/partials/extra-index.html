@@ -1,0 +1,13 @@
+<div>
+    <p>Posts Count: <a href="posts/">{{ len .Site.RegularPages }}</a></p>
+</div>
+<div>
+    <p>
+{{range $name, $taxonomy := .Site.Taxonomies.tags}} {{ $cnt := .Count }}
+    {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+        <a href={{ .RelPermalink }} title="All pages with tag {{$name}}">{{ $name }}</a>
+        <sup>{{ $cnt }}</sup> /
+    {{end}}
+{{end}}
+    </p>
+</div>
