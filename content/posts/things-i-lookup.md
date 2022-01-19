@@ -10,6 +10,25 @@ aliases:
   - /2020/02/14/things-i-lookup/
 ---
 
+## vagrant examples
+
+```
+cat > provision.sh <<EOF
+hello
+EOF
+
+chmod u+x provision.sh
+
+cat > Vagrantfile <<EOF
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/rocky8"
+  config.vm.provision "shell", path: "provision.sh", privileged: false
+end
+EOF
+
+vagrant up
+vagrant ssh
+```
 
 ## bash script boilerplate
 
