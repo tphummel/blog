@@ -132,3 +132,7 @@ disableHugoGeneratorInject = false
     identifier = "data"
     name       = "Data 🏦"
     url        = "https://data.tomhummel.com"
+  [[menu.main]]
+    identifier = "wordle"
+    name       = "Wordle 📓"
+    url        = "https://wordle.tomhummel.com"
