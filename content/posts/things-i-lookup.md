@@ -14,6 +14,8 @@ aliases:
 
 - https://github.com/andybrewer/mvp
 - https://watercss.kognise.dev/
+- https://www.swyx.io/css-100-bytes
+- [58 bytes of CSS to look great nearly everywhere](https://gist.github.com/JoeyBurzynski/617fb6201335779f8424ad9528b72c41)
 
 ## vagrant examples
 
