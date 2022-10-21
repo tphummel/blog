@@ -96,6 +96,12 @@ cat face-pics-2017-inprog.csv| csvcut -c 5 | head -n1 | xargs -I {} sh -c "wget 
 
 ```
 
+## redirect stdout and stderr to a file
+
+```
+ls -al 2>&1 > samplefile.txt
+```
+
 ## cheatsheets
 - [k8s](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/tools/kubernetes.sh)
 - [Nodejs](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/backend/node.js)
