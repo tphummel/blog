@@ -286,6 +286,14 @@ hello
 EOF
 ```
 
+```
+# don't do variable substitution/expansion
+cat > hello.js <<"EOF"
+(cb) => {
+  console.log(`my log message ${process.env.HELLO}`)
+}
+EOF
+
 ## signaling
 
 	sudo kill -SIGUSR1 <pid>
