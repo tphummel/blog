@@ -293,6 +293,7 @@ cat > hello.js <<"EOF"
   console.log(`my log message ${process.env.HELLO}`)
 }
 EOF
+```
 
 ## signaling
 
