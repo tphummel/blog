@@ -8,6 +8,7 @@ tags:
   - reference
 aliases:
   - /2020/02/14/things-i-lookup/
+  - /2020/02/14/things-i-look-up/
 ---
 
 ## drop in css
