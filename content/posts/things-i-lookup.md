@@ -17,6 +17,7 @@ aliases:
 - https://watercss.kognise.dev/
 - https://www.swyx.io/css-100-bytes
 - [58 bytes of CSS to look great nearly everywhere](https://gist.github.com/JoeyBurzynski/617fb6201335779f8424ad9528b72c41)
+- [Classless CSS](https://github.com/dbohdan/classless-css)
 
 ## vagrant examples
 
@@ -97,10 +98,15 @@ cat face-pics-2017-inprog.csv| csvcut -c 5 | head -n1 | xargs -I {} sh -c "wget 
 
 ```
 
+## pi precision
+
+- nasa/jpl uses 15 decimal precision for pi when planning inter-planetary missions. 
+- a circle with a circumference of 48 billion kilometers would be off by ~1 centimeter by cutting pi off at 15 decimals. 
+
 ## redirect stdout and stderr to a file
 
 ```
-ls -al 2>&1 > samplefile.txt
+ls -al > samplefile.txt 2>&1
 ```
 
 ## cheatsheets
