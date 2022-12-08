@@ -100,8 +100,8 @@ cat face-pics-2017-inprog.csv| csvcut -c 5 | head -n1 | xargs -I {} sh -c "wget 
 
 ## pi precision
 
-- nasa/jpl uses 15 decimal precision for pi when planning inter-planetary missions. 
-- a circle with a circumference of 48 billion kilometers would be off by ~1 centimeter by cutting pi off at 15 decimals. 
+- NASA/JPL uses 15 decimal precision for pi when planning inter-planetary missions. 
+- A circle with a circumference of 48 billion kilometers would be off by ~1 centimeter by cutting pi off at 15 decimals.
 
 ## redirect stdout and stderr to a file
 
