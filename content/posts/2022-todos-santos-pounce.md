@@ -8,6 +8,159 @@ tags:
   - cards
 data:
   sessions: 
+    - session: "2022-11-23"
+      ruleset:
+        pile: 13
+        bonus: 5
+      hands:
+        - ts: "2022-11-23T20:45:00-0700"
+          players: 
+            - name: "tom"
+              score: 10
+            - name: "neela"
+              score: -4
+            - name: "nancy"
+              score: -2
+            - name: "gavin"
+              score: 18
+              win: true
+            - name: "kate"
+              score: -1
+            - name: "alex"
+              score: -1
+        - ts: "2022-11-23T20:51:00-0700"
+          players: 
+            - name: "tom"
+              score: -3
+            - name: "neela"
+              score: 15
+              win: true
+            - name: "nancy"
+              score: -7
+            - name: "gavin"
+              score: -7
+            - name: "kate"
+              score: -5
+            - name: "alex"
+              score: 0
+        - ts: "2022-11-23T20:57:00-0700"
+          players: 
+            - name: "tom"
+              score: -2
+            - name: "neela"
+              score: 10
+            - name: "nancy"
+              score: 10
+            - name: "gavin"
+              score: -5
+            - name: "kate"
+              score: -1
+            - name: "alex"
+              score: 15
+              win: true
+        - ts: "2022-11-23T21:02:00-0700"
+          players: 
+            - name: "tom"
+              score: 6
+            - name: "neela"
+              score: 13
+            - name: "nancy"
+              score: 19
+              win: true
+            - name: "gavin"
+              score: 1
+            - name: "kate"
+              score: -4
+            - name: "alex"
+              score: 9
+        - ts: "2022-11-23T21:08:00-0700"
+          players: 
+            - name: "tom"
+              score: -12
+            - name: "neela"
+              score: 1
+            - name: "nancy"
+              score: -1
+            - name: "gavin"
+              score: 2
+            - name: "kate"
+              score: 0
+            - name: "alex"
+              score: 15
+              win: true
+        - ts: "2022-11-23T21:14:00-0700"
+          players: 
+            - name: "tom"
+              score: 11
+              win: true
+            - name: "neela"
+              score: 12
+            - name: "nancy"
+              score: 8
+            - name: "gavin"
+              score: 5
+            - name: "kate"
+              score: 6
+            - name: "alex"
+              score: -5
+        - ts: "2022-11-23T21:20:00-0700"
+          players: 
+            - name: "tom"
+              score: 14
+              win: true
+            - name: "neela"
+              score: 14
+            - name: "nancy"
+              score: 1
+            - name: "gavin"
+              score: 10
+            - name: "kate"
+              score: -1
+            - name: "alex"
+              score: -2
+        - ts: "2022-11-23T21:27:00-0700"
+          players: 
+            - name: "tom"
+              score: 15
+            - name: "neela"
+              score: 20
+            - name: "nancy"
+              score: 21
+              win: true
+            - name: "kate"
+              score: 4
+            - name: "alex"
+              score: -11
+        - ts: "2022-11-23T21:34:00-0700"
+          players: 
+            - name: "tom"
+              score: -7
+            - name: "neela"
+              score: 10
+            - name: "nancy"
+              score: 17
+              win: true
+            - name: "gavin"
+              score: 12
+            - name: "kate"
+              score: -6
+            - name: "alex"
+              score: -12
+        - ts: "2022-11-23T21:39:00-0700"
+          players: 
+            - name: "tom"
+              score: 1
+            - name: "neela"
+              score: 19
+              win: true
+            - name: "nancy"
+              score: 4
+            - name: "gavin"
+              score: -4
+            - name: "kate"
+              score: -8
+            - name: "alex"
+              score: 11
     - session: "2022-11-20"
       ruleset:
         pile: 13
