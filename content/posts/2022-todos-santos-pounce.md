@@ -8,6 +8,154 @@ tags:
   - cards
 data:
   sessions: 
+    - session: "2022-11-20"
+      ruleset:
+        pile: 13
+        bonus: 5
+      hands:
+        - ts: "2022-11-20T21:08:00-0700"
+          players: 
+            - name: "neela"
+              score: -5
+            - name: "tom"
+              score: -17
+            - name: "brent"
+              score: 2
+            - name: "kate"
+              score: -6
+            - name: "alex"
+              score: 11
+              win: true
+        - ts: "2022-11-20T21:15:00-0700"
+          players: 
+            - name: "neela"
+              score: 20
+              win: true
+            - name: "tom"
+              score: 8
+            - name: "brent"
+              score: -3
+            - name: "kate"
+              score: 2
+            - name: "alex"
+              score: 4
+            - name: "gavin"
+              score: 4
+        - ts: "2022-11-20T21:20:00-0700"
+          players: 
+            - name: "neela"
+              score: -5
+            - name: "tom"
+              score: 17
+              win: true
+            - name: "brent"
+              score: 2
+            - name: "kate"
+              score: -2
+            - name: "alex"
+              score: -6
+            - name: "sadie"
+              score: -15
+            - name: "gavin"
+              score: -8
+        - ts: "2022-11-20T21:34:00-0700"
+          players: 
+            - name: "neela"
+              score: -1
+            - name: "tom"
+              score: -20
+            - name: "kate"
+              score: 14
+              win: true
+            - name: "alex"
+              score: -14
+            - name: "dylan"
+              score: -11
+        - ts: "2022-11-20T21:41:00-0700"
+          players: 
+            - name: "neela"
+              score: -4
+            - name: "tom"
+              score: -11
+            - name: "kate"
+              score: -2
+            - name: "alex"
+              score: 18
+              win: true
+            - name: "dylan"
+              score: 7
+        - ts: "2022-11-20T21:47:00-0700"
+          players: 
+            - name: "neela"
+              score: 25
+              win: true
+            - name: "tom"
+              score: -6
+            - name: "kate"
+              score: 9
+            - name: "alex"
+              score: -12
+            - name: "dylan"
+              score: 0
+        - ts: "2022-11-20T21:53:00-0700"
+          players: 
+            - name: "neela"
+              score: 6
+            - name: "tom"
+              score: -9
+            - name: "kate"
+              score: 10
+              win: true
+            - name: "alex"
+              score: 3
+        - ts: "2022-11-20T21:59:00-0700"
+          players: 
+            - name: "neela"
+              score: 18
+              win: true
+            - name: "tom"
+              score: -6
+            - name: "kate"
+              score: -6
+            - name: "alex"
+              score: -16
+        - ts: "2022-11-20T22:04:00-0700"
+          players: 
+            - name: "neela"
+              score: -8
+            - name: "tom"
+              score: -17
+            - name: "kate"
+              score: 7
+              win: true
+            - name: "alex"
+              score: -14
+        - ts: "2022-11-20T22:09:00-0700"
+          players: 
+            - name: "neela"
+              score: 9
+            - name: "tom"
+              score: 11
+              win: true
+            - name: "kate"
+              score: -17
+            - name: "alex"
+              score: -7
+            - name: "dylan"
+              score: -3
+        - ts: "2022-11-20T22:16:00-0700"
+          players: 
+            - name: "neela"
+              score: 32
+              win: true
+            - name: "tom"
+              score: 9
+            - name: "kate"
+              score: 2
+            - name: "alex"
+              score: 16
+            - name: "dylan"
+              score: 22
     - session: "2022-11-18_2"
       ruleset:
         pile: 13
@@ -407,6 +555,7 @@ data:
     <th>Rank</th>
     <th>Name</th>
     <th>Score Avg ↓</th>
+    <th>Wins</th>
   </tr>
 
   {{ $sortable := slice }}
@@ -423,6 +572,9 @@ data:
       <td>{{ .name | title }}</td>
       <td>
         {{ lang.NumFmt 3 .scoreAvg }} ({{ .scoreSum }} / {{ .handCount }})
+      </td>
+      <td>
+        {{ .winCount }}
       </td>
     </tr>
   {{ end }}
