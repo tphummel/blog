@@ -8,7 +8,232 @@ tags:
   - cards
 data:
   sessions: 
-    - session: "2022-11-18"
+    - session: "2022-11-18_2"
+      ruleset:
+        pile: 13
+        bonus: 5
+      hands:
+        - ts: "2022-11-18T21:38:00-0700"
+          players: 
+            - name: "nancy"
+              score: 12
+              win: true
+            - name: "brent"
+              score: -10
+            - name: "sadie"
+              score: -22
+            - name: "brenty"
+              score: -22
+            - name: "kate"
+              score: -1
+            - name: "tom"
+              score: -23
+            - name: "gavin"
+              score: -12
+        - ts: "2022-11-18T21:43:00-0700"
+          players: 
+            - name: "nancy"
+              score: 9
+              win: true
+            - name: "brent"
+              score: -17
+            - name: "sadie"
+              score: -9
+            - name: "brenty"
+              score: -7
+            - name: "kate"
+              score: -5
+            - name: "tom"
+              score: -3
+            - name: "gavin"
+              score: -8
+        - ts: "2022-11-18T21:48:00-0700"
+          players: 
+            - name: "nancy"
+              score: 15
+              win: true
+            - name: "brent"
+              score: -1
+            - name: "sadie"
+              score: -15
+            - name: "brenty"
+              score: -2
+            - name: "kate"
+              score: -9
+            - name: "tom"
+              score: -5
+            - name: "gavin"
+              score: -2
+        - ts: "2022-11-18T21:54:00-0700"
+          players: 
+            - name: "nancy"
+              score: 0
+            - name: "brent"
+              score: -8
+            - name: "sadie"
+              score: -8
+            - name: "brenty"
+              score: 2
+            - name: "kate"
+              score: 11
+              win: true
+            - name: "tom"
+              score: -15
+            - name: "gavin"
+              score: -7
+            - name: "neela"
+              score: -8
+        - ts: "2022-11-18T21:59:00-0700"
+          players: 
+            - name: "nancy"
+              score: -11
+            - name: "brent"
+              score: 9
+            - name: "sadie"
+              score: -17
+            - name: "brenty"
+              score: -9
+            - name: "kate"
+              score: 15
+              win: true
+            - name: "tom"
+              score: 4
+            - name: "gavin"
+              score: 10
+            - name: "neela"
+              score: 11
+        - ts: "2022-11-18T22:04:00-0700"
+          players: 
+            - name: "nancy"
+              score: -10
+            - name: "brent"
+              score: -7
+            - name: "sadie"
+              score: -20
+            - name: "brenty"
+              score: -17
+            - name: "kate"
+              score: 11
+              win: true
+            - name: "tom"
+              score: -1
+            - name: "gavin"
+              score: -12
+            - name: "neela"
+              score: -5
+        - ts: "2022-11-18T22:10:00-0700"
+          players: 
+            - name: "nancy"
+              score: 17
+              win: true
+            - name: "brent"
+              score: 0
+            - name: "kate"
+              score: -3
+            - name: "tom"
+              score: -5
+            - name: "gavin"
+              score: -12
+            - name: "neela"
+              score: 2
+        - ts: "2022-11-18T22:17:00-0700"
+          players: 
+            - name: "nancy"
+              score: 8
+            - name: "kate"
+              score: 5
+            - name: "tom"
+              score: -2
+            - name: "gavin"
+              score: 6
+            - name: "neela"
+              score: 21
+              win: true
+        - ts: "2022-11-18T22:23:00-0700"
+          players: 
+            - name: "nancy"
+              score: 16
+              win: true
+            - name: "kate"
+              score: 4
+            - name: "tom"
+              score: 7
+            - name: "gavin"
+              score: -4
+            - name: "neela"
+              score: 15
+        - ts: "2022-11-18T22:28:00-0700"
+          players: 
+            - name: "nancy"
+              score: 9
+              win: true
+            - name: "kate"
+              score: -10
+            - name: "tom"
+              score: -4
+            - name: "gavin"
+              score: -9
+            - name: "neela"
+              score: 5
+        - ts: "2022-11-18T22:34:00-0700"
+          players: 
+            - name: "nancy"
+              score: 22
+              win: true
+            - name: "kate"
+              score: -9
+            - name: "tom"
+              score: 12
+            - name: "gavin"
+              score: 9
+            - name: "neela"
+              score: -4
+        - ts: "2022-11-18T22:40:00-0700"
+          players: 
+            - name: "nancy"
+              score: -18
+            - name: "britta"
+              score: -3
+            - name: "kate"
+              score: -22
+            - name: "tom"
+              score: -15
+            - name: "gavin"
+              score: -3
+            - name: "neela"
+              score: 15
+              win: true
+        - ts: "2022-11-18T22:47:00-0700"
+          players: 
+            - name: "nancy"
+              score: 5
+            - name: "britta"
+              score: 1
+            - name: "kate"
+              score: 0
+            - name: "tom"
+              score: 2
+            - name: "gavin"
+              score: -7
+            - name: "neela"
+              score: 23
+              win: true
+        - ts: "2022-11-18T22:52:00-0700"
+          players: 
+            - name: "nancy"
+              score: -11
+            - name: "britta"
+              score: -1
+            - name: "kate"
+              score: -5
+            - name: "tom"
+              score: -6
+            - name: "gavin"
+              score: 11
+              win: true
+            - name: "neela"
+              score: 0
+    - session: "2022-11-18_1"
       ruleset:
         pile: 13
         bonus: 5
