@@ -325,13 +325,54 @@ data:
               win: true
 ---
 
-## Intro
-
-## Overview
-
 {{< pounce.inline >}}
 {{ $sessions := .Page.Params.data.sessions }}
 <p>Sessions: {{ len $sessions }}</p>
+
+<table>
+  <tr>
+    <th>#</th>
+    <th>Start</th>
+    <th>End</th>
+    <th>Hands</th>
+    <th>Players</th>
+    <th>Player-Hands</th>
+    <th>Rules</th>
+  </tr>
+  
+  {{ range $i, $session := sort $sessions "session" }}
+    {{ $distinctPlayers := dict }}
+    {{ $handPlayerCount := 0 }}
+    {{ $startTs := time "2199-01-01T16:35:00-0700" }}
+    {{ $endTs := time "1899-01-01T16:35:00-0700" }}
+    
+    {{ range $hand := $session.hands }}
+      {{ $handPlayerCount = add $handPlayerCount (len $hand.players) }}
+      {{ $handTs := time $hand.ts }}
+      {{ if lt $handTs $startTs }}
+        {{ $startTs = $handTs }}
+      {{ end }}
+      {{ if gt $handTs $endTs }}
+        {{ $endTs = $handTs }}
+      {{ end }}
+
+      {{ range $handPlayer := $hand.players }}
+        {{ $distinctPlayers = merge $distinctPlayers (dict $handPlayer.name true) }}
+      {{ end }}
+    {{ end }}
+
+    <tr>
+      <td>{{ add $i 1 }}</td>
+      <td>{{ $startTs | time.Format "01/02 15:04" }}</td>
+      <td>{{ $endTs | time.Format "01/02 15:04"  }}</td>
+      <td>{{ len $session.hands }}</td>
+      <td>{{ len $distinctPlayers }}</td>
+      <td>{{ $handPlayerCount }}</td>
+      <td>{{ $session.ruleset.pile }}+{{ $session.ruleset.bonus }}</td>
+    </tr>
+  {{ end }}
+
+</table>
 
 {{ $allHands := slice }}
 {{ range $session := $sessions }}
@@ -347,13 +388,16 @@ data:
 {{ $scoreboardByPlayer := dict }}
 
 {{ range $hand := $allHands }}
+  {{ $ruleset := $hand.ruleset }}
   {{ range $handPlayer := $hand.players }}
     {{ if not (isset $scoreboardByPlayer $handPlayer.name) }}
       {{ $scoreboardByPlayer = merge $scoreboardByPlayer (dict $handPlayer.name $perPlayer)}}
     {{ end }}
 
     {{ $before := index $scoreboardByPlayer $handPlayer.name }}
-    {{ $after := merge $before (dict "handCount" (add (index $before "handCount") 1) "winCount" (add (index $before "winCount") (cond ($handPlayer.win | default false) 1 0)) "scoreSum" (add (index $before "scoreSum") $handPlayer.score) ) }}
+    {{ $handPlayerScore := add $handPlayer.score (cond ($handPlayer.win | default false) $ruleset.bonus 0) }}
+
+    {{ $after := merge $before (dict "handCount" (add (index $before "handCount") 1) "winCount" (add (index $before "winCount") (cond ($handPlayer.win | default false) 1 0)) "scoreSum" (add (index $before "scoreSum") $handPlayerScore) ) }}
     {{ $scoreboardByPlayer = merge $scoreboardByPlayer (dict $handPlayer.name $after) }}
   {{ end }}
 {{ end }}
@@ -362,7 +406,6 @@ data:
   <tr>
     <th>Rank</th>
     <th>Name</th>
-    <th>Wins Avg</th>
     <th>Score Avg ↓</th>
   </tr>
 
@@ -378,9 +421,6 @@ data:
     <tr>
       <td>{{ add $i 1 }}</td>
       <td>{{ .name | title }}</td>
-      <td>
-        {{ lang.NumFmt 2 .winAvg }} ({{ .winCount }} / {{ .handCount }})
-      </td>
       <td>
         {{ lang.NumFmt 3 .scoreAvg }} ({{ .scoreSum }} / {{ .handCount }})
       </td>
