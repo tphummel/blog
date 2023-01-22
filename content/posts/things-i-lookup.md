@@ -11,6 +11,13 @@ aliases:
   - /2020/02/14/things-i-look-up/
 ---
 
+## local webserver 
+
+```
+# cd to web root
+python3 -m http.server
+```
+
 ## drop in css
 
 - https://github.com/andybrewer/mvp
