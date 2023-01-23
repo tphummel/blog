@@ -1,67 +1,87 @@
 ---
-title: "2023 Tools and Processes"
+title: "2023 Tools and Workflows"
 date: 2023-01-22T07:45:00-08:00
 draft: false
 toc: false
 tags: 
   - notion
-  - 
-data: 
-  paid_services: 
-    - name: Notion
-      price: 
-      per_period: 
-      notes: 
-    - name: Hey.com
-      price: 99.00
-      per_period: year
-      notes: 
-    - name: 1Password
-      price: 
-      per_period: year
-      notes: 
-    - name: Dropbox
-      price: 119.99
-      per_period: year
-      notes: 
-    - name: Cloudflare Warp+
-      price: 4.99
-      per_period: month
-      notes: 
-    - name: Cloudflare Workers
-      price: 5.00
-      per_period: month
-      notes: General purpose compute platform for cron jobs, games, tools, automation, web widgets/doodads. 
+  - tools
+  - workflows
+  - ifttt
+  - hey.com
+  - cloudflare
+  - dropbox
+  - 1password
+paid_services: 
+  - name: Notion
+    price: 48
+    per_period: year
+    notes: daily joural, knowledge base, project management, trackers.
+  - name: Hey.com
+    price: 99.00
+    per_period: year
+    notes: Email service in which the economics respect its users.
+  - name: 1Password
+    price: 59.88
+    per_period: year
+    notes: Password manager, developer tools, family sharing.
+  - name: Dropbox
+    price: 119.99
+    per_period: year
+    notes: Document, photo, data backup.
+  - name: Feedly
+    price: 72
+    per_period: year
+    notes: News feed manager. 
+  - name: Cloudflare Warp+
+    price: 4.99
+    per_period: month
+    notes: Optimized DNS and internet routing - some semblance of privacy.
+  - name: Cloudflare Workers
+    price: 5.00
+    per_period: month
+    notes: General purpose compute platform for cron jobs, games, tools, automation, web widgets and doodads.
 ---
 
 # Tools I pay for
 
-The highest form of flattery, something so valuable/useful that I would pay out monthly or yearly for the privilege. 
+The highest form of flattery, something so valuable and useful that I would pay out monthly or yearly for the privileges.
 
-- Notion
-- Hey.com Email
-- 1Password 
-- Dropbox ($119/year via iOS App Store)
-- Cloudflare Warp+ ($4.99/mo)
-- Cloudflare Workers ($5.00/mo)
-- Feedly 
+{{< paidServices.inline >}}
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Purpose</th>
+  </tr>
+  {{ range $service := .Page.Params.paid_services }}
+    <tr>
+      <td>{{ $service.name }}</td>
+      <td>${{ lang.NumFmt 2 $service.price }} / {{ $service.per_period }} </td>
+      <td>{{ $service.notes }}</td>
+    </tr>
+  {{ end }}
+</table>
+{{< /paidServices.inline >}}
 
 # Nomie
 
 [Brandon Corbin][4] has worked tirelessly for years building [beautiful personal journaling software][5] and asking nearly nothing in return. I was happily a (small) supporter of his work monthly via Github Sponsors. Brandon has (very reasonably) [decided to move on][6] to new projects. Nomie has always been open source and Brandon has gone further by helping users self-host Nomie going forward. Thank you Brandon for everything you've built. So many people love and use your software daily.
 
-I'm now using versions I've hosted on [Cloudlare Pages][7]
+I'm now using Nomie versions I've hosted on [Cloudlare Pages][7]:
 - [Nomie 5][8]. Current version for daily use.  
 - [Nomie 6][9]. Evaluating.
 
-# Other Critical Tools / Data / Sources of truth
+My favorite things I track on Nomie: [Sneezes][14], Pushups, Haircuts, Showers. 
 
-- Google Calendar. I've migrated to [hey][0] for email, but I still host my personal calendar on Google. I'm interested in dedicated tools like [cal.com][1] but haven't yet looked into how to migrate to them. 
-- Google Sheets. 
-- Github.com. 
-- [Cloudflare Pages][7]. State of the art static website hosting. 
-- Apple Health. 
-- iOS Shortcuts. [Daily Face Picture][12], [Daily Wordle][13]
+# Other Critical Tools
+
+- Google Calendar. I've migrated to [hey][0] for email, but I still host my personal calendar on Google. I'm interested in dedicated tools like [cal.com][1] but haven't yet looked into how to migrate to them yet.
+- Google Sheets.
+- Github.com.
+- [Cloudflare Pages][7]. State of the art static website hosting.
+- Apple Health.
+- iOS Shortcuts. [Daily Wordle][13], [Daily Face Picture][12].
 
 # Wearables / Body
 - Apple Watch. 45mm,  Alumnium, Wifi Only. 
@@ -70,21 +90,34 @@ I'm now using versions I've hosted on [Cloudlare Pages][7]
 - Garmin. Forerunner 220.
 - Withings / Nokia Healthmate. Withings Body connected scale. 
 - Oral-B iO. Connected Toothbrush. 
-- BACtrack. Blood Alcohol 
+- BACtrack. Blood alcohol measurement. 
 
 # Social Media
 
-Social media has many pitfalls and painful effects on the world. I've made my peace with using these tools in an purposeful (somewhat anti-social) way.
+I've made my peace with using these tools in an purposeful (somewhat anti-social) way.
 
 - [Swarm][2]. Location checkins. 
-- WhatsApp. Family and friends chat. 
+- WhatsApp. Group chat. 
 - Linkedin. Professional networking. 
-- Untappd. Beer reviews and checkins. 
-- Vivino. Wine reviews and checkins. 
 - Strava. Fitness. 
+- Reelgood. Movie/TV journal and recommendations. 
+- Untappd. Beer journal and recommendations. 
+- Vivino. Wine journal and recommendations. 
 
-# Streaming Services / Entertainment
+# Workflows
+- Feedly (read later and notes) -> IFTTT -> Google Sheets
+- Pocket -> IFTTT -> Google Sheets (link/article capture)
+- Peloton ([bike][16]) -> Strava -> IFTTT -> Google Sheets
+- Garmin ([running][15]) -> Strava - > IFTTT -> Google Sheets
+- Spotify -> Last.fm -> [Last.fm to CSV][11]
+- iOS Shortcuts -> Photo + Geotag -> Dropbox ([daily face pic][12])
+- Wordle -> iOS Shortcuts -> Github.com -> [Cloudflare Pages][7] ([Wordle results capture][13])
+- IFTTT geofencing -> Google Sheets (commute tracking)
+- Swarm -> IFTTT -> Google Sheets
+
+# Streaming Entertainment
 - Spotify
+- MLB.tv
 - Apple Podcasts
 - Peloton
 - [Calm][3]
@@ -93,21 +126,12 @@ Social media has many pitfalls and painful effects on the world. I've made my pe
 - Audible
 - HBO Max
 - Disney+
-- MLB.tv
 - [Shudder][10]
 - Hulu
 - Amazon Prime
 
-# Workflows
-- Feedly -> Saved Items & Notes -> IFTTT -> Google Sheets
-- Pocket -> IFTTT -> Google Sheets
-- Peloton (bike) -> Strava -> IFTTT -> Google Sheets
-- Garmin (run) -> Strava - > IFTTT -> Google Sheets
-- Spotify -> Last.fm -> [Last.fm to CSV][11]
-- iOS Shortcuts -> Photo + Geotag -> Dropbox ([daily face pic][12])
-
 # Tools I'm not using in 2023
-- Twitter / Tweetbot. A car crash, don't rubberneck. Feedly brings me the news and links from the sources I value. 
+- Twitter. A car crash. Don't rubberneck. Feedly brings me the news and links from the sources I value. 
 
 
   [0]: https://hey.com
@@ -124,3 +148,6 @@ Social media has many pitfalls and painful effects on the world. I've made my pe
   [11]: https://benjaminbenben.com/lastfm-to-csv/
   [12]: https://data.tomhummel.com/recipe/face-timelapse/
   [13]: https://wordle.tomhummel.com/a/how-it-works/
+  [14]: https://data.tomhummel.com/sneezes/
+  [15]: https://data.tomhummel.com/running/
+  [16]: https://data.tomhummel.com/swim-bike-run/
