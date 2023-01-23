@@ -11,6 +11,37 @@ aliases:
   - /2020/02/14/things-i-look-up/
 ---
 
+## Hugo Inline Shortcode
+
+config.toml
+
+```
+enableInlineShortcodes: true
+```
+
+in an individual content page
+```
+{{</* myTable.inline */>}}
+<table>
+  <tr>
+    <th>Rank</th>
+    <th>Name</th>
+    <th>Games Played</th>
+    <th>Avg Score</th>
+    <th>Notes</th>
+  </tr>
+  {{ range $player := .Params.data.players }}
+    <tr>
+      <td>{{ $player.rank }}</td>
+      <td>{{ $player.name }}</td>
+      <td>{{ $player.gameCount }}</td>
+      <td>{{ lang.NumFmt 2 (div (float $player.totalScore) ($player.gameCount)) }} ({{ $player.totalScore }} / {{ $player.gameCount }})</td>
+      <td>{{ $player.notes }}</td>
+    </tr>
+  {{ end }}
+{{</* /myTable.inline */>}}
+```
+
 ## local webserver 
 
 ```
