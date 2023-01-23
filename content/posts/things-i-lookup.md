@@ -19,7 +19,7 @@ config.toml
 enableInlineShortcodes: true
 ```
 
-in an individual content page
+Store your data in a content page front matter. And then the shortcode goes in the main page content. 
 ```
 {{</* myTable.inline */>}}
 <table>
@@ -30,7 +30,7 @@ in an individual content page
     <th>Avg Score</th>
     <th>Notes</th>
   </tr>
-  {{ range $player := .Params.data.players }}
+  {{ range $player := .Page.Params.players }}
     <tr>
       <td>{{ $player.rank }}</td>
       <td>{{ $player.name }}</td>
