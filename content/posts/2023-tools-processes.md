@@ -142,7 +142,7 @@ I've made my peace with using these tools in an purposeful (somewhat anti-social
   [5]: https://nomie.app
   [6]: https://nomie.app/#more
   [7]: https://pages.cloudflare.com
-  [8]: https://nomie-5.pages.dev
+  [8]: https://nomie5.pages.dev
   [9]: https://nomie-6.pages.dev
   [10]: https://www.shudder.com/
   [11]: https://benjaminbenben.com/lastfm-to-csv/
