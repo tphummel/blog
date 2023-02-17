@@ -181,6 +181,17 @@ ANSIBLE_HOST_KEY_CHECKING=false ansible all -b -u ec2-user -i 10.23.1.41,10.23.1
 - /28: 14 usable
 - /29: 6 usable
 
+```
+# subdivide a /24 into four equal parts
+> cidrsubnets("10.0.1.0/24", 2, 2, 2, 2)
+tolist([
+  "10.0.1.0/26",
+  "10.0.1.64/26",
+  "10.0.1.128/26",
+  "10.0.1.192/26",
+])
+```
+
 [ref](http://droptips.com/cidr-subnet-masks-and-usable-ip-addresses-quick-reference-guide-cheat-sheet)
 
 ## Chrome Screenshot of entire window 
