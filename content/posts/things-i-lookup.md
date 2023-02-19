@@ -57,7 +57,7 @@ python3 -m http.server
 - [58 bytes of CSS to look great nearly everywhere](https://gist.github.com/JoeyBurzynski/617fb6201335779f8424ad9528b72c41)
 - [Classless CSS](https://github.com/dbohdan/classless-css)
 
-## vagrant examples
+## vagrant
 
 ```
 cat > provision.sh <<EOF
@@ -193,6 +193,30 @@ tolist([
 ```
 
 [ref](http://droptips.com/cidr-subnet-masks-and-usable-ip-addresses-quick-reference-guide-cheat-sheet)
+
+## Private IPv4 Network CIDRs
+
+| CIDR           | IP Range                      | \# of addresses | Subnet Mask |
+| -------------- | ----------------------------- | --------------- | ----------- |
+| 10.0.0.0/8     | 10.0.0.0 – 10.255.255.255     | 16_777_216      | 255.0.0.0   |
+| 172.16.0.0/12  | 172.16.0.0 – 172.31.255.255   | 1_048_576       | 255.240.0.0 |
+| 192.168.0.0/16 | 192.168.0.0 – 192.168.255.255 | 65_536          | 255.255.0.0 |
+
+[ref](https://en.wikipedia.org/wiki/Private_network)
+
+## Uptime Availability 9's
+
+| Availability | \# of 9's | Downtime per year |
+| ------------ | --------- | ----------------- |
+| 90.00000%    | 1         | 36.5 days         |
+| 99.00000%    | 2         | 3.65 days         |
+| 99.50000%    | 2.5       | 1.83 days         |
+| 99.90000%    | 3         | 8.76 hours        |
+| 99.95000%    | 3.5       | 4.38 hours        |
+| 99.99000%    | 4         | 52.56 minutes     |
+| 99.99900%    | 5         | 5.26 minutes      |
+| 99.99990%    | 6         | 31.5 seconds      |
+| 99.99999%    | 7         | 3.15 seconds      |
 
 ## Chrome Screenshot of entire window 
 
