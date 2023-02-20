@@ -141,7 +141,7 @@ Note: Option #4 does not include using managed kubernetes platforms like [EKS][2
 - [ECS EC2 vs. ECS Fargate Shared Responsibility Model][19]
 - [AWS EKS Shared Responsibility Model][20]
 
-## Beyond the Four Types
+## Beyond the Four Ways
 
 The four approaches above attempt to control cost and complexity, provide a constrained set of capabilities in order to achieve a goal. These will cover the common 80% of usecases for web applications. When you outgrow these four it means you may have special requirements. At a certain scale an organization can benefit from investments in platform capabilities, such as those provided by [Nomad][12] or [Kubernetes][13]. The breakeven point on these investments can be much further away than you think but still may make sense. YMMV.
 
