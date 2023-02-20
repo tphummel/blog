@@ -1,6 +1,6 @@
 ---
 title: "Four Ways to Build Web Apps"
-date: 2023-02-18T07:45:00-08:00
+date: 2023-02-20T09:30:00-08:00
 draft: false
 toc: true
 url: /posts/four-web-apps
