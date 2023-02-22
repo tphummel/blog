@@ -100,10 +100,6 @@ disableHugoGeneratorInject = false
 
   # Social icons
   [[params.social]]
-    name = "twitter"
-    url = "https://twitter.com/tphummel"
-
-  [[params.social]]
     name = "linkedin"
     url = "https://www.linkedin.com/in/tomphummel/"
 
