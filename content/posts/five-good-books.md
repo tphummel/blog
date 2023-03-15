@@ -88,7 +88,7 @@ See also, the [Issue Based Information System (IBIS)][5]
 
 ## Conclusion
 
-For me, these five books form an braided rope of practices, methods, and mantras to build a fulfilling career and life. 
+For me, these five books form an interwoven rope of practices, methods, and mantras to build a fulfilling career and life. 
 
 
   [0]: https://en.wikipedia.org/wiki/Getting_Things_Done
