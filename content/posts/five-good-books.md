@@ -8,7 +8,7 @@ tags: [gtd, 7-habits, ]
 
 ## Intro
 
-What follows is a list of five books that profoundly changed my professional life, my executive function, my problem solving, my cognition, and my life in general. I've linked Amazon when I couldn't find a wikipedia link. These are not affiliate links. I have no stake in where or if you purchase these books.
+What follows is a list of five books that profoundly changed my professional life, my executive function, my problem solving, my cognition, and my life in general. A common thread across these books is they intellectually outflank other comparable books. They form a more complete picture of the topic and with it more actionable and resonant conclusions.
 
 ## 'Getting Things Done'
 
