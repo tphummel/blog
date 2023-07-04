@@ -13,24 +13,47 @@ tags:
 
 ## Intro
 
-I wrote [a blog post]({{< relref "posts/four-web-apps.md" >}}) in February 2023. It became by far the most popular thing I've personally put on the internet. I love when [others share this stuff](https://www.swyx.io/ranking-1-on-hn-in-mid-april) so I've included some background on what happened before, during, and after.
+I wrote [a blog post]({{< relref "posts/four-web-apps.md" >}}) in February 2023. It became by far the most popular content I've personally put on the internet. I love when [others share this stuff](https://www.swyx.io/ranking-1-on-hn-in-mid-april) so I've included some background on what happened before, during, and after.
 
-![Four Ways to Build Web Apps](/img/four-web-apps/post-min.png "Four Ways to Build Web Apps")
+[![Four Ways to Build Web Apps](/img/four-web-apps/post-min.png "Four Ways to Build Web Apps")]({{< relref "posts/four-web-apps.md" >}})
 
 ## Highlights
 
 - 80,000 pageviews in first 16 hours.
 - Averaged 1+ request per second in each of 14 consecutive hours: 11:00AM PT 2/20 until 1:00 AM PT 2/21. 
 - On the Hacker News frontpage for 12 straight hours.
-- Peaked at HN #5 slot.
-- HN: 307 upvotes, 121 comments.
+- Peaked at [HN #5 slot][0].
+- HN: [307 upvotes, 121 comments][1].
+
+## Charts
+
+### Pageviews Overview
+![Seven Day Pageviews](/img/four-web-apps/honeycomb-overview-min.png "Data from honeycomb")
+
+### Pageviews Zoomed
+![Four Day Pageviews](/img/four-web-apps/honeycomb-zoom-min.png "Data from honeycomb")
+
+### Hacker News Ranking
+![Hacker News Rankings](/img/four-web-apps/hacker-news-ranking-min.png "Post reached top 5 on HN")
+
+### Pct of Traffic By Country
+(from Cloudflare, First 48 Hours)
+
+| Country | % of Traffic |
+| --- | --- |
+| United States | 62.80% |
+| Germany | 7.71% |
+| United Kingdom | 6.52% |
+| Canada | 5.12% |
+| Australia | 4.06% |
+| All Others Combined | 13.79% |
 
 ## Timeline
 
 - 2/20/2023
     - 17:30 UTC - [Published blog post](https://github.com/tphummel/blog/pull/87)
-    - 17:45 UTC - [Submitted the link on HN](https://news.ycombinator.com/item?id=34870636)
-    - 19:20 UTC - [Post entered Hacker News front page](https://hnrankings.info/34870636/)
+    - 17:45 UTC - [Submitted the link on HN][1]
+    - 19:20 UTC - [Post entered Hacker News front page][0]
 - 2/21
     - 03:00 UTC - When I realized what was happening
     - 09:20 UTC - Post exited HN front page
@@ -48,16 +71,12 @@ There is no question this exposure radiated outward to a number of my other post
 
 The tools available on Honeycomb's generous free tier are what unlocked the analysis in this post. Coarse grained data was available on Cloudflare but not sufficient to do everything.
 
-## Data
+## Regrets
 
-### Pageviews Overview
-![Seven Day Pageviews](/img/four-web-apps/honeycomb-overview-min.png "Data from honeycomb")
+- I wish I didn’t link my fork of the [nomie repo](https://github.com/open-nomie/nomie6-oss) as the post drove a handful of Github stars to my fork. I’m not doing development on the fork and I’m afraid it will create confusion for people who discover the project going forward.
+- I would have created more specificity around option #3, the Linux VM singleton. This was an intentional choice. Some comments seemed to think I meant one or more linux servers. No, I meant precisely one linux VM with a SQLite database file sitting on the local filesystem. 
 
-### Pageviews Zoomed
-![Four Day Pageviews](/img/four-web-apps/honeycomb-zoom-min.png "Data from honeycomb")
-
-### Hacker News Ranking
-![Hacker News Rankings](/img/four-web-apps/hacker-news-ranking-min.png "Post reached top 5 on HN")
+## Appendix
 
 ### Hourly
 
@@ -107,19 +126,5 @@ The tools available on Honeycomb's generous free tier are what unlocked the anal
 | 3/2 16:00 -0800 | 0.259 | 373 | 106,537 |
 | 3/3 16:00 -0800 | 0.242 | 349 | 106,886 |
 
-### Pct of Traffic By Country
-(from Cloudflare, First 48 Hours)
-
-| Country | % of Traffic |
-| --- | --- |
-| United States | 62.80% |
-| Germany | 7.71% |
-| United Kingdom | 6.52% |
-| Canada | 5.12% |
-| Australia | 4.06% |
-| All Others Combined | 13.79% |
-
-## Regrets
-
-- I wish I didn’t link my fork of the [nomie repo](https://github.com/open-nomie/nomie6-oss) as the post drove a handful of Github stars to my fork. I’m not doing development on the fork and I’m afraid it will create confusion for people who discover the project going forward.
-- I would have created more specificity around option #3, the Linux VM singleton. This was an intentional choice. Some comments seemed to think I meant one or more linux servers. No, I meant precisely one linux VM with a SQLite database file sitting on the local filesystem. 
+  [0]: https://hnrankings.info/34870636/
+  [1]: https://news.ycombinator.com/item?id=34870636
