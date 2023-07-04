@@ -1,8 +1,9 @@
 ---
-title: "Front Page of Hacker News"
-date: 2023-07-04T05:30:00-08:00
+title: "The Front Page of Hacker News"
+date: 2023-07-04T12:30:00-08:00
 draft: false
 toc: true
+url: /posts/front-page-hacker-news
 tags:
 - cloudflare
 - hugo
@@ -12,7 +13,7 @@ tags:
 
 ## Intro
 
-I wrote [a blog post](https://tomhummel.com/posts/four-web-apps/) in February 2023. It became by far the most popular thing I've personally put on the internet. I love when [others share this stuff](https://www.swyx.io/ranking-1-on-hn-in-mid-april) so I've included some views into what happened before, during, and after. 
+I wrote [a blog post]({{< relref "posts/four-web-apps.md" >}}) in February 2023. It became by far the most popular thing I've personally put on the internet. I love when [others share this stuff](https://www.swyx.io/ranking-1-on-hn-in-mid-april) so I've included some background on what happened before, during, and after.
 
 ![Four Ways to Build Web Apps](/img/four-web-apps/post-min.png "Four Ways to Build Web Apps")
 
