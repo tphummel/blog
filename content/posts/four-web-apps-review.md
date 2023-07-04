@@ -39,9 +39,11 @@ I wrote [a blog post](https://tomhummel.com/posts/four-web-apps/) in February 20
 
 As shown in the timeline, I had no idea this was happening until hours after it started. I hit publish and then went on with my day. Once I did, I was too scared to read the comment threads for about 24 hours - I was sure everyone would tear me apart. In the end the community was very supportive and I took great joy in reading everyones' thoughts!
 
+There is no question this exposure radiated outward to a number of my other posts, projects, websites, github repos, etc.
+
 ## Technical Details
 
-My blog ([Tomhummel.com](https://tomhummel.com)) is a [static website](https://github.com/tphummel/blog/) built with [Hugo](https://gohugo.io), hosted on [Cloudflare Pages](https://pages.cloudflare.com/) (Way #1), augmented with a Cloudflare Worker (Way #2). [The worker](https://github.com/tphummel/blog/blob/main/workers/index.js) intercepts each request, sends the request to its original destination, sends analytics data to [Honeycomb](https://honeycomb.io), and sets two security headers on the response.
+[My blog](https://tomhummel.com) is a [static website](https://github.com/tphummel/blog/) built with [Hugo](https://gohugo.io), hosted on [Cloudflare Pages](https://pages.cloudflare.com/) (Way #1), augmented with a Cloudflare Worker (Way #2). [The worker](https://github.com/tphummel/blog/blob/main/workers/index.js) intercepts each request, sends the request to its original destination, sends analytics data to [Honeycomb](https://honeycomb.io), and sets two security headers on the response.
 
 The tools available on Honeycomb's generous free tier are what unlocked the analysis in this post. Coarse grained data was available on Cloudflare but not sufficient to do everything.
 
