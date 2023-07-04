@@ -170,33 +170,35 @@ Which providers are worth considering for all-in investment? In my opinion, the 
 - There are of course other options. There are more complicated and (allegedly) capable approaches which move the cost and complexity curves with the promise of more capabilities. YMMV.
 - It's challenging to create things that matter. Be thorough, get lots of reps, always be learning, and good luck.
 
+> Edit 2023-07-04: This post got alot of attention. See [follow-up analysis]({{< relref "posts/front-page-hacker-news.md" >}}) of this post.
 
-    [1]: https://workers.cloudflare.com/
-    [2]: https://pages.cloudflare.com/
-    [3]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_website_configuration
-    [4]: https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Add_to_home_screen
-    [5]: https://github.com/tphummel/nomie5
-    [6]: https://github.com/brandoncorbin
-    [7]: https://gohugo.io/
-    [8]: https://github.com/tphummel/cloud-static
-    [9]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
-    [10]: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance
-    [11]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine
-    [12]: https://registry.terraform.io/providers/hashicorp/nomad/latest/docs
-    [13]: https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
-    [14]: https://github.com/aws-samples/twelve-factor-app-ecs-blog
-    [15]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster
-    [16]: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/container_instances_container_instance
-    [17]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_group
-    [18]: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_v2_service
-    [19]: https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-shared.html
-    [20]: https://docs.aws.amazon.com/eks/latest/userguide/security.html
-    [21]: https://registry.terraform.io/providers/honeycombio/honeycombio/latest
-    [22]: https://registry.terraform.io/providers/DataDog/datadog/latest
-    [23]: https://fly.io/
-    [24]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
-    [25]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
-    [26]: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster
-    [27]: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_cluster
-    [28]: https://web.dev/progressive-web-apps/
-    [29]: https://caniuse.com/web-app-manifest
+
+  [1]: https://workers.cloudflare.com/
+  [2]: https://pages.cloudflare.com/
+  [3]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_website_configuration
+  [4]: https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Add_to_home_screen
+  [5]: https://github.com/tphummel/nomie5
+  [6]: https://github.com/brandoncorbin
+  [7]: https://gohugo.io/
+  [8]: https://github.com/tphummel/cloud-static
+  [9]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
+  [10]: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance
+  [11]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine
+  [12]: https://registry.terraform.io/providers/hashicorp/nomad/latest/docs
+  [13]: https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
+  [14]: https://github.com/aws-samples/twelve-factor-app-ecs-blog
+  [15]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster
+  [16]: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/container_instances_container_instance
+  [17]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_group
+  [18]: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_v2_service
+  [19]: https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-shared.html
+  [20]: https://docs.aws.amazon.com/eks/latest/userguide/security.html
+  [21]: https://registry.terraform.io/providers/honeycombio/honeycombio/latest
+  [22]: https://registry.terraform.io/providers/DataDog/datadog/latest
+  [23]: https://fly.io/
+  [24]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
+  [25]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
+  [26]: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster
+  [27]: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_cluster
+  [28]: https://web.dev/progressive-web-apps/
+  [29]: https://caniuse.com/web-app-manifest
