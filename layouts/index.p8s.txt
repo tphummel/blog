@@ -1,0 +1,7 @@
+{{- $posts := where .Site.RegularPages "Section" "posts" -}}
+{{- $wordCount := 0 -}}
+{{- range $posts -}}
+    {{- $wordCount = add $wordCount .WordCount -}}
+{{- end -}}
+total_posts {{ len $posts }}
+total_words {{ $wordCount }}

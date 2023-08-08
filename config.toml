@@ -134,3 +134,13 @@ disableHugoGeneratorInject = false
     identifier = "wordle"
     name       = "Wordle 📓"
     url        = "https://wordle.tomhummel.com"
+
+[outputFormats]
+  [outputFormats.p8s]
+    baseName = 'metrics'
+    suffix = 'txt'
+    isPlainText = true
+    mediaType = 'text/plain'
+
+[outputs]
+  home = ['html', 'p8s']
