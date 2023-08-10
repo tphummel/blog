@@ -109,7 +109,7 @@ The usecases I'm most interested in right now are:
 
 - Learning about [Proxmox][19] and virtualization in general. 
 - Playing with various iterations of the Hashistack: [Nomad][10], [Consul][17], and [Vault][18]. 
-- Playing [k3s.io][24] and other minimal kubernetes distributions. 
+- Playing with [k3s.io][24] and other minimal kubernetes distributions. 
 - Playing with the [Prometheus][20] telemetry ecosystem. 
 - Playing with the [proxmox terraform provider][22] w/ self-hosted Gitlab and [Atlantis][23]. 
 - Playing with [self-hosted Github Actions runners][21] on my hardware.
