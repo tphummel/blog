@@ -70,8 +70,6 @@ My background in cloud and linux automation along with the challenging and empow
 
 This led me to discovering the [TinyMiniMicro][13] series of video reviews from [ServeTheHome][14]. This content really made a homelab feel within reach. 
 
-https://www.servethehome.com/introducing-project-tinyminimicro-home-lab-revolution/
-
 The series reviews three main families of compute:
 
 - Lenovo ThinkCenter Tiny
