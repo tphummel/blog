@@ -16,3 +16,10 @@
 {{end}}
     </p>
 </div>
+<div>
+    <p>
+        {{ with .Site.GetPage "advent-of-code" }}
+        <a href="{{ .RelPermalink }}">Advent of Code</a>
+        {{ end}}
+    </p>
+</div>
