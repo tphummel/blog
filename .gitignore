@@ -4,3 +4,4 @@ vendor/
 *.log
 build.json
 public/
+content/advent-of-code/**/input.txt
