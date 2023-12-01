@@ -1,17 +1,22 @@
 ---
 title: 2022 - Day 1
-date: 2023-11-30T09:40:00.000-08:00
+date: 2023-11-30T16:00:00.000-08:00
 toc: false
 puzzle_link: https://adventofcode.com/2022/day/1
+solved: 
+  part1: true
+  part2: true
 ---
 
 # Intro
 
+The puzzle prompt on [adventofcode.com](https://adventofcode.com/2022/day/1)
+
 ```
-# run with test data
+# run solution with test data
 zx content/advent-of-code/2022/1/_index.md
 
-# run with input file data
+# run solution with input file data
 zx content/advent-of-code/2022/1/_index.md content/advent-of-code/2022/1/input.txt
 ```
 
