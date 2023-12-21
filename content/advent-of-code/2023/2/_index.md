@@ -43,6 +43,7 @@ const bagContents = {
 
 const sampleSolutions = {
   part1: 8,
+  part2: 2286
 }
 
 let inputContent
@@ -87,28 +88,54 @@ const games = inputContent
     }
   })
 
-if (!inputFile) debug(games[0].grabReveals)
+// if (!inputFile) debug(games[0].grabReveals)
 
-
-
-const validGames = games.filter(game => {
+games.forEach(game => {
   let gameIsPossible = true
+  const maxByColor = {
+    red: -1,
+    green: -1,
+    blue: -1,
+  }
   game.grabReveals.forEach(gr => {
     gr.forEach(reveal => {
       if (reveal.quantity > bagContents[reveal.color]) gameIsPossible = false
+      if (reveal.quantity > maxByColor[reveal.color]) maxByColor[reveal.color] = reveal.quantity
     })
   })
-  return gameIsPossible
+  game.isPossible = gameIsPossible
+  game.maxByColor = maxByColor
 })
 
-const validGamesIdSummed = validGames.reduce((memo, game) => {
+if (!inputFile) debug(games[0])
+
+const possibleGame = games.filter(game => game.isPossible)
+const possibleGameIdsSummed = possibleGame.reduce((memo, game) => {
   memo += game.gameNumber
   return memo
 }, 0)
 
-console.log(`Part 1: Sum of valid game ids: ${validGamesIdSummed}`)
+console.log(`Part 1: Sum of valid game ids: ${possibleGameIdsSummed}`)
 
-if (!inputFile) assert.equal(validGamesIdSummed, sampleSolutions.part1, 'part 1 solution should match expected')
+if (!inputFile) assert.equal(possibleGameIdsSummed, sampleSolutions.part1, 'part 1 solution should match expected')
+
+const gamePowers = games.map(g => {
+  const gamePower = Object.values(g.maxByColor).reduce((memo, val) => {
+    if (memo === 0) return val
+    memo *= val
+    return memo
+  }, 0)
+  return gamePower
+})
+
+const powerSums = gamePowers.reduce((memo, power) => {
+  memo += power
+  return memo
+}, 0)
+
+if (!inputFile) assert.equal(powerSums, sampleSolutions.part2, 'part 2 solution should match expected')
+
+console.log(`Part 2: Sum of game powers: ${powerSums}`)
 
 function debug (msg) {
   if (process.env.DEBUG) console.log(msg)  
