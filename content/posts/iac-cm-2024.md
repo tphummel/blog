@@ -2,6 +2,9 @@
 title: "Infrastructure as Code / Config Management in 2024"
 date: 2023-12-30T20:00:00-08:00
 draft: false
+url: "/posts/iac-cm-2024"
+aliases:
+  - /posts/infrastructure-as-code-/-config-management-in-2024/
 toc: true
 tags:
   - linux
