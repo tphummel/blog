@@ -14,7 +14,7 @@ What follows is a list of five books that profoundly changed my professional lif
 
 ['Getting Things Done'][0] by David Allen (2001), or just "GTD", is about achieving relaxed control of your life.
 
-- Your brain is great at problem solving and pattern recognition. It is terrible at remembering things. Get everything out of your brain into an air tight system you brain trusts. If the system isn't legitimate your brain won't let go.
+- Your brain is great at problem solving and pattern recognition. It is terrible at remembering things. Get everything out of your brain into an air tight system your brain trusts. If the system isn't legitimate your brain won't let go.
 - It is 9:35am on Wednesday morning. What do I choose to put my time and energy toward?
 - A project is an outcome you want to pursue which takes more than one action step and has a time horizon sooner than one year.
 - Projects are either committed to or not (someday/maybe). Commitments can be to your family, your work, yourself, etc.  
@@ -56,7 +56,7 @@ There are three possible ways to prioritize work
 
 People aren't stages, they exhibit behaviors of those stages. You can't skip over stages. 
 
-## Lateral Thinking
+## 'Lateral Thinking'
 
 The concept of lateral thinking first entered my awareness via a quote attributed to Nintendo visionary [Gunpei Yokoi][6] who promoted "Lateral Thinking with Seasoned Technology". Nintendo is known for gaming devices which don't use cutting edge technology. Instead opting to innovate with "withered technology" to open new markets and parry would-be competitors.
 
@@ -70,7 +70,7 @@ See also, [Random Creative Stimulus](https://en.wikipedia.org/w/index.php?title=
 
 It is funny to note that at time of writing Amazon has this book categorized under "Religion & Spirituality > Occult & Paranormal".
 
-## Dialogue Mapping
+## 'Dialogue Mapping'
 
 ['Dialogue Mapping'][4] by Jeff Conklin (2005) is a tool for making meetings engaging, transparent, and valuable. I find it immensely satisfy to act as facilitator because it requires intense focus, active listening, and real time analysis. The approach can also mitigate all kinds of cancerous meeting behavior such as aggressiveness, crowding out or talking over participants, and ensuring each idea or input is given equal standing.
 
@@ -82,7 +82,7 @@ See also, the [Issue Based Information System (IBIS)][5]
 
 - "Habit 1: Be Proactive" overlaps with GTD's focus on identifying the next physical action on a project. 
 - "Habit 2: Begin with the end in mind" overlaps with GTD's focus on defining clear project outcomes.
-- "Habit 4: Think Win-win" overlaps with Stage 4-5 in Tribal Leadership
+- "Habit 4: Think Win-win" overlaps with Stage 4-5 in Tribal Leadership. Having an abundance mentality instead of scarcity.
 - "Habit 5: Seek first to understand then to be understood" pairs well with the methods in Dialogue Mapping
 - "Habit 7: Sharpen the saw" helps reinforce the need to recharge and balance your life. The Production/Production Capacity balance topic supports getting away from the work to ensure you have the energy to continue ahead. It is adjacent to Lateral Thinking, in particular looking for creative stimulation that may seem at first unrelated to your primary focus.
 
