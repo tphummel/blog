@@ -76,7 +76,7 @@ It is funny to note that at time of writing Amazon has this book categorized und
 
 See also, the [Issue Based Information System (IBIS)][5]
 
-## 'The 7 Habits of Highly Effective People
+## 'The 7 Habits of Highly Effective People'
 
 ['The 7 Habits of Highly Effective People'][2] by Stephen Covey (1989) nailed the clickbait title before it was cool. If you can get past the pompous sounding title it is a treasure trove of lessons for improving your productivity and executive function. 
 
