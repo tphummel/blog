@@ -116,24 +116,28 @@ disableHugoGeneratorInject = false
 [menu]
   [[menu.main]]
     identifier = "posts"
-    name       = "Posts 📝"
+    name       = "📝"
     url        = "posts/"
   [[menu.main]]
     identifier = "about"
-    name       = "About 💁‍♂️"
+    name       = "💁‍♂️"
     url        = "about/"
   [[menu.main]]
     identifier = "lapsrun"
-    name       = "Laps.run 🏃‍♂️"
+    name       = "🏃‍♂️"
     url        = "https://laps.run"
   [[menu.main]]
     identifier = "data"
-    name       = "Data 🏦"
+    name       = "🏦"
     url        = "https://data.tomhummel.com"
   [[menu.main]]
     identifier = "wordle"
-    name       = "Wordle 📓"
+    name       = "🟩🟨⬛️"
     url        = "https://wordle.tomhummel.com"
+  [[menu.main]]
+    identifier = "movies"
+    name       = "📼"
+    url        = "https://movies.tomhummel.com"
 
 [outputFormats]
   [outputFormats.p8s]
