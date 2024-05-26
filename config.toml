@@ -134,6 +134,10 @@ disableHugoGeneratorInject = false
     identifier = "wordle"
     name       = "Wordle 📓"
     url        = "https://wordle.tomhummel.com"
+  [[menu.main]]
+    identifier = "movies"
+    name       = "📼"
+    url        = "https://movies.tomhummel.com"
 
 [outputFormats]
   [outputFormats.p8s]
