@@ -73,7 +73,7 @@ I've been on [an exciting path][0] of building and running a homelab over the pa
 1. atlantis: debian bookworm LXC. caddy binary, atlantis binary or docker image, systemd units. (i'm not using docker)
 1. postgresql: Create from the PVE host console shell using [tteck pve helper scripts][4], databases > postgresql. 
 
-### How to add a new LXC guest
+## How to add a new LXC guest
 - Reserve the next virtual MAC address in my MAC address table I maintain in a Notion doc. 
 - Reserve the next private IP address in my Homelab CIDR range, which I maintain in a Notion doc. 
 - Create a DHCP reservation in Unifi for the MAC address and IP Address pair above.
@@ -344,7 +344,6 @@ Self host your:
 - connect to your apps privately over cloudflare tunnel (or tailscale, etc)
 
 Scan [awesome-selfhosted][8] and let your imagination run. Focus on utility. Focus on paid services you use every day.  
-
 
   [0]: {{< relref "posts/homelab-2023" >}}
   [1]: https://www.servethehome.com/introducing-project-tinyminimicro-home-lab-revolution/
