@@ -1,7 +1,7 @@
 ---
-title: "My Proxmox Homelab"
+title: "Proxmox Homelab Software"
 date: 2024-05-26T08:00:00-07:00
-url: "/posts/proxmox-homelab"
+url: "/posts/proxmox-homelab-software"
 draft: false
 toc: true
 tags:
@@ -73,8 +73,6 @@ I've been on [an exciting path][0] of building and running a homelab over the pa
 1. atlantis: debian bookworm LXC. caddy binary, atlantis binary or docker image, systemd units. (i'm not using docker)
 1. postgresql: Create from the PVE host console shell using [tteck pve helper scripts][4], databases > postgresql. 
 
-
-
 ### How to add a new LXC guest
 - Reserve the next virtual MAC address in my MAC address table I maintain in a Notion doc. 
 - Reserve the next private IP address in my Homelab CIDR range, which I maintain in a Notion doc. 
@@ -85,7 +83,6 @@ I've been on [an exciting path][0] of building and running a homelab over the pa
 - Create the terraform bits with the new `proxmox_lxc` [resource][13]
   - which defines: the proxmox host to use, the hostname, the lxc os template (debian 12 - the same version stored on the same device on all hosts), run the lxc unprivileged, set memory and cpu cores, allow nested virtualization (for docker to work), the root filesystem size, ssh authorized keys, the mac address, the provisioner script, and ignore changes to the ostemplate (when I upgrade the version in the future i don't want the guest to be destroyed)
   - provisioner script: install ansible and git. install ansible roles. Setup the ansible-pull systemd timer to run every 15 minutes. `ansible-pull` can be configured to run every time or only when there is a new commit in git. Install the dependent ansible roles I need. Finally run the systemd unit once immediately. 
-
 
 the terraform manifest:
 
@@ -214,7 +211,7 @@ resource "cloudflare_record" "mailcatcher" {
 }
 ```
 
-the provisioner script (setup-ansible-pull-cron.sh):
+the guest provisioner script (setup-ansible-pull-cron.sh):
 
 ```
 #!/bin/bash
@@ -263,7 +260,7 @@ do
 done
 ```
 
-## A useful pattern
+## Ansible pull playbook
 
 ```
 ---
@@ -331,15 +328,15 @@ Self host your:
 - rss [feed reader][5], [link saver][6], and [link archiver][7]. 
 - [games][9]
 - [location data][10]
-- uptime monitoring[11]
-- [backup][12] your critical data to offsite storage
-- ifttt-style automation
+- [uptime monitoring][11]
+- backup your critical data to offsite storage. tools like syncthing, rclone, airbyte
+- ifttt-style automation. tools like activepieces, node-red
 - misc handy tools: it-tech.tools, hrconvert2
 - mailhog
 - olivetin
 - nocodb
 - wiki
-- pastebin / secret sharing
+- [pastebin / secret sharing][15]
 - a single html page with all your links in one spot
 - backup images from your phone
 - podcast and audiobook library
@@ -359,8 +356,8 @@ Scan [awesome-selfhosted][8] and let your imagination run. Focus on utility. Foc
   [7]: https://archivebox.io/
   [8]: https://awesome-selfhosted.net/
   [9]: {{< relref "posts/minecraft-server-setup" >}}
-  [10]: owntracks
-  [11]: uptime kuma
-  [12]: rclone
+  [10]: https://github.com/tphummel/owntracks-receiver
+  [11]: https://github.com/louislam/uptime-kuma
   [13]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
   [14]: https://github.com/geerlingguy/ansible-role-gitlab
+  [15]: https://github.com/pglombardo/PasswordPusher
