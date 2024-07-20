@@ -1,0 +1,70 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+  <script>
+    let counter = 0
+    function buttonClick () {
+      const answer = document.getElementById('answer')
+      // goal: 20 items
+        // yes: 40% - 8
+        // no: 35% - 7
+        // maybe: 25% - 5
+      const responses = [
+        'yes',
+        "i'm 81% sure, yes",
+        'as i see it, yes!',
+        'nino says "sure thing, dude"',
+        'right on!',
+        "absolutely!",
+        "probably yes",
+        "almost certainly",
+
+        'no way, jose',
+        "i don't think so",
+        "i'm 99% sure, no",
+        "negative",
+        "definitely not",
+        "not a chance",
+        "unlikely",
+        
+        "i'm tired, please ask again later",
+        "i'm not sure",
+        "i'm not sure, ask again later",
+        "perhaps",
+        "it's unclear at this time",
+      ]
+      const randomIndex = Math.floor(Math.random() * responses.length)
+      answer.innerText = responses[randomIndex]
+      counter += 1
+    }
+  </script>
+</head>
+
+<body>
+
+  <p>Hello! Welcome to Nino, Otto, and Tom's magic eight ball🎱🎱</p>
+  <p>Ask a question and then:</p>
+  <button onclick="buttonClick()">Shake the magic eight ball!</button>
+  <h1 id="answer"></h1>
+</body>
+
+</html>
