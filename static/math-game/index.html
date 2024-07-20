@@ -5,7 +5,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
-  <link rel="stylesheet" href="css/style.css">
   <meta name="description" content="">
 
   <meta property="og:title" content="">
@@ -18,12 +17,23 @@
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.png">
 
-  <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#fafafa">
+  <style>
+    td,
+    th {
+      border: 1px solid rgb(160 160 160);
+      padding: 8px 10px;
+    }
+  </style>
   <script>
-    let attempts = 0
-    let wins = 0
-    function createProblem () {
+    const gameState = {
+      attempts: 0,
+      corrects: 0,
+      points: 0,
+      history: []
+    }
+
+    function createPrompt () {
       const min = 0
       const max = 10
       const quantity = 2
@@ -43,52 +53,89 @@
       }
     }
 
-    function scoreSolution (problem, solution) {
+    function showMathProblem () {
+      const Prompt = createPrompt()
+      document.getElementById('prompt')
+        .innerText = `${Prompt.numbers[0]} + ${Prompt.numbers[1]}`
+      document.getElementById('expected')
+        .innerText = Prompt.solution
+    }
+
+    function updateScoreboard () {
+      document.getElementById('attempts').innerText = gameState.history.length
+      document.getElementById('corrects').innerText = gameState.corrects
+      document.getElementById('points').innerText = gameState.points
+
+      const table = document.querySelector('table#history')
+      table.innerHTML = '<tr><th>#</th><th>Problem</th><th>Outcome</th></tr>'
+
+      for (let i = 0; i < gameState.history.length; i++) {
+        const row = table.insertRow()
+        row.insertCell().appendChild(document.createTextNode(i))
+        row.insertCell().appendChild(document.createTextNode(gameState.history[i].prompt))
+        row.insertCell().appendChild(document.createTextNode(gameState.history[i].isCorrect ? '✅' : '❌'))
+      }
 
     }
 
     function buttonClick () {
-      attempts++
-      const solutionGuess = document.getElementById('solution-guess').value
-      const correctSolution = document.getElementById('solution').innerText
+      const attempt = {
+        prompt: document.getElementById('prompt').innerText,
+        actual: parseInt(document.getElementById('actual').value, 10),
+        expected: parseInt(document.getElementById('expected').innerText, 10)
+      }
       
-      const expected = parseInt(correctSolution, 10)
-      const actual = parseInt(solutionGuess, 10)
-      console.table({
-        solutionGuess, correctSolution, expected, actual
-      })
-
       const feedback = document.getElementById('feedback')
-
-      if (expected === actual) {
-        feedback.innerHTML = '<span style="color: purple">🎉🎉 Correct! You did it!</span>'
-        wins++
+      if (attempt.expected === attempt.actual) {
+        feedback.style.backgroundColor = 'palegreen'
+        feedback.innerHTML = `<span">🎉🎉 Correct! ${attempt.prompt} = ${attempt.expected}</span>`
+        gameState.corrects++
+        gameState.points += attempt.expected
+        attempt.isCorrect = true
       } else {
-        feedback.innerText = "Not correct, try again!"
+        feedback.style.backgroundColor = 'lightcoral'
+        feedback.innerText = '❌ Incorrect, try again!'
+        attempt.isCorrect = false
+      }
+      gameState.history.push(attempt)
+
+      updateScoreboard()
+      if (attempt.isCorrect) {
+        showMathProblem()
+        document.getElementById('actual').value = ''
       }
     }
 
-    window.addEventListener('load', (event) => {
-      const problem = createProblem()
-      document.getElementById('problem')
-        .innerText = `${problem.numbers[0]} + ${problem.numbers[1]}`
-      document.getElementById('solution')
-        .innerText = problem.solution
-    })
+    window.addEventListener('load', showMathProblem)
   </script>
 </head>
 
 <body>
   <p>Hello! Welcome to the math game</p>
-  <!-- <p>Attempts: <span id="attempts"></span></p>
-  <p>Wins: <span id="wins"></span></p> -->
-  <p>Problem: <span id="problem"></span></p>
-  <div id="solution" hidden></div>
+  <p>Problem: <span id="prompt"></span></p>
+  <div id="expected" hidden></div>
   <p>
-    Solution: <input id="solution-guess" type="text" />
+    Solution: <input id="actual" type="number" />
     <button onclick="buttonClick()">Enter Solution</button>
   </p>
-  <p id="feedback"></p>
+  <p style="padding: 2px 5px; border: 1px solid black" id="feedback"></p>
+  <p>Scoreboard</p>
+  <table>
+    <tr>
+      <th>Attempts</th>
+      <td id="attempts">0</td>
+    </tr>
+    <tr>
+      <th>Correct</th>
+      <td id="corrects">0</td>
+    </tr>
+    <tr>
+      <th>Points</th>
+      <td id="points">0</td>
+    </tr>
+  </table>
+  <p>History</p>
+  <table id="history"></table>
 </body>
 
 </html>
