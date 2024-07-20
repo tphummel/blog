@@ -1,0 +1,94 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+  <script>
+    let attempts = 0
+    let wins = 0
+    function createProblem () {
+      const min = 0
+      const max = 10
+      const quantity = 2
+
+      const numbers = []
+      let sum = 0
+
+      while (numbers.length < quantity) {
+        const randomInteger = Math.floor(Math.random() * max)
+        numbers.push(randomInteger)
+        sum += randomInteger
+      }
+
+      return {
+        numbers,
+        solution: sum
+      }
+    }
+
+    function scoreSolution (problem, solution) {
+
+    }
+
+    function buttonClick () {
+      attempts++
+      const solutionGuess = document.getElementById('solution-guess').value
+      const correctSolution = document.getElementById('solution').innerText
+      
+      const expected = parseInt(correctSolution, 10)
+      const actual = parseInt(solutionGuess, 10)
+      console.table({
+        solutionGuess, correctSolution, expected, actual
+      })
+
+      const feedback = document.getElementById('feedback')
+
+      if (expected === actual) {
+        feedback.innerHTML = '<span style="color: purple">🎉🎉 Correct! You did it!</span>'
+        wins++
+      } else {
+        feedback.innerText = "Not correct, try again!"
+      }
+    }
+
+    window.addEventListener('load', (event) => {
+      const problem = createProblem()
+      document.getElementById('problem')
+        .innerText = `${problem.numbers[0]} + ${problem.numbers[1]}`
+      document.getElementById('solution')
+        .innerText = problem.solution
+    })
+  </script>
+</head>
+
+<body>
+  <p>Hello! Welcome to the math game</p>
+  <!-- <p>Attempts: <span id="attempts"></span></p>
+  <p>Wins: <span id="wins"></span></p> -->
+  <p>Problem: <span id="problem"></span></p>
+  <div id="solution" hidden></div>
+  <p>
+    Solution: <input id="solution-guess" type="text" />
+    <button onclick="buttonClick()">Enter Solution</button>
+  </p>
+  <p id="feedback"></p>
+</body>
+
+</html>
