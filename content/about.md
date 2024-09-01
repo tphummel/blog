@@ -17,4 +17,7 @@ Projects
 Other Links
 - [If your state was a california county, it would be...](https://gist.github.com/tphummel/2e293015608bf181a2c0a92a206afda9)
 
+Inspo
+> "In our current digital landscape, where a corporate algorithm tells us what to read, watch, drink, eat, wear, smell like, and sound like, human curation of the web is an act of revolution. A simple list of hyperlinks published under a personal domain name is subversive. Curation is punk." [Source](https://www.fromjason.xyz/p/notebook/raw-dog-the-open-web/)
+
 {{< figure src="https://api.thegreenwebfoundation.org/greencheckimage/Tomhummel.com?nocache=true" alt="This website is hosted Green - checked by thegreenwebfoundation.org" >}}

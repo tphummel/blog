@@ -18,6 +18,10 @@
 </div>
 <div>
     <p>
+        {{ with .Site.GetPage "colophon" }}
+        <a href="{{ .RelPermalink }}">Colophon</a>
+        {{ end}}
+        /
         {{ with .Site.GetPage "advent-of-code" }}
         <a href="{{ .RelPermalink }}">Advent of Code</a>
         {{ end}}
@@ -27,3 +31,12 @@
         {{ end}}
     </p>
 </div>
+<hr />
+<div>
+    <a href="https://www.fromjason.xyz/p/freelance/from-jason-2-0-is-an-11ty-powered-digital-garden-with-multiple-plots/#about-plots">Plots</a> in my <a href="https://maggieappleton.com/garden-history">digital garden</a> 
+    <div><a href="/posts">tomhummel.com</a>- my general website on technology and other topics</div>
+    <div><a href="https://data.tomhummel.com">data.tomhummel.com</a>- my personal data tools, techniques, and reporting</div>
+    <div><a href="https://wordle.tomhummel.com">wordle.tomhummel.com</a>- my wordle results and data</div>
+    <div><a href="https://movies.tomhummel.com">movies.tomhummel.com</a>- my movie list</div>
+</div>
+<hr />

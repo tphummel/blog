@@ -15,18 +15,11 @@ brew update
 brew install hugo
 
 git clone git@github.com:tphummel/blog.git tomhummel.com
+cd tomhummel.com/
 ```
 
 ## dev
 
 ```
 hugo server -D -w
-```
-
-## publish
-
-```
-rm -rf public/
-hugo
-aws s3 sync --delete public/ s3://my-bucket/
 ```
