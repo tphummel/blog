@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+  <title>tomhummel.com - math game</title>
   <meta name="description" content="">
 
   <meta property="og:title" content="">
@@ -34,17 +34,19 @@
     }
 
     function createPrompt () {
-      const min = 0
-      const max = 13
-      const quantity = 2
+      const urlParams = new URLSearchParams(window.location.search)
+      const min = urlParams.get('min') ? parseInt(urlParams.get('min'), 10) : 0
+      const max = urlParams.get('max') ? parseInt(urlParams.get('max'), 10) : 500
+      const quantity = urlParams.get('quantity') || 2
 
       const numbers = []
       let sum = 0
-
+      const range = (max - min + 1)
       while (numbers.length < quantity) {
-        const randomInteger = Math.floor(Math.random() * max)
-        numbers.push(randomInteger)
-        sum += randomInteger
+        const randomByRange = Math.floor(Math.random() * range)
+        const randomInRange = randomByRange + min
+        numbers.push(randomInRange)
+        sum += randomInRange
       }
 
       return {
@@ -54,11 +56,18 @@
     }
 
     function showMathProblem () {
-      const Prompt = createPrompt()
-      document.getElementById('prompt')
-        .innerText = `${Prompt.numbers[0]} + ${Prompt.numbers[1]}`
-      document.getElementById('expected')
-        .innerText = Prompt.solution
+      const prompt = createPrompt()
+      const displayPrompt = prompt.numbers.reduce((memo, number) => {
+        if (memo == '') {
+          memo = `${number}`
+        } else {
+          memo += ` + ${number}`
+        }
+        return memo
+      }, '')
+
+      document.getElementById('prompt').innerText = displayPrompt
+      document.getElementById('expected').innerText = prompt.solution
     }
 
     function updateScoreboard () {
@@ -134,6 +143,18 @@
       <td id="points">0</td>
     </tr>
   </table>
+  <p>
+    <details>
+      <summary>Instructions</summary>
+      You can add querystring arguments to configure the game. Defaults:
+      <ul>
+        <li>min=0</li>
+        <li>max=500</li>
+        <li>quantity=2</li>
+      </ul>
+      <p>example: <a href="https://tomhummel.com/math-game?min=50&max=750&quantity=5">/math-game?min=50&max=750&quantity=5</a></p>
+    </details>
+  </p>
   <p>History</p>
   <table id="history"></table>
 </body>
