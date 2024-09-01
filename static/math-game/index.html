@@ -1,0 +1,162 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tomhummel.com - math game</title>
+  <meta name="description" content="">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <meta name="theme-color" content="#fafafa">
+  <style>
+    td,
+    th {
+      border: 1px solid rgb(160 160 160);
+      padding: 8px 10px;
+    }
+  </style>
+  <script>
+    const gameState = {
+      attempts: 0,
+      corrects: 0,
+      points: 0,
+      history: []
+    }
+
+    function createPrompt () {
+      const urlParams = new URLSearchParams(window.location.search)
+      const min = urlParams.get('min') ? parseInt(urlParams.get('min'), 10) : 0
+      const max = urlParams.get('max') ? parseInt(urlParams.get('max'), 10) : 500
+      const quantity = urlParams.get('quantity') || 2
+
+      const numbers = []
+      let sum = 0
+      const range = (max - min + 1)
+      while (numbers.length < quantity) {
+        const randomByRange = Math.floor(Math.random() * range)
+        const randomInRange = randomByRange + min
+        numbers.push(randomInRange)
+        sum += randomInRange
+      }
+
+      return {
+        numbers,
+        solution: sum
+      }
+    }
+
+    function showMathProblem () {
+      const prompt = createPrompt()
+      const displayPrompt = prompt.numbers.reduce((memo, number) => {
+        if (memo == '') {
+          memo = `${number}`
+        } else {
+          memo += ` + ${number}`
+        }
+        return memo
+      }, '')
+
+      document.getElementById('prompt').innerText = displayPrompt
+      document.getElementById('expected').innerText = prompt.solution
+    }
+
+    function updateScoreboard () {
+      document.getElementById('attempts').innerText = gameState.history.length
+      document.getElementById('corrects').innerText = gameState.corrects
+      document.getElementById('points').innerText = gameState.points
+
+      const table = document.querySelector('table#history')
+      table.innerHTML = '<tr><th>#</th><th>Problem</th><th>Outcome</th></tr>'
+
+      for (let i = 0; i < gameState.history.length; i++) {
+        const row = table.insertRow()
+        row.insertCell().appendChild(document.createTextNode(i))
+        row.insertCell().appendChild(document.createTextNode(gameState.history[i].prompt))
+        row.insertCell().appendChild(document.createTextNode(gameState.history[i].isCorrect ? '✅' : '❌'))
+      }
+
+    }
+
+    function buttonClick () {
+      const attempt = {
+        prompt: document.getElementById('prompt').innerText,
+        actual: parseInt(document.getElementById('actual').value, 10),
+        expected: parseInt(document.getElementById('expected').innerText, 10)
+      }
+      
+      const feedback = document.getElementById('feedback')
+      if (attempt.expected === attempt.actual) {
+        feedback.style.backgroundColor = 'palegreen'
+        feedback.innerHTML = `<span">🎉🎉 Correct! ${attempt.prompt} = ${attempt.expected}</span>`
+        gameState.corrects++
+        gameState.points += attempt.expected
+        attempt.isCorrect = true
+      } else {
+        feedback.style.backgroundColor = 'lightcoral'
+        feedback.innerText = '❌ Incorrect, try again!'
+        attempt.isCorrect = false
+      }
+      gameState.history.push(attempt)
+
+      updateScoreboard()
+      if (attempt.isCorrect) {
+        showMathProblem()
+        document.getElementById('actual').value = ''
+      }
+    }
+
+    window.addEventListener('load', showMathProblem)
+  </script>
+</head>
+
+<body>
+  <p>Hello! Welcome to the math game</p>
+  <p>Problem: <span id="prompt"></span></p>
+  <div id="expected" hidden></div>
+  <p>
+    Solution: <input id="actual" type="number" />
+    <button onclick="buttonClick()">Enter Solution</button>
+  </p>
+  <p style="padding: 2px 5px; border: 1px solid black" id="feedback"></p>
+  <p>Scoreboard</p>
+  <table>
+    <tr>
+      <th>Attempts</th>
+      <td id="attempts">0</td>
+    </tr>
+    <tr>
+      <th>Correct</th>
+      <td id="corrects">0</td>
+    </tr>
+    <tr>
+      <th>Points</th>
+      <td id="points">0</td>
+    </tr>
+  </table>
+  <p>
+    <details>
+      <summary>Instructions</summary>
+      You can add querystring arguments to configure the game. Defaults:
+      <ul>
+        <li>min=0</li>
+        <li>max=500</li>
+        <li>quantity=2</li>
+      </ul>
+      <p>example: <a href="https://tomhummel.com/math-game?min=50&max=750&quantity=5">/math-game?min=50&max=750&quantity=5</a></p>
+    </details>
+  </p>
+  <p>History</p>
+  <table id="history"></table>
+</body>
+
+</html>
