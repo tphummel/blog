@@ -1,0 +1,11 @@
+{
+  "name": "Tom Hummel's Blog",
+  "short_name": "tomhummel.com",
+  "description": "Software Engineer in Los Angeles, CA",
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#4CAF50",
+  "orientation": "portrait"
+}
