@@ -138,6 +138,10 @@ disableHugoGeneratorInject = false
     identifier = "movies"
     name       = "📼"
     url        = "https://movies.tomhummel.com"
+  [[menu.main]]
+    identifier = "mlb"
+    name       = "⚾️"
+    url        = "https://mlb.tomhummel.com"
 
 [outputFormats]
   [outputFormats.p8s]
