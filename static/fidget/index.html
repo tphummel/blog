@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bump Kit</title>
+    <style>
+        #buttons-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .counter-button {
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="buttons-container">
+        <!-- 4x4 grid of buttons -->
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-0">0,0: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-0">1,0: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-0">2,0: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-0">3,0: 0</button>
+        
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-1">0,1: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-1">1,1: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-1">2,1: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-1">3,1: 0</button>
+        
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-2">0,2: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-2">1,2: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-2">2,2: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-2">3,2: 0</button>
+        
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-3">0,3: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-3">1,3: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-3">2,3: 0</button>
+        <button class="counter-button" data-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3">3,3: 0</button>
+    </div>
+
+    <script>
+        // Select all counter buttons
+        const counterButtons = document.querySelectorAll('.counter-button');
+
+        // Add click event listener to each button
+        counterButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                try {
+                    // Get the base URL from the button's data attribute
+                    const baseUrl = button.getAttribute('data-url');
+
+                    // Fetch the updated count by calling the URL with /add
+                    const response = await fetch(`${baseUrl}/add`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    // Parse the new count from the response
+                    const newCount = await response.text();
+
+                    // Update the button text with the new count
+                    button.textContent = `${button.textContent.split(':')[0]}: ${newCount}`;
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            // Initial fetch of the current count when the page loads
+            fetch(button.getAttribute('data-url'))
+                .then(response => response.text())
+                .then(count => {
+                    button.textContent = `${button.textContent.split(':')[0]}: ${count}`;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
