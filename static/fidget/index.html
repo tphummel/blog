@@ -72,57 +72,62 @@
             data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3/bump.json">0</button>
     </div>
 
-    <script>
-        // Select all counter buttons
-        const counterButtons = document.querySelectorAll('.counter-button');
+<script>
+    // Select all counter buttons
+    const counterButtons = document.querySelectorAll('.counter-button');
 
-        // Add click event listener to each button
-        counterButtons.forEach(button => {
-            button.addEventListener('click', async () => {
-                try {
-                    // Get the bump URL from the data attribute
-                    const bumpUrl = button.getAttribute('data-bump-url');
+    // Add click event listener to each button
+    counterButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            try {
+                // Get the bump URL from the data attribute
+                const bumpUrl = button.getAttribute('data-bump-url');
 
-                    // Fetch the updated count using GET
-                    const response = await fetch(bumpUrl, {
-                        mode: 'cors',
-                        headers: {
-                            'Origin': window.location.origin
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                // Fetch the updated count using GET with CORS mode
+                const response = await fetch(bumpUrl, {
+                    mode: 'cors',
+                    headers: {
+                        'Origin': window.location.origin
                     }
-
-                    // Parse the JSON response
-                    const data = await response.json();
-
-                    // Update the button text with the new count
-                    button.textContent = data.count;
-                } catch (error) {
-                    console.error('Error bumping counter:', error);
-                    alert(`Failed to bump counter: ${error.message}`);
-                }
-            });
-
-            // Initial fetch of the current count when the page loads
-            const getUrl = button.getAttribute('data-get-url');
-            fetch(getUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    button.textContent = data.count;
-                })
-                .catch(error => {
-                    console.error('Error fetching initial count:', error);
-                    button.textContent = 'Error';
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Parse the JSON response
+                const data = await response.json();
+
+                // Update the button text with the new count
+                button.textContent = data.count;
+            } catch (error) {
+                console.error('Error bumping counter:', error);
+                alert(`Failed to bump counter: ${error.message}`);
+            }
         });
-    </script>
+
+        // Initial fetch of the current count when the page loads
+        const getUrl = button.getAttribute('data-get-url');
+        fetch(getUrl, {
+            mode: 'cors',
+            headers: {
+                'Origin': window.location.origin
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            button.textContent = data.count;
+        })
+        .catch(error => {
+            console.error('Error fetching initial count:', error);
+            button.textContent = 'Error';
+        });
+    });
+</script>
 </body>
 </html>
