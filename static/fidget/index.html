@@ -84,7 +84,12 @@
                     const bumpUrl = button.getAttribute('data-bump-url');
 
                     // Fetch the updated count using GET
-                    const response = await fetch(bumpUrl);
+                    const response = await fetch(bumpUrl, {
+                        mode: 'cors',
+                        headers: {
+                            'Origin': window.location.origin
+                        }
+                    });
                     
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
