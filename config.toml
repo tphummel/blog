@@ -3,7 +3,6 @@ title   = "Tom Hummel"
 
 DefaultContentLanguage = "en"
 
-theme = "hello-friend-ng"
 
 PygmentsCodeFences = true
 PygmentsStyle = "monokai"
