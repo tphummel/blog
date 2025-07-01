@@ -3,5 +3,12 @@
 <article>
   <h1>{{ .Title }}</h1>
   {{ .Content }}
+  <footer>
+    <p>Posted {{ .Date.Format "2006-01-02" }}
+    {{ with .Params.tags }}|
+    Tags: {{ range $i, $tag := . }}{{ if $i }}, {{ end }}<a href="{{ "/tags/" | relURL }}{{ $tag | urlize }}">{{ $tag }}</a>{{ end }}
+    {{ end }}
+    </p>
+  </footer>
 </article>
 {{ end }}
