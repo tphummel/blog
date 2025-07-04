@@ -1,0 +1,43 @@
+/* Water.css (simplified) */
+:root {
+  color-scheme: light dark;
+  --background-body: #fff;
+  --text-main: #000;
+  --links: #0645ad;
+  --visited: #0b0080;
+  --background-alt: #f2f2f2;
+  --border: #d3d3d3;
+}
+
+body {
+  background: var(--background-body);
+  color: var(--text-main);
+  margin: 0 auto;
+  padding: 0 1rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.4;
+  max-width: 800px;
+}
+
+main {
+  margin-top: 2rem;
+}
+
+a {
+  color: var(--links);
+}
+
+a:visited {
+  color: var(--visited);
+}
+
+pre, code {
+  font-family: ui-monospace, monospace;
+  background: var(--background-alt);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1.5em;
+}
