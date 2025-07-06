@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    {{ partial "extra-head.html" . }}
+</head>
+<body>
+<header>
+    <h1><a href="{{ "/" | relURL }}">{{ .Site.Title }}</a></h1>
+</header>
+<main>
+    {{ block "main" . }}{{ end }}
+</main>
+</body>
+</html>
