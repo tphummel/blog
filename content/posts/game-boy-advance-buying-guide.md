@@ -101,8 +101,7 @@ Here is an overview of the 228 Nintendo Game Boy Advance games rated 70 or above
 
 ## Background & Methodology
 
-See [Nintendo DS Buying Guide]({{< ref nintendo-ds-buying-guide >}}) for background and methodology. It applies equally here.
+See [Nintendo DS Buying Guide]({{< relref nintendo-ds-buying-guide >}}) for background and methodology. It applies equally here.
 
 ### Data
-
-- [metacritic dataset (gen 5,6,7 + wii u)](/files/metacritic-gen5-6-7.csv)
+- [metacritic dataset (gen 5,6,7 + wii u)]({{ "files/metacritic-gen5-6-7.csv" | relURL }})

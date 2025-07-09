@@ -143,9 +143,9 @@ __Most Common Driver Pairs__ (min. 50 races)
 
 Diddy Kong and Toadette were a monster team, finishing 1st or 2nd in 108 of 145 races they started.
 
-  [0]: {{< ref exfiltrating-mario-kart-data-from-google-app-engine >}}
+  [0]: {{< relref exfiltrating-mario-kart-data-from-google-app-engine >}}
   [1]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/csv
-  [2]: {{< ref mario-kart-primer >}}
+  [2]: {{< relref mario-kart-primer >}}
   [3]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/README.md
   [4]: https://harelba.github.io/q/
   [5]: https://github.com/tphummel/junk/blob/master/gaej-kart/script/data/reports/README.md

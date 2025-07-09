@@ -45,7 +45,7 @@ More web clients consuming the websocket events. Or a dashboard of graphics each
 
 
   [0]: https://github.com/tphummel/tetris-db
-  [1]: {{< ref tetris-primer >}}
+  [1]: {{< relref tetris-primer >}}
   [2]: https://redis.io/topics/pubsub
   [4]: https://d3js.org/
   [5]: https://github.com/tphummel/junk/tree/master/socket-viz

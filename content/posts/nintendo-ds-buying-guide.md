@@ -247,4 +247,4 @@ I assigned an id to each game in price charting download. i used that id to map 
 
 ### Data 
 
-- [metacritic dataset (gen 5,6,7 + wii u)](/files/metacritic-gen5-6-7.csv)
+- [metacritic dataset (gen 5,6,7 + wii u)]({{ "files/metacritic-gen5-6-7.csv" | relURL }})

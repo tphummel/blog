@@ -81,8 +81,8 @@ And just like that I have the [data][14] out. I wish I had just started with app
 
 I think the lesson here is that if I'm going to use a PaaS I can't create something, walk away from it for two years, and expect everything to be peachy when I try to make a change (however small I may think it is). And I don't think I will be choosing to use Java anytime soon, given the option. All the same adios GAE we had a good run.
 
-  [0]: {{< ref tetris-primer >}}
-  [3]: {{< ref mario-kart-primer >}}
+  [0]: {{< relref tetris-primer >}}
+  [3]: {{< relref mario-kart-primer >}}
   [4]: https://developers.google.com/appengine/docs/java/gettingstarted/installing
   [5]: https://developers.google.com/appengine/docs/java/tools/eclipse
   [6]: https://developers.google.com/eclipse/docs/existingprojects

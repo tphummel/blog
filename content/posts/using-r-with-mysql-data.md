@@ -62,5 +62,5 @@ hist(df1$ratio, 100,
 {{< figure src=/img/KqmmL5w.png title="R Histogram" alt="R Histogram" >}}
 
 
-  [0]: {{< ref tetris-primer >}}
+  [0]: {{< relref tetris-primer >}}
   [1]: https://cran.r-project.org/

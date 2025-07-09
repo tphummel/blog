@@ -199,7 +199,7 @@ content/posts/tetris-primer.md
   [12]: https://github.com/tphummel/blog/blob/1ad3d9e24449557e2f710faf1c8353bd30607b9e/config.toml
   [13]: https://github.com/tphummel/blog/commit/17b813c8c981d5915fecd5d207de2c264bde2fbb#diff-354f30a63fb0907d4ad57269548329e3
   [14]: https://github.com/tphummel/blog/commit/17b813c8c981d5915fecd5d207de2c264bde2fbb#diff-b67911656ef5d18c4ae36cb6741b7965
-  [15]: https://tomhummel.com/ci.json
+  [15]: {{ "ci.json" | relURL }}
   [16]: https://github.com/Track3/hermit
   [17]: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
   [18]: https://cloudflare.com

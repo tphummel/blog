@@ -147,4 +147,4 @@ It might even be too streamlined. If so, you should switch to one of the many ot
 
 ## Files
 
-- Download checklist as [xlsx](/files/super-metroid-100-checklist.xlsx), [csv](/files/super-metroid-100-checklist.csv).
+- Download checklist as [xlsx]({{ "files/super-metroid-100-checklist.xlsx" | relURL }}), [csv]({{ "files/super-metroid-100-checklist.csv" | relURL }}).

@@ -164,5 +164,5 @@ __Standings by Course__
 |Yoshi Circuit|Tom|33|20|11|1|0|1|0|0|0|297|
 |Yoshi Circuit|Nick|33|13|20|0|0|0|0|0|0|290|
 
-  [0]: {{< ref double-dash-analysis-part-1 >}}
-  [1]: {{< ref mario-kart-primer >}}
+  [0]: {{< relref double-dash-analysis-part-1 >}}
+  [1]: {{< relref mario-kart-primer >}}

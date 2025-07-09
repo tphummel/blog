@@ -52,11 +52,11 @@ The basic structure of the site allows you to create a league. The league has lo
 
 As of 2012 the system has collected over 1000 races.
 
-EDIT: 2013-05-12. I've taken down the GAE app. I broke it while [extracting its historical data]({{< ref exfiltrating-mario-kart-data-from-google-app-engine >}}).
+EDIT: 2013-05-12. I've taken down the GAE app. I broke it while [extracting its historical data]({{< relref exfiltrating-mario-kart-data-from-google-app-engine >}}).
 
-EDIT: 2016-01-04. I've done [some analysis]({{< ref double-dash-analysis-part-1 >}}) on the extracted data.
+EDIT: 2016-01-04. I've done [some analysis]({{< relref double-dash-analysis-part-1 >}}) on the extracted data.
 
-EDIT: 2016-01-11. I've done [even more analysis]({{< ref double-dash-analysis-part-2 >}}) on the extracted data.
+EDIT: 2016-01-11. I've done [even more analysis]({{< relref double-dash-analysis-part-2 >}}) on the extracted data.
 
   [0]: http://en.wikipedia.org/wiki/Mario_Kart:_Double_Dash%E2%80%BC
   [1]: http://babyparkdd.appspot.com/

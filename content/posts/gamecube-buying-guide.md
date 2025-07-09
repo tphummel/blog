@@ -123,10 +123,9 @@ See [Nintendo DS Buying Guide][1] for background and methodology. It applies equ
 
 ### Data
 
-- [metacritic dataset (gen 5,6,7 + wii u)](/files/metacritic-gen5-6-7.csv)
+ - [metacritic dataset (gen 5,6,7 + wii u)]({{ "files/metacritic-gen5-6-7.csv" | relURL }})
 
 
-  [0]: {{< ref game-boy-advance-buying-guide >}}
-  [1]: {{< ref nintendo-ds-buying-guide >}}
-  [2]: https://metacritic.com
-  [3]: https://www.pricecharting.com/
+  [0]: {{< relref game-boy-advance-buying-guide >}}
+  [1]: {{< relref nintendo-ds-buying-guide >}}
+  [2]: https://metacritic.com  [3]: https://www.pricecharting.com/

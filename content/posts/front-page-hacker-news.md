@@ -15,7 +15,7 @@ tags:
 
 I wrote [a blog post]({{< relref "posts/four-web-apps.md" >}}) in February 2023. It became by far the most popular content I've personally put on the internet. I love when [others share this stuff](https://www.swyx.io/ranking-1-on-hn-in-mid-april) so I've included some background on what happened before, during, and after.
 
-[![Four Ways to Build Web Apps](/img/four-web-apps/post-min.png "Four Ways to Build Web Apps")]({{< relref "posts/four-web-apps.md" >}})
+[![Four Ways to Build Web Apps]({{ "img/four-web-apps/post-min.png" | relURL }} "Four Ways to Build Web Apps")]({{< relref "posts/four-web-apps.md" >}})
 
 ## Highlights
 
@@ -28,13 +28,13 @@ I wrote [a blog post]({{< relref "posts/four-web-apps.md" >}}) in February 2023.
 ## Charts
 
 ### Pageviews Overview
-![Seven Day Pageviews](/img/four-web-apps/honeycomb-overview-min.png "Data from honeycomb")
+![Seven Day Pageviews]({{ "img/four-web-apps/honeycomb-overview-min.png" | relURL }} "Data from honeycomb")
 
 ### Pageviews Zoomed
-![Four Day Pageviews](/img/four-web-apps/honeycomb-zoom-min.png "Data from honeycomb")
+![Four Day Pageviews]({{ "img/four-web-apps/honeycomb-zoom-min.png" | relURL }} "Data from honeycomb")
 
 ### Hacker News Ranking
-![Hacker News Rankings](/img/four-web-apps/hacker-news-ranking-min.png "Post reached top 5 on HN")
+![Hacker News Rankings]({{ "img/four-web-apps/hacker-news-ranking-min.png" | relURL }} "Post reached top 5 on HN")
 
 ### Pct of Traffic By Country
 (from Cloudflare, First 48 Hours)
@@ -67,7 +67,7 @@ There is no question this exposure radiated outward to a number of my other post
 
 ## Technical Details
 
-[My blog](https://tomhummel.com) is a [static website](https://github.com/tphummel/blog/) built with [Hugo](https://gohugo.io), hosted on [Cloudflare Pages](https://pages.cloudflare.com/) (Way #1), augmented with a Cloudflare Worker (Way #2). [The worker](https://github.com/tphummel/blog/blob/main/workers/index.js) intercepts each request, sends the request to its original destination, sends analytics data to [Honeycomb](https://honeycomb.io), and sets two security headers on the response.
+[My blog]({{ "/" | relURL }}) is a [static website](https://github.com/tphummel/blog/) built with [Hugo](https://gohugo.io), hosted on [Cloudflare Pages](https://pages.cloudflare.com/) (Way #1), augmented with a Cloudflare Worker (Way #2). [The worker](https://github.com/tphummel/blog/blob/main/workers/index.js) intercepts each request, sends the request to its original destination, sends analytics data to [Honeycomb](https://honeycomb.io), and sets two security headers on the response.
 
 The tools available on Honeycomb's generous free tier are what unlocked the analysis in this post. Coarse grained data was available on Cloudflare but not sufficient to do everything.
 
