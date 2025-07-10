@@ -4,7 +4,27 @@
     <meta charset="utf-8">
     <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-    {{ partial "extra-head.html" . }}
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 16 16'><text x='0' y='14'>💾</text></svg>" />
+    <style>
+      table {
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        width: 100%;
+      }
+
+      td, th {
+        padding: 6px;
+        text-align: left;
+      }
+
+      th {
+        border-bottom: 1px solid #dbdbdb;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #161f27;
+      }
+    </style>
 </head>
 <body>
 <header>
