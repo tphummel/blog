@@ -1,3 +1,45 @@
 {{ define "main" }}
-{{ partial "extra-index.html" . }}
+{{ $scratch := newScratch }}
+{{ range .Site.RegularPages }}
+    {{ $scratch.Add "wordcount" .WordCount }}
+{{ end }}
+
+<div>
+    <p>Posts: <a href="posts/">{{ len .Site.RegularPages }}</a>, Words: {{ $scratch.Get "wordcount" | lang.NumFmt 0 }}</p>
+</div>
+<div>
+    <p>
+{{range $name, $taxonomy := .Site.Taxonomies.tags}} {{ $cnt := .Count }}
+    {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+        <a href={{ .RelPermalink }} title="All pages with tag {{$name}}">{{ $name }}</a>
+        <sup>{{ $cnt }}</sup> /
+    {{end}}
+{{end}}
+    </p>
+</div>
+<hr />
+<div>
+    🌳 <a href="https://www.fromjason.xyz/p/freelance/from-jason-2-0-is-an-11ty-powered-digital-garden-with-multiple-plots/#about-plots">Plots</a> in my <a href="https://maggieappleton.com/garden-history">digital garden</a> 🪴
+    <div><a href="/posts">tomhummel.com</a></div>
+    <div><a href="https://data.tomhummel.com">data.tomhummel.com</a></div>
+    <div><a href="https://wordle.tomhummel.com">wordle.tomhummel.com</a></div>
+    <div><a href="https://movies.tomhummel.com">movies.tomhummel.com</a></div>
+    <div><a href="https://mlb.tomhummel.com">mlb.tomhummel.com</a></div>
+</div>
+<hr />
+<div>
+    <p>
+        {{ with .Site.GetPage "colophon" }}
+        <a href="{{ .RelPermalink }}">Colophon</a>
+        {{ end}}
+        /
+        {{ with .Site.GetPage "advent-of-code" }}
+        <a href="{{ .RelPermalink }}">Advent of Code</a>
+        {{ end}}
+        /
+        {{ with .Site.GetPage "experiments" }}
+        <a href="{{ .RelPermalink }}">🧪</a>
+        {{ end}}
+    </p>
+</div>
 {{ end }}
