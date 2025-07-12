@@ -19,6 +19,9 @@ fi
 # Export paths for use in build
 export PATH="$PWD/$ASDF_DIR/bin:$PWD/$ASDF_DIR/shims:$PATH"
 
+which asdf
+asdf version
+
 echo "➡️ Installing plugins from .tool-versions"
 
 # Extract tools and ensure plugins are added
