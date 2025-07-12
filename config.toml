@@ -17,7 +17,9 @@ archetypeDir = "archetypes"
 contentDir   = "content"
 dataDir      = "data"
 layoutDir    = "layouts"
-paginate = 1000
+
+[pagination]
+  pagerSize = 1000
 publishDir   = "public"
 
 buildDrafts  = false
