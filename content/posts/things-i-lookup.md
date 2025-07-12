@@ -35,7 +35,7 @@ Store your data in a content page front matter. And then the shortcode goes in t
       <td>{{ $player.rank }}</td>
       <td>{{ $player.name }}</td>
       <td>{{ $player.gameCount }}</td>
-      <td>{{ lang.NumFmt 2 (div (float $player.totalScore) ($player.gameCount)) }} ({{ $player.totalScore }} / {{ $player.gameCount }})</td>
+      <td>{{ .Site.Language.NumFmt 2 (div (float $player.totalScore) ($player.gameCount)) }} ({{ $player.totalScore }} / {{ $player.gameCount }})</td>
       <td>{{ $player.notes }}</td>
     </tr>
   {{ end }}

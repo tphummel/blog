@@ -724,7 +724,7 @@ data:
       <td>{{ add $i 1 }}</td>
       <td>{{ .name | title }}</td>
       <td>
-        {{ lang.NumFmt 3 .scoreAvg }} ({{ .scoreSum }} / {{ .handCount }})
+        {{ .Site.Language.NumFmt 3 .scoreAvg }} ({{ .scoreSum }} / {{ .handCount }})
       </td>
       <td>
         {{ .winCount }}

@@ -14,8 +14,6 @@ Everyday we leave a wake of data behind us. Generally, you would you would assum
 
 But people also leave a wake of physical data behind them, usually by accident.
 
-{{< tweet 858732773586030593 >}}
-
 Sales slips are extremely dense in information. Let's look at all of the things we can learn.
 
 Somebody with a Visa card ending in 0723 paid $17.99 to have their car washed at [Overland Car Wash](https://www.yelp.com/biz/overland-car-wash-and-detail-center-los-angeles) on Monday April 3, 2017 at 2:15 PM.
