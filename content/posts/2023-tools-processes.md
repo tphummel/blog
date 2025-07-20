@@ -47,7 +47,22 @@ paid_services:
 
 The highest form of flattery, something so valuable and useful that I would pay out monthly or yearly for the privileges.
 
-{{< paidServices >}}
+{{< paidServices.inline >}}
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Purpose</th>
+  </tr>
+  {{ range $service := .Page.Params.paid_services }}
+    <tr>
+      <td>{{ $service.name }}</td>
+      <td>${{ lang.FormatNumber 2 $service.price }} / {{ $service.per_period }} </td>
+      <td>{{ $service.notes }}</td>
+    </tr>
+  {{ end }}
+</table>
+{{< /paidServices.inline >}}
 
 # Nomie
 
