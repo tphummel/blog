@@ -5,7 +5,7 @@
 {{ end }}
 
 <div>
-    <p>Posts: <a href="posts/">{{ len .Site.RegularPages }}</a>, Words: {{ .Site.Language.NumFmt 0 ($scratch.Get "wordcount") }}</p>
+    <p>Posts: <a href="posts/">{{ len .Site.RegularPages }}</a>, Words: {{ lang.FormatNumber 0 ($scratch.Get "wordcount") }}</p>
 </div>
 <div>
     <p>

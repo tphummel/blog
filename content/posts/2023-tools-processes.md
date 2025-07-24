@@ -57,7 +57,7 @@ The highest form of flattery, something so valuable and useful that I would pay 
   {{ range $service := .Page.Params.paid_services }}
     <tr>
       <td>{{ $service.name }}</td>
-      <td>${{ .Site.Language.NumFmt 2 $service.price }} / {{ $service.per_period }} </td>
+      <td>${{ lang.FormatNumber 2 $service.price }} / {{ $service.per_period }} </td>
       <td>{{ $service.notes }}</td>
     </tr>
   {{ end }}
