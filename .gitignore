@@ -4,5 +4,6 @@ vendor/
 *.log
 build.json
 public/
+.hugo_build.lock
 content/advent-of-code/**/input.txt
 .asdf-local/
