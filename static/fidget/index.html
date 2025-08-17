@@ -12,8 +12,12 @@
             margin: 0 auto;
         }
         .counter-button {
-            padding: 10px;
+            padding: 16px;
             font-size: 16px;
+        }
+        .counter-button .count {
+            display: block;
+            font-size: 1.5em;
         }
         .payload {
             font-size: 0.8em;
@@ -85,17 +89,14 @@
         const { count, created, updated, _meta } = data;
         const rows = [];
         if (created?.at !== undefined) {
-            rows.push(['Created At', created.at]);
-        }
-        if (created?.by !== undefined) {
-            rows.push(['Created By', created.by]);
+            rows.push(['Created', created.at]);
         }
         if (updated?.at !== undefined) {
-            rows.push(['Updated At', updated.at]);
+            rows.push(['Updated', updated.at]);
         }
         const expiresAt = _meta?.expires?.at;
         if (expiresAt !== undefined) {
-            rows.push(['Expires At', expiresAt]);
+            rows.push(['Expired', expiresAt]);
         }
 
         let tableHTML = '';
