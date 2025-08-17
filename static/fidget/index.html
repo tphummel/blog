@@ -12,8 +12,22 @@
             margin: 0 auto;
         }
         .counter-button {
-            padding: 10px;
             font-size: 16px;
+        }
+        .counter-button.expiring-soon {
+            color: red;
+        }
+        .counter-button .count {
+            display: block;
+            font-size: 1.5em;
+        }
+        .payload {
+            font-size: 0.8em;
+            margin-top: 4px;
+            border-collapse: collapse;
+        }
+        .payload td {
+            padding: 0 4px;
         }
     </style>
 </head>
@@ -73,6 +87,46 @@
     </div>
 
 <script>
+    function updateButtonContent(button, data) {
+        const { count, created, updated, _meta } = data;
+        const rows = [];
+
+        const formatDate = (timestamp) => {
+            if (typeof timestamp !== 'string') return [timestamp, ''];
+            const dateOnly = timestamp.split('T')[0];
+            return [dateOnly, timestamp];
+        };
+
+        if (created?.at !== undefined) {
+            const [display, full] = formatDate(created.at);
+            rows.push(['Created', display, full]);
+        }
+        if (updated?.at !== undefined) {
+            const [display, full] = formatDate(updated.at);
+            rows.push(['Updated', display, full]);
+        }
+        const expiresAt = _meta?.expires?.at;
+        let expiringSoon = false;
+        if (expiresAt !== undefined) {
+            const [display, full] = formatDate(expiresAt);
+            rows.push(['Expires', display, full]);
+            const diff = new Date(expiresAt).getTime() - Date.now();
+            if (diff < 30 * 24 * 60 * 60 * 1000) {
+                expiringSoon = true;
+            }
+        }
+
+        let tableHTML = '';
+        if (rows.length > 0) {
+            const rowsHTML = rows
+                .map(([label, value, full]) => `<tr><td>${label}</td><td title="${full}">${value}</td></tr>`)
+                .join('');
+            tableHTML = `<table class="payload"><tbody>${rowsHTML}</tbody></table>`;
+        }
+        button.innerHTML = `<span class="count">${count}</span>${tableHTML}`;
+        button.classList.toggle('expiring-soon', expiringSoon);
+    }
+
     // Select all counter buttons
     const counterButtons = document.querySelectorAll('.counter-button');
 
@@ -90,7 +144,7 @@
                         'Origin': window.location.origin
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -98,8 +152,8 @@
                 // Parse the JSON response
                 const data = await response.json();
 
-                // Update the button text with the new count
-                button.textContent = data.count;
+                // Update the button text with the new count and payload details
+                updateButtonContent(button, data);
             } catch (error) {
                 console.error('Error bumping counter:', error);
                 alert(`Failed to bump counter: ${error.message}`);
@@ -121,7 +175,7 @@
             return response.json();
         })
         .then(data => {
-            button.textContent = data.count;
+            updateButtonContent(button, data);
         })
         .catch(error => {
             console.error('Error fetching initial count:', error);
