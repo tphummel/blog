@@ -16,8 +16,12 @@
             font-size: 16px;
         }
         .payload {
-            display: block;
             font-size: 0.8em;
+            margin-top: 4px;
+            border-collapse: collapse;
+        }
+        .payload td {
+            padding: 0 4px;
         }
     </style>
 </head>
@@ -78,21 +82,21 @@
 
 <script>
     function updateButtonContent(button, data) {
-        const { count, ...rest } = data;
-        let payloadHTML = '';
-        const entries = Object.entries(rest);
-        if (entries.length > 0) {
-            const payloadString = entries
-                .map(([key, value]) => {
-                    if (typeof value === 'object' && value !== null) {
-                        return `${key}: ${JSON.stringify(value)}`;
-                    }
-                    return `${key}: ${value}`;
-                })
-                .join(', ');
-            payloadHTML = `<span class="payload">${payloadString}</span>`;
+        const { count, created_at, updated_at, expires_at } = data;
+        const rows = [
+            ['Created At', created_at],
+            ['Updated At', updated_at],
+            ['Expires At', expires_at]
+        ].filter(([, value]) => value !== undefined);
+
+        let tableHTML = '';
+        if (rows.length > 0) {
+            const rowsHTML = rows
+                .map(([label, value]) => `<tr><td>${label}</td><td>${value}</td></tr>`)
+                .join('');
+            tableHTML = `<table class="payload"><tbody>${rowsHTML}</tbody></table>`;
         }
-        button.innerHTML = `<span class="count">${count}</span>${payloadHTML}`;
+        button.innerHTML = `<span class="count">${count}</span>${tableHTML}`;
     }
 
     // Select all counter buttons
