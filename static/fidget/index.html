@@ -82,12 +82,21 @@
 
 <script>
     function updateButtonContent(button, data) {
-        const { count, created_at, updated_at, expires_at } = data;
-        const rows = [
-            ['Created At', created_at],
-            ['Updated At', updated_at],
-            ['Expires At', expires_at]
-        ].filter(([, value]) => value !== undefined);
+        const { count, created, updated, _meta } = data;
+        const rows = [];
+        if (created?.at !== undefined) {
+            rows.push(['Created At', created.at]);
+        }
+        if (created?.by !== undefined) {
+            rows.push(['Created By', created.by]);
+        }
+        if (updated?.at !== undefined) {
+            rows.push(['Updated At', updated.at]);
+        }
+        const expiresAt = _meta?.expires?.at;
+        if (expiresAt !== undefined) {
+            rows.push(['Expires At', expiresAt]);
+        }
 
         let tableHTML = '';
         if (rows.length > 0) {
