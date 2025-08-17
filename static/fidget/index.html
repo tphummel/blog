@@ -109,7 +109,7 @@
         let expiringSoon = false;
         if (expiresAt !== undefined) {
             const [display, full] = formatDate(expiresAt);
-            rows.push(['Expired', display, full]);
+            rows.push(['Expires', display, full]);
             const diff = new Date(expiresAt).getTime() - Date.now();
             if (diff < 30 * 24 * 60 * 60 * 1000) {
                 expiringSoon = true;
