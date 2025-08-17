@@ -15,6 +15,10 @@
             padding: 10px;
             font-size: 16px;
         }
+        .metadata {
+            display: block;
+            font-size: 0.8em;
+        }
     </style>
 </head>
 <body>
@@ -73,6 +77,22 @@
     </div>
 
 <script>
+    function updateButtonContent(button, data) {
+        let metaHTML = '';
+        if (data.metadata) {
+            let metaString = '';
+            if (typeof data.metadata === 'object' && data.metadata !== null) {
+                metaString = Object.entries(data.metadata)
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join(', ');
+            } else {
+                metaString = data.metadata;
+            }
+            metaHTML = `<span class="metadata">${metaString}</span>`;
+        }
+        button.innerHTML = `<span class="count">${data.count}</span>${metaHTML}`;
+    }
+
     // Select all counter buttons
     const counterButtons = document.querySelectorAll('.counter-button');
 
@@ -90,7 +110,7 @@
                         'Origin': window.location.origin
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -98,8 +118,8 @@
                 // Parse the JSON response
                 const data = await response.json();
 
-                // Update the button text with the new count
-                button.textContent = data.count;
+                // Update the button text with the new count and metadata
+                updateButtonContent(button, data);
             } catch (error) {
                 console.error('Error bumping counter:', error);
                 alert(`Failed to bump counter: ${error.message}`);
@@ -121,7 +141,7 @@
             return response.json();
         })
         .then(data => {
-            button.textContent = data.count;
+            updateButtonContent(button, data);
         })
         .catch(error => {
             console.error('Error fetching initial count:', error);
