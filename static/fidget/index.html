@@ -11,6 +11,11 @@
             max-width: 600px;
             margin: 0 auto;
         }
+        .bumper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
         .counter-button {
             font-size: 16px;
         }
@@ -20,6 +25,10 @@
         .counter-button .count {
             display: block;
             font-size: 1.5em;
+        }
+        .refresh-button,
+        .show-json-button {
+            font-size: 12px;
         }
         .payload {
             font-size: 0.8em;
@@ -32,59 +41,7 @@
     </style>
 </head>
 <body>
-    <div id="buttons-container">
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-0/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-0/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-0/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-0/bump.json">0</button>
-        
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-1/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-1/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-1/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-1/bump.json">0</button>
-        
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-2/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-2/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-2/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-2/bump.json">0</button>
-        
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-3/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-3/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-3/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3/bump.json">0</button>
-    </div>
+    <div id="buttons-container"></div>
 
 <script>
     function updateButtonContent(button, data) {
@@ -127,40 +84,7 @@
         button.classList.toggle('expiring-soon', expiringSoon);
     }
 
-    // Select all counter buttons
-    const counterButtons = document.querySelectorAll('.counter-button');
-
-    // Add click event listener to each button
-    counterButtons.forEach(button => {
-        button.addEventListener('click', async () => {
-            try {
-                // Get the bump URL from the data attribute
-                const bumpUrl = button.getAttribute('data-bump-url');
-
-                // Fetch the updated count using GET with CORS mode
-                const response = await fetch(bumpUrl, {
-                    mode: 'cors',
-                    headers: {
-                        'Origin': window.location.origin
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Parse the JSON response
-                const data = await response.json();
-
-                // Update the button text with the new count and payload details
-                updateButtonContent(button, data);
-            } catch (error) {
-                console.error('Error bumping counter:', error);
-                alert(`Failed to bump counter: ${error.message}`);
-            }
-        });
-
-        // Initial fetch of the current count when the page loads
+    function fetchData(button) {
         const getUrl = button.getAttribute('data-get-url');
         fetch(getUrl, {
             mode: 'cors',
@@ -178,10 +102,87 @@
             updateButtonContent(button, data);
         })
         .catch(error => {
-            console.error('Error fetching initial count:', error);
+            console.error('Error fetching count:', error);
             button.textContent = 'Error';
         });
-    });
+    }
+
+    function setupBumper(x, y) {
+        const getUrl = `https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-${x}-${y}.json`;
+        const bumpUrl = `https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-${x}-${y}/bump.json`;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bumper';
+
+        const button = document.createElement('button');
+        button.className = 'counter-button';
+        button.setAttribute('data-get-url', getUrl);
+        button.setAttribute('data-bump-url', bumpUrl);
+        button.textContent = '0';
+
+        const refresh = document.createElement('button');
+        refresh.className = 'refresh-button';
+        refresh.textContent = 'Refresh';
+
+        const showJson = document.createElement('button');
+        showJson.className = 'show-json-button';
+        showJson.textContent = 'Show JSON';
+
+        wrapper.appendChild(button);
+        wrapper.appendChild(refresh);
+        wrapper.appendChild(showJson);
+        document.getElementById('buttons-container').appendChild(wrapper);
+
+        button.addEventListener('click', async () => {
+            try {
+                const bumpUrl = button.getAttribute('data-bump-url');
+                const response = await fetch(bumpUrl, {
+                    mode: 'cors',
+                    headers: {
+                        'Origin': window.location.origin
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                updateButtonContent(button, data);
+            } catch (error) {
+                console.error('Error bumping counter:', error);
+                alert(`Failed to bump counter: ${error.message}`);
+            }
+        });
+
+        refresh.addEventListener('click', () => fetchData(button));
+
+        showJson.addEventListener('click', async () => {
+            try {
+                const getUrl = button.getAttribute('data-get-url');
+                const response = await fetch(getUrl, {
+                    mode: 'cors',
+                    headers: {
+                        'Origin': window.location.origin
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                alert(JSON.stringify(data, null, 2));
+            } catch (error) {
+                console.error('Error fetching JSON:', error);
+                alert(`Failed to fetch JSON: ${error.message}`);
+            }
+        });
+
+        fetchData(button);
+    }
+
+    for (let x = 0; x < 4; x++) {
+        for (let y = 0; y < 4; y++) {
+            setupBumper(x, y);
+        }
+    }
 </script>
 </body>
 </html>
