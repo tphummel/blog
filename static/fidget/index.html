@@ -11,6 +11,15 @@
             max-width: 600px;
             margin: 0 auto;
         }
+        .bumper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .docs-link {
+            font-size: 12px;
+        }
         .counter-button {
             font-size: 16px;
         }
@@ -33,57 +42,105 @@
 </head>
 <body>
     <div id="buttons-container">
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-0/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-0/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-0/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-0.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-0/bump.json">0</button>
-        
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-1/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-1/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-1/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-1.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-1/bump.json">0</button>
-        
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-2/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-2/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-2/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-2.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-2/bump.json">0</button>
-        
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-3/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-3/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-3/bump.json">0</button>
-        <button class="counter-button" 
-            data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3.json"
-            data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3/bump.json">0</button>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-0.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-0/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-0-0" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-0.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-0/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-1-0" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-0.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-0/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-2-0" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-0.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-0/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-3-0" target="_blank">/docs</a>
+        </div>
+
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-1.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-1/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-0-1" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-1.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-1/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-1-1" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-1.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-1/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-2-1" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-1.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-1/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-3-1" target="_blank">/docs</a>
+        </div>
+
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-2.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-2/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-0-2" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-2.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-2/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-1-2" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-2.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-2/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-2-2" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-2.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-2/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-3-2" target="_blank">/docs</a>
+        </div>
+
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-3.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-0-3/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-0-3" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-3.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-1-3/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-1-3" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-3.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-2-3/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-2-3" target="_blank">/docs</a>
+        </div>
+        <div class="bumper">
+            <button class="counter-button"
+                data-get-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3.json"
+                data-bump-url="https://bumpkit.tphummel.workers.dev/bumper/tph-fidget-3-3/bump.json">0</button>
+            <a class="docs-link" href="https://bumpkit.tphummel.workers.dev/docs/bumper/tph-fidget-3-3" target="_blank">/docs</a>
+        </div>
     </div>
 
 <script>
