@@ -6,20 +6,26 @@
 </head>
 <body>
   <div id="app"></div>
+  <pre id="error" style="color: red;"></pre>
   <script type="module">
-    import * as svelte from 'https://cdn.jsdelivr.net/npm/svelte@3.59.2';
     import { compile } from 'https://cdn.jsdelivr.net/npm/svelte@3.59.2/compiler.mjs';
-    window.svelte = svelte;
 
     async function main() {
-      const res = await fetch('App.svelte');
-      const source = await res.text();
-      const { js, css } = compile(source, { generate: 'dom', format: 'iife', name: 'App' });
-      const style = document.createElement('style');
-      style.textContent = css.code;
-      document.head.appendChild(style);
-      eval(js.code);
-      new App({ target: document.getElementById('app') });
+      try {
+        const res = await fetch('App.svelte');
+        if (!res.ok) throw new Error(`failed to load App.svelte: ${res.status}`);
+        const source = await res.text();
+        const { js, css } = compile(source, { generate: 'dom', format: 'iife', name: 'App' });
+        const style = document.createElement('style');
+        style.textContent = css.code;
+        document.head.appendChild(style);
+        const App = new Function(`${js.code}; return App;`)();
+        new App({ target: document.getElementById('app') });
+      } catch (err) {
+        const pre = document.getElementById('error');
+        pre.textContent = err.stack || err;
+        console.error(err);
+      }
     }
     main();
   </script>

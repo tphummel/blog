@@ -1,6 +1,6 @@
 <script>
   const gridSize = 4;
-  const counters = [];
+  let counters = [];
   const EXPIRING_SOON_MS = 30 * 24 * 60 * 60 * 1000;
 
   function format(ts) {
@@ -22,6 +22,7 @@
     } catch (e) {
       counter.error = e;
     }
+    counters = counters;
   }
 
   function createCounter(x, y) {
@@ -50,6 +51,7 @@
     } catch (e) {
       counter.error = e;
     }
+    counters = counters;
   }
 </script>
 
@@ -70,6 +72,10 @@
 .counter-button .count {
   display: block;
   font-size: 1.5em;
+}
+.error {
+  color: red;
+  font-size: 0.8em;
 }
 .payload {
   font-size: 0.8em;
@@ -102,6 +108,9 @@
             {/if}
           </tbody>
         </table>
+      {/if}
+      {#if counter.error}
+        <span class="error">{counter.error.message}</span>
       {/if}
     </button>
   {/each}
