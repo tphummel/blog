@@ -47,7 +47,10 @@
   }
 
   function color(counter) {
-    return counter.data.count % 2 ? '#000' : '#fff';
+    const hex = (counter.data.count % 0x1000000)
+      .toString(16)
+      .padStart(6, '0');
+    return `#${hex}`;
   }
 </script>
 
