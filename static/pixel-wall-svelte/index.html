@@ -13,10 +13,16 @@
 </head>
 <body>
   <div id="app"></div>
-  <pre id="log" style="color: red; white-space: pre-wrap;"></pre>
   <script>
     function log(msg) {
-      const pre = document.getElementById('log');
+      let pre = document.getElementById('log');
+      if (!pre) {
+        pre = document.createElement('pre');
+        pre.id = 'log';
+        pre.style.color = 'red';
+        pre.style.whiteSpace = 'pre-wrap';
+        document.body.appendChild(pre);
+      }
       pre.textContent += (pre.textContent ? '\n' : '') + msg;
     }
 
@@ -27,7 +33,6 @@
     import { compile } from 'https://cdn.jsdelivr.net/npm/svelte@3.59.2/compiler.mjs';
 
     async function main() {
-      log('initializing');
       try {
         const res = await fetch('App.svelte');
         if (!res.ok) throw new Error(`failed to load App.svelte: ${res.status}`);
@@ -43,7 +48,6 @@
 
         const { default: App } = await import(`data:text/javascript,${encodeURIComponent(js.code)}`);
         new App({ target: document.getElementById('app') });
-        log('ready');
       } catch (err) {
         log(err.stack || err);
         console.error(err);
