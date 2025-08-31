@@ -2,6 +2,12 @@
   const width = 16;
   let counters = [];
 
+  function format(ts) {
+    if (typeof ts !== 'string') return { display: ts, full: '' };
+    const dateOnly = ts.split('T')[0];
+    return { display: dateOnly, full: ts };
+  }
+
   async function fetchCounter(counter) {
     try {
       const res = await fetch(counter.getUrl, {
@@ -65,6 +71,16 @@
     background: var(--color);
     border: 1px solid #ccc;
   }
+  .status-table {
+    margin-top: 1em;
+    border-collapse: collapse;
+  }
+  .status-table th,
+  .status-table td {
+    border: 1px solid #ccc;
+    padding: 2px 4px;
+    font-size: 0.8em;
+  }
 </style>
 
 <div class="grid">
@@ -72,3 +88,29 @@
     <div class="pixel" style="--color: {color(counter)}" on:click={() => bump(counter)}></div>
   {/each}
 </div>
+
+<table class="status-table">
+  <thead>
+    <tr><th>Bumper</th><th>Count</th><th>Updated</th><th>Expires</th></tr>
+  </thead>
+  <tbody>
+    {#each counters as counter}
+      <tr>
+        <td>{counter.id}</td>
+        <td>{counter.data.count}</td>
+        <td>
+          {#if counter.data.updated?.at}
+            {@const u = format(counter.data.updated.at)}
+            <span title="{u.full}">{u.display}</span>
+          {/if}
+        </td>
+        <td>
+          {#if counter.data._meta?.expires?.at}
+            {@const e = format(counter.data._meta.expires.at)}
+            <span title="{e.full}">{e.display}</span>
+          {/if}
+        </td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
