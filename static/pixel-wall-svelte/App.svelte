@@ -17,7 +17,7 @@
     width: 10px;
     height: 10px;
     background: var(--color);
-    border: 1px solid #eee;
+    border: 1px solid #ccc;
   }
 </style>
 
