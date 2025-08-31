@@ -1,29 +1,53 @@
 <script>
-  import { onMount } from 'svelte';
-
   const width = 16;
-  const storageKey = 'pixel-wall-state';
-  let pixels = Array(width * width).fill('#fff');
+  let counters = [];
 
-  onMount(() => {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length === pixels.length) {
-          pixels = parsed;
-        }
-      } catch (err) {
-        console.error('failed to parse saved state', err);
-      }
+  async function fetchCounter(counter) {
+    try {
+      const res = await fetch(counter.getUrl, {
+        mode: 'cors',
+        headers: { Origin: window.location.origin }
+      });
+      if (!res.ok) throw new Error(res.status);
+      counter.data = await res.json();
+    } catch (e) {
+      counter.error = e;
     }
-  });
+    counters = counters;
+  }
 
-  $: localStorage.setItem(storageKey, JSON.stringify(pixels));
+  function createCounter(index) {
+    const id = `pixel-wall-svelte-${index}`;
+    const counter = {
+      id,
+      getUrl: `https://bumpkit.tphummel.workers.dev/bumper/${id}.json`,
+      bumpUrl: `https://bumpkit.tphummel.workers.dev/bumper/${id}/bump.json`,
+      data: { count: 0 }
+    };
+    fetchCounter(counter);
+    return counter;
+  }
 
-  function toggle(index) {
-    pixels[index] = pixels[index] === '#fff' ? '#000' : '#fff';
-    pixels = pixels;
+  async function bump(counter) {
+    try {
+      const res = await fetch(counter.bumpUrl, {
+        mode: 'cors',
+        headers: { Origin: window.location.origin }
+      });
+      if (!res.ok) throw new Error(res.status);
+      counter.data = await res.json();
+    } catch (e) {
+      counter.error = e;
+    }
+    counters = counters;
+  }
+
+  for (let i = 0; i < width * width; i++) {
+    counters.push(createCounter(i));
+  }
+
+  function color(counter) {
+    return counter.data.count % 2 ? '#000' : '#fff';
   }
 </script>
 
@@ -41,7 +65,7 @@
 </style>
 
 <div class="grid">
-  {#each pixels as color, i}
-    <div class="pixel" style="--color: {color}" on:click={() => toggle(i)}></div>
+  {#each counters as counter}
+    <div class="pixel" style="--color: {color(counter)}" on:click={() => bump(counter)}></div>
   {/each}
 </div>
