@@ -7,3 +7,4 @@ date: 2020-09-01T08:00:00
 - [magic eight ball](/eight-ball)
 - [Fidget Toy](/fidget)
 - [Fidget Toy (Svelte)](/fidget-svelte)
+- [Pixel Wall (Svelte)](/pixel-wall-svelte)
