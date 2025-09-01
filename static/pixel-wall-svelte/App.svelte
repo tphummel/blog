@@ -91,13 +91,19 @@
 
 <table class="status-table">
   <thead>
-    <tr><th>Bumper</th><th>Count</th><th>Updated</th><th>Expires</th></tr>
+    <tr><th>Bumper</th><th>Count</th><th>Created</th><th>Updated</th><th>Expires</th></tr>
   </thead>
   <tbody>
     {#each counters as counter}
       <tr>
         <td>{counter.id}</td>
         <td>{counter.data.count}</td>
+        <td>
+          {#if counter.data.created?.at}
+            {@const c = format(counter.data.created.at)}
+            <span title="{c.full}">{c.display}</span>
+          {/if}
+        </td>
         <td>
           {#if counter.data.updated?.at}
             {@const u = format(counter.data.updated.at)}
