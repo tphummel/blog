@@ -73,13 +73,13 @@
     <ellipse cx="60" cy="80" rx="40" ry="20" fill="#f44336" />
     <rect x="20" y="90" width="80" height="10" fill="#795548" />
   </svg>
+  <button on:click={unshlump}>Unshlump the Borfin ({count})</button>
 {:else}
   <svg width="120" height="120" viewBox="0 0 120 120" aria-label="Borfin unshlumped">
     <ellipse cx="60" cy="50" rx="20" ry="40" fill="#8bc34a" />
     <rect x="50" y="90" width="20" height="20" fill="#795548" />
   </svg>
 {/if}
-<button on:click={unshlump}>Unshlump the Borfin ({count})</button>
 {#if error}
   <div class="error">{error.message}</div>
 {/if}
