@@ -22,9 +22,11 @@
   }
 
   function setUpdated(data) {
-    const parsed = Date.parse(data.updated_at);
+    const parsed = Date.parse(data.updated?.at);
     if (isNaN(parsed)) {
-      throw new Error(`invalid bumper response ${JSON.stringify(data)}`);
+      const err = new Error('invalid bumper response');
+      err.data = data;
+      throw err;
     }
     updatedAt = new Date(parsed);
     computeStatus();
@@ -40,7 +42,8 @@
       count = data.count;
       setUpdated(data);
     } catch (e) {
-      error = e.message + (data ? ` ${JSON.stringify(data)}` : '');
+      const body = e.data ?? data;
+      error = e.message + (body ? ` ${JSON.stringify(body)}` : '');
     }
   }
 
@@ -54,7 +57,8 @@
       count = data.count;
       setUpdated(data);
     } catch (e) {
-      error = e.message + (data ? ` ${JSON.stringify(data)}` : '');
+      const body = e.data ?? data;
+      error = e.message + (body ? ` ${JSON.stringify(body)}` : '');
     }
   }
 
