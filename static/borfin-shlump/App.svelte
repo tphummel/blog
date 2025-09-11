@@ -68,6 +68,9 @@
   <p class="warning">Beware the local night air</p>
 {/if}
 <p>Status: {status}</p>
+{#if updatedAt}
+  <p>unshlumped at {updatedAt.toLocaleString()}</p>
+{/if}
 {#if status === 'shlumped'}
   <svg width="120" height="120" viewBox="0 0 120 120" aria-label="Borfin shlumped">
     <ellipse cx="60" cy="80" rx="40" ry="20" fill="#f44336" />
