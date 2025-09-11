@@ -101,9 +101,14 @@
   </svg>
   <button on:click={unshlump}>Unshlump the Borfin ({count})</button>
 {:else}
-  <svg width="120" height="120" viewBox="0 0 120 120" aria-label="Borfin unshlumped">
-    <ellipse cx="60" cy="50" rx="20" ry="40" fill="#8bc34a" />
-    <rect x="50" y="90" width="20" height="20" fill="#795548" />
+  <svg width="160" height="120" viewBox="0 0 160 120" aria-label="Borfin unshlumped">
+    <!-- upright body -->
+    <path d="M80 10 C60 10, 40 30, 40 70 V100 H120 V70 C120 30, 100 10, 80 10 Z" fill="#8bc34a" />
+    <!-- straight hose -->
+    <path d="M80 0 V110" stroke="#90a4ae" stroke-width="4" fill="none" />
+    <!-- plugs -->
+    <circle cx="80" cy="0" r="5" fill="#cfd8dc" />
+    <circle cx="80" cy="110" r="5" fill="#cfd8dc" />
   </svg>
 {/if}
 {#if error}
