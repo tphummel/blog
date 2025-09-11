@@ -1,7 +1,7 @@
 <script>
   let count = 0;
   let status = '';
-  let error;
+  let error = '';
   let updatedAt;
   let nightAir = false;
   const lastLoaded = new Date();
@@ -19,29 +19,38 @@
     nightAir = hour >= 22 || hour < 6;
   }
 
+  function setUpdated(at) {
+    const parsed = new Date(at);
+    if (isNaN(parsed.getTime())) {
+      throw new Error('invalid bumper response');
+    }
+    updatedAt = parsed;
+    computeStatus();
+  }
+
   async function fetchCount() {
+    error = '';
     try {
       const res = await fetch(getUrl, { mode: 'cors', headers: { Origin: window.location.origin } });
       if (!res.ok) throw new Error(res.status);
       const data = await res.json();
       count = data.count;
-      updatedAt = new Date(data.updated_at);
-      computeStatus();
+      setUpdated(data.updated_at);
     } catch (e) {
-      error = e;
+      error = e.message;
     }
   }
 
   async function unshlump() {
+    error = '';
     try {
       const res = await fetch(bumpUrl, { mode: 'cors', headers: { Origin: window.location.origin } });
       if (!res.ok) throw new Error(res.status);
       const data = await res.json();
       count = data.count;
-      updatedAt = new Date(data.updated_at);
-      computeStatus();
+      setUpdated(data.updated_at);
     } catch (e) {
-      error = e;
+      error = e.message;
     }
   }
 
@@ -84,5 +93,5 @@
   </svg>
 {/if}
 {#if error}
-  <div class="error">{error.message}</div>
+  <div class="error">{error}</div>
 {/if}
