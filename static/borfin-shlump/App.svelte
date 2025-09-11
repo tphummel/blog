@@ -89,9 +89,15 @@
   <p>unshlumped at {updatedAt.toLocaleString()}</p>
 {/if}
 {#if status === 'shlumped'}
-  <svg width="120" height="120" viewBox="0 0 120 120" aria-label="Borfin shlumped">
-    <ellipse cx="60" cy="80" rx="40" ry="20" fill="#f44336" />
-    <rect x="20" y="90" width="80" height="10" fill="#795548" />
+  <svg width="160" height="120" viewBox="0 0 160 120" aria-label="Borfin shlumped">
+    <!-- blob body -->
+    <path d="M60 20 C20 20, 10 80, 60 100 H120 C150 70, 140 30, 100 20 Z" fill="#8d6e63" />
+    <!-- wrapped hose -->
+    <path d="M0 40 C40 20, 80 40, 120 20 S160 60, 120 80 C80 100, 40 80, 0 100" stroke="#90a4ae" stroke-width="4" fill="none" />
+    <!-- plugs -->
+    <circle cx="0" cy="40" r="5" fill="#cfd8dc" />
+    <circle cx="0" cy="100" r="5" fill="#cfd8dc" />
+    <circle cx="160" cy="60" r="5" fill="#cfd8dc" />
   </svg>
   <button on:click={unshlump}>Unshlump the Borfin ({count})</button>
 {:else}
