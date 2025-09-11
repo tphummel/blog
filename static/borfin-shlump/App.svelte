@@ -14,43 +14,47 @@
     const now = new Date();
     const six = new Date(now);
     six.setHours(6, 0, 0, 0);
-    status = now > six && updatedAt < six ? 'shlumped' : 'unshlumped';
+    if (updatedAt) {
+      status = now > six && updatedAt < six ? 'shlumped' : 'unshlumped';
+    }
     const hour = now.getHours();
     nightAir = hour >= 22 || hour < 6;
   }
 
-  function setUpdated(at) {
-    const parsed = new Date(at);
-    if (isNaN(parsed.getTime())) {
-      throw new Error('invalid bumper response');
+  function setUpdated(data) {
+    const parsed = Date.parse(data.updated_at);
+    if (isNaN(parsed)) {
+      throw new Error(`invalid bumper response ${JSON.stringify(data)}`);
     }
-    updatedAt = parsed;
+    updatedAt = new Date(parsed);
     computeStatus();
   }
 
   async function fetchCount() {
     error = '';
+    let data;
     try {
       const res = await fetch(getUrl, { mode: 'cors', headers: { Origin: window.location.origin } });
       if (!res.ok) throw new Error(res.status);
-      const data = await res.json();
+      data = await res.json();
       count = data.count;
-      setUpdated(data.updated_at);
+      setUpdated(data);
     } catch (e) {
-      error = e.message;
+      error = e.message + (data ? ` ${JSON.stringify(data)}` : '');
     }
   }
 
   async function unshlump() {
     error = '';
+    let data;
     try {
       const res = await fetch(bumpUrl, { mode: 'cors', headers: { Origin: window.location.origin } });
       if (!res.ok) throw new Error(res.status);
-      const data = await res.json();
+      data = await res.json();
       count = data.count;
-      setUpdated(data.updated_at);
+      setUpdated(data);
     } catch (e) {
-      error = e.message;
+      error = e.message + (data ? ` ${JSON.stringify(data)}` : '');
     }
   }
 
