@@ -437,18 +437,6 @@ label input {
 .grid:has(> :last-child:nth-child(8)) { --grid-cells: 8; }
 .grid:has(> :last-child:nth-child(9)) { --grid-cells: 9; }
 
-footer.footer-fleuron {
-  margin-top: calc(var(--line-height) * 3);
-  display: flex;
-  justify-content: center;
-}
-
-footer.footer-fleuron svg {
-  display: block;
-  width: 5rem;
-  height: auto;
-}
-
 /* DEBUG UTILITIES */
 
 .debug .debug-grid {
