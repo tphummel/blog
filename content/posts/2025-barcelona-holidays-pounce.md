@@ -1,6 +1,6 @@
 ---
 title: "2025 Barcelona Holidays Pounce"
-date: 2025-12-30T12:00:00-08:00
+date: 2025-12-30T08:00:00-08:00
 draft: true
 toc: false
 tags:
