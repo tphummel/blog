@@ -9,35 +9,17 @@
   onMount(async () => {
     try {
       craps = await import(MODULE_URL);
+      strategyName = availableStrategies[0][0];
     } catch (err) {
       loadError = err.message;
     }
   });
 
-  const strategies = {
-    'Pass Line Only': {
-      key: 'minPassLineOnly',
-      description: 'Bet the minimum on the pass line each come-out roll. No odds, no additional bets. The simplest possible strategy.'
-    },
-    'Pass + Max Odds': {
-      key: 'minPassLineMaxOdds',
-      description: 'Bet the minimum on the pass line, then back it with full 3-4-5x odds once a point is set. Odds bets carry no house edge.'
-    },
-    'Pass + Place 6/8': {
-      key: 'minPassLinePlaceSixEight',
-      description: 'Bet the minimum on the pass line, plus place bets on 6 and 8 after a point is set (skipping whichever is the point).'
-    },
-    'Pass + Max Odds + Place 6/8': {
-      key: 'minPassLineMaxOddsPlaceSixEight',
-      description: 'Bet the minimum on the pass line with full 3-4-5x odds, plus place bets on 6 and 8 (skipping the point).'
-    },
-    'Pass + Come + Place 6/8': {
-      key: 'passCome68',
-      description: 'Pass line with full odds, one come bet with full odds, and place bets on 6 and 8. Avoids redundant coverage when the come bet lands on 6 or 8.'
-    },
-  };
+  $: availableStrategies = craps
+    ? Object.entries(craps.betting).filter(([key, fn]) => fn.title && key !== 'lineMaxOdds')
+    : [];
 
-  let strategyName = 'Pass Line Only';
+  let strategyName = null;
   let numHands = 50;
   let minBet = 5;
   const maxOddsMultiple = { 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3 };
@@ -70,7 +52,7 @@
 
   function simulate() {
     const rules = buildRules();
-    const bettingStrategy = craps.betting[strategies[strategyName].key];
+    const bettingStrategy = craps.betting[strategyName];
     const handResults = [];
     let wins = 0;
     let losses = 0;
@@ -154,13 +136,15 @@
   <div class="controls">
     <div class="field">
       <label for="strategy">Betting Strategy</label>
-      <select id="strategy" bind:value={strategyName}>
-        {#each Object.keys(strategies) as s}
-          <option value={s}>{s}</option>
+      <select id="strategy" bind:value={strategyName} disabled={!craps}>
+        {#each availableStrategies as [key, fn]}
+          <option value={key}>{fn.title}</option>
         {/each}
       </select>
     </div>
-    <div class="strategy-desc">{strategies[strategyName].description}</div>
+    {#if strategyName}
+      <div class="strategy-desc">{craps.betting[strategyName].description}</div>
+    {/if}
     <div class="field">
       <label for="hands">Hands</label>
       <input id="hands" type="number" min="1" max="10000" bind:value={numHands} style="width:100px" />
