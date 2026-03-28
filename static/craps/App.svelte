@@ -23,7 +23,7 @@
   };
 
   let strategyName = 'Pass Line Only';
-  let numSessions = 50;
+  let numHands = 50;
   let minBet = 5;
   const maxOddsMultiple = { 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3 };
 
@@ -56,13 +56,13 @@
   function simulate() {
     const rules = buildRules();
     const bettingStrategy = craps.betting[strategyKeys[strategyName]];
-    const sessionResults = [];
+    const handResults = [];
     let wins = 0;
     let losses = 0;
     let totalWagered = 0;
     let totalReturned = 0;
 
-    for (let i = 0; i < numSessions; i++) {
+    for (let i = 0; i < numHands; i++) {
       const { history, balance } = craps.playHand({ rules, bettingStrategy });
 
       const gained = history.reduce((sum, roll) => {
@@ -71,24 +71,24 @@
 
       totalReturned += gained;
       if (balance >= 0) wins++; else losses++;
-      sessionResults.push({ rolls: history.length, balance });
-      if (i === numSessions - 1) lastHistory = history;
+      handResults.push({ rolls: history.length, balance });
+      if (i === numHands - 1) lastHistory = history;
     }
 
-    const avgBalance = sessionResults.reduce((s, r) => s + r.balance, 0) / numSessions;
-    const avgRolls   = sessionResults.reduce((s, r) => s + r.rolls,   0) / numSessions;
-    const minBalance = Math.min(...sessionResults.map(r => r.balance));
-    const maxBalance = Math.max(...sessionResults.map(r => r.balance));
+    const avgBalance = handResults.reduce((s, r) => s + r.balance, 0) / numHands;
+    const avgRolls   = handResults.reduce((s, r) => s + r.rolls,   0) / numHands;
+    const minBalance = Math.min(...handResults.map(r => r.balance));
+    const maxBalance = Math.max(...handResults.map(r => r.balance));
 
     results = {
-      sessions: numSessions,
+      hands: numHands,
       wins,
       losses,
       avgBalance: avgBalance.toFixed(2),
       avgRolls:   avgRolls.toFixed(1),
       minBalance,
       maxBalance,
-      sessionResults
+      handResults
     };
     showHistory = false;
   }
@@ -123,14 +123,14 @@
   .roll-result { font-weight: bold; }
   .tag { display: inline-block; font-size: 0.75rem; padding: 1px 6px; border-radius: 3px; color: #fff; margin-right: 3px; }
   .toggle { background: none; color: #333; border: 1px solid #ccc; margin-top: 0.5rem; font-size: 0.85rem; padding: 0.3rem 0.8rem; }
-  .session-chart { display: flex; flex-wrap: wrap; gap: 4px; margin: 0.5rem 0; }
-  .session-dot { width: 14px; height: 14px; border-radius: 2px; }
+  .hand-chart { display: flex; flex-wrap: wrap; gap: 4px; margin: 0.5rem 0; }
+  .hand-dot { width: 14px; height: 14px; border-radius: 2px; }
   .hist-wrap { overflow-x: auto; }
   .error { color: #dc2626; font-family: monospace; }
 </style>
 
 <h1>Craps Simulator</h1>
-<p>Simulate craps sessions using betting strategies from <a href="https://github.com/tphummel/node-craps" target="_blank">node-craps</a>.</p>
+<p>Simulate craps hands using betting strategies from <a href="https://github.com/tphummel/node-craps" target="_blank">node-craps</a>.</p>
 
 {#if loadError}
   <p class="error">Failed to load module: {loadError}</p>
@@ -145,8 +145,8 @@
       </select>
     </div>
     <div class="field">
-      <label for="sessions">Sessions</label>
-      <input id="sessions" type="number" min="1" max="10000" bind:value={numSessions} style="width:100px" />
+      <label for="hands">Hands</label>
+      <input id="hands" type="number" min="1" max="10000" bind:value={numHands} style="width:100px" />
     </div>
     <div class="field">
       <label for="minbet">Min Bet ($)</label>
@@ -160,48 +160,48 @@
   </div>
 
   {#if results}
-    <h2>Results — {results.sessions} sessions</h2>
+    <h2>Results — {results.hands} hands</h2>
     <div class="stats-grid">
       <div class="stat">
-        <div class="stat-label">Avg Net / Session</div>
+        <div class="stat-label">Avg Net / Hand</div>
         <div class="stat-value {Number(results.avgBalance) >= 0 ? 'positive' : 'negative'}">{fmt(results.avgBalance)}</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Win / Loss Sessions</div>
+        <div class="stat-label">Win / Loss Hands</div>
         <div class="stat-value neutral-color">{results.wins} / {results.losses}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Win Rate</div>
-        <div class="stat-value neutral-color">{(results.wins / results.sessions * 100).toFixed(1)}%</div>
+        <div class="stat-value neutral-color">{(results.wins / results.hands * 100).toFixed(1)}%</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Avg Rolls / Session</div>
+        <div class="stat-label">Avg Rolls / Hand</div>
         <div class="stat-value neutral-color">{results.avgRolls}</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Best Session</div>
+        <div class="stat-label">Best Hand</div>
         <div class="stat-value positive">{fmt(results.maxBalance)}</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Worst Session</div>
+        <div class="stat-label">Worst Hand</div>
         <div class="stat-value negative">{fmt(results.minBalance)}</div>
       </div>
     </div>
 
-    <h2>Session Results</h2>
-    <div class="session-chart">
-      {#each results.sessionResults as s, i}
+    <h2>Hand Results</h2>
+    <div class="hand-chart">
+      {#each results.handResults as s, i}
         <div
-          class="session-dot"
+          class="hand-dot"
           style="background:{s.balance >= 0 ? '#22c55e' : '#ef4444'}"
-          title="Session {i+1}: {fmt(s.balance)} ({s.rolls} rolls)"
+          title="Hand {i+1}: {fmt(s.balance)} ({s.rolls} rolls)"
         ></div>
       {/each}
     </div>
 
     {#if lastHistory}
       <button class="toggle" on:click={() => showHistory = !showHistory}>
-        {showHistory ? 'Hide' : 'Show'} Last Session Roll-by-Roll
+        {showHistory ? 'Hide' : 'Show'} Last Hand Roll-by-Roll
       </button>
 
       {#if showHistory}
