@@ -9,7 +9,6 @@
   onMount(async () => {
     try {
       craps = await import(MODULE_URL);
-      strategyName = availableStrategies[0][0];
     } catch (err) {
       loadError = err.message;
     }
@@ -20,6 +19,7 @@
     : [];
 
   let strategyName = null;
+  $: if (availableStrategies.length && !strategyName) strategyName = availableStrategies[0][0];
   let numHands = 50;
   let minBet = 5;
   const maxOddsMultiple = { 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3 };
