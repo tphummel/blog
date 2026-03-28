@@ -96,7 +96,6 @@
       maxBalance,
       handResults
     };
-    showHistory = false;
   }
 
   function fmt(n) {
