@@ -25,7 +25,7 @@
   let strategyName = 'Pass Line Only';
   let numSessions = 50;
   let minBet = 5;
-  let maxOdds = 3;
+  let maxOdds = '3-4-5';
 
   let results = null;
   let lastHistory = null;
@@ -49,11 +49,17 @@
     'neutral':      '#888'
   };
 
+  function parseOdds(str) {
+    const parts = String(str).split('-').map(n => parseInt(n, 10));
+    if (parts.length !== 3 || parts.some(n => isNaN(n))) return null;
+    return { 4: parts[0], 5: parts[1], 6: parts[2], 8: parts[2], 9: parts[1], 10: parts[0] };
+  }
+
   function buildRules() {
     return {
       ...craps.defaultRules,
       minBet,
-      maxOddsMultiple: { 4: maxOdds, 5: maxOdds, 6: maxOdds, 8: maxOdds, 9: maxOdds, 10: maxOdds }
+      maxOddsMultiple: parseOdds(maxOdds)
     };
   }
 
@@ -157,11 +163,11 @@
       <input id="minbet" type="number" min="1" max="500" bind:value={minBet} style="width:80px" />
     </div>
     <div class="field">
-      <label for="maxodds">Max Odds (×)</label>
-      <input id="maxodds" type="number" min="0" max="100" bind:value={maxOdds} style="width:80px" />
+      <label for="maxodds">Max Odds</label>
+      <input id="maxodds" type="text" placeholder="3-4-5" bind:value={maxOdds} style="width:80px" />
     </div>
     <div class="field" style="justify-content:flex-end">
-      <button on:click={simulate} disabled={!craps}>
+      <button on:click={simulate} disabled={!craps || !parseOdds(maxOdds)}>
         {craps ? 'Simulate' : 'Loading…'}
       </button>
     </div>
