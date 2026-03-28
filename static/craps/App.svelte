@@ -14,12 +14,27 @@
     }
   });
 
-  const strategyKeys = {
-    'Pass Line Only':              'minPassLineOnly',
-    'Pass + Max Odds':             'minPassLineMaxOdds',
-    'Pass + Place 6/8':            'minPassLinePlaceSixEight',
-    'Pass + Max Odds + Place 6/8': 'minPassLineMaxOddsPlaceSixEight',
-    'Pass + Come + Place 6/8':     'passCome68',
+  const strategies = {
+    'Pass Line Only': {
+      key: 'minPassLineOnly',
+      description: 'Bet the minimum on the pass line each come-out roll. No odds, no additional bets. The simplest possible strategy.'
+    },
+    'Pass + Max Odds': {
+      key: 'minPassLineMaxOdds',
+      description: 'Bet the minimum on the pass line, then back it with full 3-4-5x odds once a point is set. Odds bets carry no house edge.'
+    },
+    'Pass + Place 6/8': {
+      key: 'minPassLinePlaceSixEight',
+      description: 'Bet the minimum on the pass line, plus place bets on 6 and 8 after a point is set (skipping whichever is the point).'
+    },
+    'Pass + Max Odds + Place 6/8': {
+      key: 'minPassLineMaxOddsPlaceSixEight',
+      description: 'Bet the minimum on the pass line with full 3-4-5x odds, plus place bets on 6 and 8 (skipping the point).'
+    },
+    'Pass + Come + Place 6/8': {
+      key: 'passCome68',
+      description: 'Pass line with full odds, one come bet with full odds, and place bets on 6 and 8. Avoids redundant coverage when the come bet lands on 6 or 8.'
+    },
   };
 
   let strategyName = 'Pass Line Only';
@@ -55,7 +70,7 @@
 
   function simulate() {
     const rules = buildRules();
-    const bettingStrategy = craps.betting[strategyKeys[strategyName]];
+    const bettingStrategy = craps.betting[strategies[strategyName].key];
     const handResults = [];
     let wins = 0;
     let losses = 0;
@@ -103,7 +118,8 @@
   * { box-sizing: border-box; }
   h1 { margin: 0 0 1rem 0; font-size: 1.4rem; }
   h2 { font-size: 1.1rem; margin: 1.2rem 0 0.5rem 0; }
-  .controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+  .controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.75rem; align-items: flex-end; }
+  .strategy-desc { font-size: 0.85rem; color: #555; margin-bottom: 1rem; max-width: 520px; }
   .field { display: flex; flex-direction: column; gap: 0.25rem; }
   label { font-size: 0.85rem; font-weight: bold; }
   select, input { padding: 0.4rem 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
@@ -139,11 +155,12 @@
     <div class="field">
       <label for="strategy">Betting Strategy</label>
       <select id="strategy" bind:value={strategyName}>
-        {#each Object.keys(strategyKeys) as s}
+        {#each Object.keys(strategies) as s}
           <option value={s}>{s}</option>
         {/each}
       </select>
     </div>
+    <div class="strategy-desc">{strategies[strategyName].description}</div>
     <div class="field">
       <label for="hands">Hands</label>
       <input id="hands" type="number" min="1" max="10000" bind:value={numHands} style="width:100px" />
