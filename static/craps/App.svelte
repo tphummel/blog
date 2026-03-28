@@ -1,10 +1,18 @@
 <script>
+  import { onMount } from 'svelte';
+
   const MODULE_URL = 'https://esm.sh/gh/tphummel/node-craps';
 
   let craps = null;
   let loadError = null;
 
-  import(MODULE_URL).then(m => { craps = m; }).catch(err => { loadError = err.message; });
+  onMount(async () => {
+    try {
+      craps = await import(MODULE_URL);
+    } catch (err) {
+      loadError = err.message;
+    }
+  });
 
   const strategyKeys = {
     'Pass Line Only':              'minPassLineOnly',
