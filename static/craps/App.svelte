@@ -25,8 +25,16 @@
   const maxOddsMultiple = { 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3 };
 
   let results = null;
-  let lastHistory = null;
-  let showHistory = false;
+  let allHistories = [];
+
+  $: detailHands = results
+    ? (results.hands <= 10
+        ? allHistories
+        : [
+            ...allHistories.slice().sort((a, b) => b.balance - a.balance).slice(0, 5),
+            ...allHistories.slice().sort((a, b) => a.balance - b.balance).slice(0, 5)
+          ].sort((a, b) => a.index - b.index))
+    : [];
 
   const resultLabels = {
     'comeout win':  'Come-out Win',
@@ -54,6 +62,7 @@
     const rules = buildRules();
     const bettingStrategy = craps.betting[strategyName];
     const handResults = [];
+    allHistories = [];
     let wins = 0;
     let losses = 0;
     let totalWagered = 0;
@@ -69,7 +78,7 @@
       totalReturned += gained;
       if (balance >= 0) wins++; else losses++;
       handResults.push({ rolls: history.length, balance });
-      if (i === numHands - 1) lastHistory = history;
+      allHistories.push({ index: i, balance, history });
     }
 
     const avgBalance = handResults.reduce((s, r) => s + r.balance, 0) / numHands;
@@ -120,8 +129,10 @@
   th { background: #f5f5f5; font-size: 0.8rem; }
   .roll-result { font-weight: bold; }
   .tag { display: inline-block; font-size: 0.75rem; padding: 1px 6px; border-radius: 3px; color: #fff; margin-right: 3px; }
-  .toggle { background: none; color: #333; border: 1px solid #ccc; margin-top: 0.5rem; font-size: 0.85rem; padding: 0.3rem 0.8rem; }
   .hand-chart { display: flex; flex-wrap: wrap; gap: 4px; margin: 0.5rem 0; }
+  details { border: 1px solid #ddd; border-radius: 4px; margin-bottom: 0.5rem; }
+  details summary { padding: 0.5rem 0.75rem; cursor: pointer; font-size: 0.9rem; }
+  details[open] summary { border-bottom: 1px solid #ddd; }
   .hand-dot { width: 14px; height: 14px; border-radius: 2px; }
   .hist-wrap { overflow-x: auto; }
   .error { color: #dc2626; font-family: monospace; }
@@ -200,19 +211,17 @@
       {/each}
     </div>
 
-    {#if lastHistory}
-      <button class="toggle" on:click={() => showHistory = !showHistory}>
-        {showHistory ? 'Hide' : 'Show'} Last Hand Roll-by-Roll
-      </button>
-
-      {#if showHistory}
+    <h2>Hand Detail{results.hands > 10 ? ' — 5 Best & 5 Worst' : ''}</h2>
+    {#each detailHands as hand}
+      <details>
+        <summary>Hand {hand.index + 1} — {fmt(hand.balance)} ({hand.history.length} rolls)</summary>
         <div class="hist-wrap">
           <table>
             <thead>
               <tr><th>#</th><th>Dice</th><th>Sum</th><th>Result</th><th>Point</th><th>Payouts</th></tr>
             </thead>
             <tbody>
-              {#each lastHistory as roll, i}
+              {#each hand.history as roll, i}
                 <tr>
                   <td>{i + 1}</td>
                   <td>{roll.die1} + {roll.die2}</td>
@@ -239,7 +248,7 @@
             </tbody>
           </table>
         </div>
-      {/if}
-    {/if}
+      </details>
+    {/each}
   {/if}
 {/if}
