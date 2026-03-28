@@ -33,7 +33,7 @@
         : [
             ...allHistories.slice().sort((a, b) => b.balance - a.balance).slice(0, 5),
             ...allHistories.slice().sort((a, b) => a.balance - b.balance).slice(0, 5)
-          ].sort((a, b) => a.index - b.index))
+          ].sort((a, b) => b.balance - a.balance))
     : [];
 
   const resultLabels = {
@@ -53,6 +53,55 @@
     'point set':    '#3b82f6',
     'neutral':      '#888'
   };
+
+  function computeLosses(roll) {
+    const losses = [];
+    const bb = roll.betsBefore;
+    if (!bb) return losses;
+    const { result, diceSum } = roll;
+
+    if (result === 'seven out') {
+      if (bb.pass?.line) losses.push({ type: 'pass line loss', amount: bb.pass.line.amount });
+      if (bb.pass?.odds) losses.push({ type: 'pass odds loss', amount: bb.pass.odds.amount });
+      if (bb.place?.six) losses.push({ type: 'place 6 loss', amount: bb.place.six.amount });
+      if (bb.place?.eight) losses.push({ type: 'place 8 loss', amount: bb.place.eight.amount });
+      if (bb.come?.points) {
+        Object.entries(bb.come.points).forEach(([pt, bets]) => {
+          bets.forEach(bet => {
+            losses.push({ type: `come ${pt} loss`, amount: bet.line.amount });
+            if (bet.odds) losses.push({ type: `come ${pt} odds loss`, amount: bet.odds.amount });
+          });
+        });
+      }
+    }
+    if (result === 'comeout loss') {
+      if (bb.pass?.line) losses.push({ type: 'pass line loss', amount: bb.pass.line.amount });
+    }
+    if (result === 'comeout win') {
+      if (bb.dontPass?.line) losses.push({ type: "don't pass loss", amount: bb.dontPass.line.amount });
+    }
+    if (result === 'point win') {
+      if (bb.dontPass?.line) losses.push({ type: "don't pass loss", amount: bb.dontPass.line.amount });
+      if (bb.dontCome?.points?.[diceSum]) {
+        bb.dontCome.points[diceSum].forEach(bet => {
+          losses.push({ type: `don't come ${diceSum} loss`, amount: bet.line.amount });
+        });
+      }
+    }
+    // Come pending bets lose on 2, 3, 12
+    if ([2, 3, 12].includes(diceSum) && bb.come?.pending?.length) {
+      bb.come.pending.forEach(bet => {
+        losses.push({ type: 'come line loss', amount: bet.amount });
+      });
+    }
+    // Don't come pending bets lose on 7 or 11
+    if ([7, 11].includes(diceSum) && bb.dontCome?.pending?.length) {
+      bb.dontCome.pending.forEach(bet => {
+        losses.push({ type: "don't come loss", amount: bet.amount });
+      });
+    }
+    return losses;
+  }
 
   function buildRules() {
     return { ...craps.defaultRules, minBet, maxOddsMultiple };
@@ -78,7 +127,7 @@
       totalReturned += gained;
       if (balance >= 0) wins++; else losses++;
       handResults.push({ rolls: history.length, balance });
-      allHistories.push({ index: i, balance, history });
+      allHistories.push({ index: i, balance, history: history.map(roll => ({ ...roll, losses: computeLosses(roll) })) });
     }
 
     const avgBalance = handResults.reduce((s, r) => s + r.balance, 0) / numHands;
@@ -223,7 +272,7 @@
               {#each hand.history as roll, i}
                 <tr>
                   <td>{i + 1}</td>
-                  <td>{roll.die1} + {roll.die2}</td>
+                  <td>{roll.die1}{roll.die2}</td>
                   <td>{roll.diceSum}</td>
                   <td>
                     <span class="roll-result" style="color:{resultColors[roll.result] || '#333'}">
@@ -232,10 +281,15 @@
                   </td>
                   <td>{roll.point ?? '—'}</td>
                   <td>
-                    {#if roll.payouts?.length}
-                      {#each roll.payouts as p}
+                    {#if roll.payouts?.length || roll.losses?.length}
+                      {#each roll.payouts ?? [] as p}
                         <span class="tag" style="background:{resultColors[roll.result] || '#888'}">
                           {p.type}: +${(p.principal + p.profit).toFixed(0)}
+                        </span>
+                      {/each}
+                      {#each roll.losses ?? [] as l}
+                        <span class="tag" style="background:#ef4444">
+                          {l.type}: -${l.amount.toFixed(0)}
                         </span>
                       {/each}
                     {:else}
