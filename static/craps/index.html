@@ -57,5 +57,11 @@
     }
     main();
   </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/craps/sw.js', { scope: '/craps/' })
+        .catch(err => console.warn('SW registration failed:', err));
+    }
+  </script>
 </body>
 </html>
