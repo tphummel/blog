@@ -11,3 +11,4 @@ date: 2020-09-01T08:00:00
 - [Borfin Shlump](/borfin-shlump)
 - [Card Shuffle](/card-shuffle-svelte)
 - [Craps Simulator](/craps)
+- [Craps Roguelike (Lab)](/craps-roguelike)
