@@ -1,3 +1,17 @@
+<script context="module">
+  const EXCITING_TYPES = new Set([
+    'stolen_base_2b', 'stolen_base_3b', 'stolen_base_home',
+    'double_play', 'grounded_into_double_play', 'strikeout_double_play', 'lined_into_double_play',
+    'triple_play', 'grounded_into_triple_play', 'lined_into_triple_play',
+  ]);
+
+  const ODDITY_TYPES = new Set([
+    'balk',
+    'catcher_interf',
+    'obstruction',
+  ]);
+</script>
+
 <script>
   import { onMount } from 'svelte';
 
@@ -121,37 +135,66 @@
     return result;
   }
 
-  const EXCITING_TYPES = new Set([
-    'stolen_base_2b', 'stolen_base_3b', 'stolen_base_home',
-    'double_play', 'grounded_into_double_play', 'strikeout_double_play', 'lined_into_double_play',
-    'triple_play', 'grounded_into_triple_play', 'lined_into_triple_play',
-  ]);
-
-  const ODDITY_TYPES = new Set([
-    'balk',
-    'catcher_interf',
-    'obstruction',
-  ]);
-
   function parsePlays(allPlays, typeSet) {
     const seen = new Set();
     const result = [];
     for (const play of allPlays) {
-      const inning  = play.about?.inning ?? 0;
-      const half    = play.about?.halfInning ?? 'top';
-      const check   = (et, event, desc) => {
+      const inning = play.about?.inning ?? 0;
+      const half   = play.about?.halfInning ?? 'top';
+      const pitchEvents = (play.playEvents ?? []).filter(e => e.type === 'pitch');
+      const lastPitchId = pitchEvents.length ? pitchEvents[pitchEvents.length - 1].playId : null;
+
+      const checkResult = () => {
+        const et    = play.result?.eventType;
+        const event = play.result?.event;
+        const desc  = play.result?.description;
         if (!et || !typeSet.has(et)) return;
         const key = `${inning}:${half}:${et}:${desc}`;
         if (seen.has(key)) return;
         seen.add(key);
-        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '' });
+        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '', playId: lastPitchId });
       };
-      check(play.result?.eventType, play.result?.event, play.result?.description);
+
+      const checkAction = (ev) => {
+        const et    = ev.details?.eventType;
+        const event = ev.details?.event;
+        const desc  = ev.details?.description;
+        if (!et || !typeSet.has(et)) return;
+        const key = `${inning}:${half}:${et}:${desc}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '', playId: ev.playId ?? null });
+      };
+
+      checkResult();
       for (const ev of (play.playEvents ?? [])) {
-        if (ev.type === 'action') {
-          check(ev.details?.eventType, ev.details?.event, ev.details?.description);
-        }
+        if (ev.type === 'action') checkAction(ev);
       }
+    }
+    return result;
+  }
+
+  function parseHomers(allPlays) {
+    const result = [];
+    for (const play of allPlays) {
+      if (play.result?.eventType !== 'home_run') continue;
+      const inning = play.about?.inning ?? 0;
+      const half   = play.about?.halfInning ?? 'top';
+      const pitchEvents = (play.playEvents ?? []).filter(e => e.type === 'pitch');
+      const lastPitch = pitchEvents.length ? pitchEvents[pitchEvents.length - 1] : null;
+      const hd = lastPitch?.hitData ?? {};
+      result.push({
+        inning,
+        halfInning: half,
+        batter:      play.matchup?.batter?.fullName ?? null,
+        pitcher:     play.matchup?.pitcher?.fullName ?? null,
+        description: play.result?.description ?? '',
+        distance:    hd.totalDistance ?? null,
+        launchAngle: hd.launchAngle ?? null,
+        launchSpeed: hd.launchSpeed ?? null,
+        hardness:    hd.hardness ?? null,
+        playId:      lastPitch?.playId ?? null,
+      });
     }
     return result;
   }
@@ -170,6 +213,7 @@
           abs:      parseABS(all, awayTeamId, homeTeamId),
           exciting: parsePlays(all, EXCITING_TYPES),
           oddities: parsePlays(all, ODDITY_TYPES),
+          homers:   parseHomers(all),
         }
       };
     } catch (e) {
@@ -412,6 +456,7 @@
   .abs-challenge summary.upheld { color: #9a3412; border-color: #fca5a5; background: #fff7ed; }
   .abs-body { padding: 0.25rem 0.4rem; font-size: 0.78rem; color: #555; border-left: 2px solid #ddd; margin-top: 0.2rem; }
   .abs-iframe { display: block; width: 100%; max-width: 560px; height: 315px; border: 0; margin-top: 0.4rem; }
+  .abs-challenge summary.homer { color: #1d4ed8; border-color: #93c5fd; background: #eff6ff; }
 
   .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
   .lineup-head { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; margin-bottom: 0.25rem; }
@@ -440,8 +485,9 @@
   <button class="tab" class:active={view === 'scoreboard'} on:click={() => switchView('scoreboard')}>Scoreboard</button>
   <button class="tab" class:active={view === 'lineups'} on:click={() => switchView('lineups')}>Lineups</button>
   <button class="tab" class:active={view === 'abs'} on:click={() => switchView('abs')}>ABS</button>
-  <button class="tab" class:active={view === 'plays'} on:click={() => switchView('plays')}>Plays</button>
-  <button class="tab" class:active={view === 'oddities'} on:click={() => switchView('oddities')}>Oddities</button>
+  <button class="tab" class:active={view === 'plays'} on:click={() => switchView('plays')}>😲</button>
+  <button class="tab" class:active={view === 'oddities'} on:click={() => switchView('oddities')}>🤔</button>
+  <button class="tab" class:active={view === 'homers'} on:click={() => switchView('homers')}>Homers</button>
 </div>
 
 {#if loading}
@@ -690,6 +736,60 @@
     {/each}
   </div>
 
+{:else if view === 'homers'}
+  {#if bsLoading}
+    <p class="loading">Loading…</p>
+  {/if}
+  <div class="games">
+    {#each games as game}
+      {@const aw = game.teams.away}
+      {@const hw = game.teams.home}
+      {@const st = gameStatus(game)}
+      {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
+      {@const pd = playData[game.gamePk]}
+      {@const hrs = pd?.homers}
+      <div class="card" class:as-game={asGame}>
+        <div class="matchup">
+          <div class="team-block"><span class="abbr">{aw.team.abbreviation ?? aw.team.name}</span></div>
+          <span class="status" class:live={st.live}>{st.text}</span>
+          <div class="team-block"><span class="abbr">{hw.team.abbreviation ?? hw.team.name}</span></div>
+        </div>
+        {#if game.status.abstractGameState === 'Preview'}
+          <p class="none" style="font-size:0.83rem">Game not yet started.</p>
+        {:else if pd === undefined}
+          <p class="loading">Loading…</p>
+        {:else if pd === null}
+          <p class="none" style="font-size:0.83rem">Data unavailable.</p>
+        {:else if !hrs?.length}
+          <p class="none" style="font-size:0.83rem">No home runs.</p>
+        {:else}
+          <div class="play-list">
+            {#each hrs as hr}
+              <details class="abs-challenge" on:toggle={e => e.target.open && hr.playId && expandPlay(hr.playId)}>
+                <summary class="homer">
+                  {hr.halfInning === 'top' ? '▲' : '▼'}{hr.inning} · {hr.batter ?? '?'}{hr.distance != null ? ` · ${hr.distance}ft` : ''}{hr.launchSpeed != null ? ` · ${hr.launchSpeed.toFixed(1)}mph EV` : ''}{hr.launchAngle != null ? ` · ${hr.launchAngle.toFixed(0)}°` : ''}{hr.hardness === 'Barrel' ? ' · Barrel' : ''}
+                </summary>
+                <div class="abs-body">
+                  {#if hr.pitcher}vs {hr.pitcher}<br>{/if}
+                  {hr.description}
+                  {#if hr.playId && expandedPlays.has(hr.playId)}
+                    <iframe
+                      class="abs-iframe"
+                      src="https://baseballsavant.mlb.com/sporty-videos?playId={hr.playId}"
+                      title="Home run video"
+                      allow="autoplay; fullscreen"
+                      sandbox="allow-scripts allow-same-origin allow-popups"
+                    ></iframe>
+                  {/if}
+                </div>
+              </details>
+            {/each}
+          </div>
+        {/if}
+      </div>
+    {/each}
+  </div>
+
 {:else if view === 'plays' || view === 'oddities'}
   {#if bsLoading}
     <p class="loading">Loading…</p>
@@ -720,10 +820,29 @@
         {:else}
           <div class="play-list">
             {#each plays as p}
-              <div class="play-entry">
-                <span class="play-inn">{p.halfInning === 'top' ? '▲' : '▼'}{p.inning}</span>
-                <span class="play-desc">{p.description || p.event}</span>
-              </div>
+              {#if p.playId}
+                <details class="abs-challenge" on:toggle={e => e.target.open && expandPlay(p.playId)}>
+                  <summary>
+                    {p.halfInning === 'top' ? '▲' : '▼'}{p.inning} · {p.description || p.event}
+                  </summary>
+                  <div class="abs-body">
+                    {#if expandedPlays.has(p.playId)}
+                      <iframe
+                        class="abs-iframe"
+                        src="https://baseballsavant.mlb.com/sporty-videos?playId={p.playId}"
+                        title="Play video"
+                        allow="autoplay; fullscreen"
+                        sandbox="allow-scripts allow-same-origin allow-popups"
+                      ></iframe>
+                    {/if}
+                  </div>
+                </details>
+              {:else}
+                <div class="play-entry">
+                  <span class="play-inn">{p.halfInning === 'top' ? '▲' : '▼'}{p.inning}</span>
+                  <span class="play-desc">{p.description || p.event}</span>
+                </div>
+              {/if}
             {/each}
           </div>
         {/if}
