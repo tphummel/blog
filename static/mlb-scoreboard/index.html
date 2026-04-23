@@ -29,7 +29,10 @@
     }
 
     window.addEventListener('error', (e) => log(e.error?.stack || e.message));
-    window.addEventListener('unhandledrejection', (e) => log(e.reason?.stack || e.reason));
+    window.addEventListener('unhandledrejection', (e) => {
+      const r = e.reason;
+      if (r) log(r instanceof Error ? (r.stack || r.message) : String(r));
+    });
   </script>
   <script type="module">
     import { compile } from 'https://cdn.jsdelivr.net/npm/svelte@3.59.2/compiler.mjs';
@@ -48,10 +51,12 @@
           document.head.appendChild(style);
         }
 
-        const { default: App } = await import(`data:text/javascript,${encodeURIComponent(js.code)}`);
+        const blob = new Blob([js.code], { type: 'text/javascript' });
+        const blobUrl = URL.createObjectURL(blob);
+        const { default: App } = await import(blobUrl);
         new App({ target: document.getElementById('app') });
       } catch (err) {
-        log(err.stack || err);
+        log(err instanceof Error ? (err.stack || err.message) : String(err));
         console.error(err);
       }
     }
