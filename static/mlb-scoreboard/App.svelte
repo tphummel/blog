@@ -131,7 +131,8 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       const map = {};
-      for (const item of (data.highlights?.highlights?.items ?? [])) {
+      const items = data.highlights?.highlights?.items ?? [];
+      for (const item of items) {
         for (const kw of (item.keywordsAll ?? [])) {
           if (kw.type === 'mlbtax__playID') {
             const url = item.playbacks?.find(p => p.name === 'mp4Avc')?.url
@@ -140,9 +141,11 @@
           }
         }
       }
+      // store debug info alongside the map so we can surface it in the UI
+      map.__debug = `${items.length} highlights, ${Object.keys(map).filter(k => k !== '__debug').length} matched`;
       contentData = { ...contentData, [pk]: map };
     } catch (e) {
-      contentData = { ...contentData, [pk]: {} };
+      contentData = { ...contentData, [pk]: { __debug: `error: ${e.message}` } };
     }
   }
 
@@ -600,7 +603,7 @@
                   {:else if cd?.[c.playId]}
                     <video class="abs-video" src={cd[c.playId]} controls playsinline></video>
                   {:else if cd !== undefined}
-                    <p class="none" style="font-size:0.8rem;margin:0.25rem 0">No video available.</p>
+                    <p class="none" style="font-size:0.8rem;margin:0.25rem 0">No video available. {cd.__debug ?? ''}</p>
                   {/if}
                 </details>
               {/each}
