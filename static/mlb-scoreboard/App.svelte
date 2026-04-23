@@ -35,6 +35,7 @@
     error = null;
     games = [];
     boxscores = {};
+    absData = {};
     try {
       const res = await fetch(
         `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${date}&hydrate=linescore,team,probablePitcher,decisions`
@@ -46,7 +47,6 @@
       error = e.message;
     }
     loading = false;
-    absData = {};
     if (games.length) fetchStartedBoxscores();
   }
 
@@ -100,15 +100,7 @@
     for (const d of Object.values(map)) {
       if (d.attempts > 0) result[d.side].push(d);
     }
-    return (result.away.length || result.home.length) ? result : null;
-  }
-
-  function formatABS(pk, side, abbr) {
-    const d = absData[pk];
-    if (!d) return '';
-    const players = d[side];
-    if (!players?.length) return '';
-    return `${abbr}: ${players.map(p => `${p.name} ${p.success}/${p.attempts}`).join(', ')}`;
+    return result;
   }
 
   async function fetchStartedBoxscores() {
@@ -142,8 +134,7 @@
   function switchView(v) {
     view = v;
     pushUrl();
-    // boxscores already fetching; if any Preview games have since started, fetch them
-    if (v === 'lineups' && !bsLoading) fetchStartedBoxscores();
+    if (!bsLoading) fetchStartedBoxscores();
   }
 
   onMount(() => loadSchedule(dateStr));
@@ -168,10 +159,10 @@
     return { text: '—', live: false };
   }
 
-  function formatHRs(pk, side, abbr) {
-    const team = boxscores[pk]?.teams?.[side];
-    if (!team?.players) return '';
-    const players = Object.values(team.players)
+  // Pass teamData directly so Svelte tracks boxscores as a reactive dependency
+  function formatHRs(teamData, abbr) {
+    if (!teamData?.players) return '';
+    const players = Object.values(teamData.players)
       .filter(p => (p.stats?.batting?.homeRuns ?? 0) > 0)
       .map(p => {
         const gameHR = p.stats.batting.homeRuns;
@@ -243,7 +234,9 @@
   .meta { font-size: 0.8rem; color: #666; margin-top: 0.35rem; }
   .hr-line { font-size: 0.8rem; color: #444; margin-top: 0.3rem; }
   .hr-label { color: #999; }
-  .meta-label { color: #999; }
+
+  .abs-row { font-size: 0.83rem; margin-top: 0.25rem; }
+  .abs-team { color: #888; margin-right: 0.2rem; }
 
   .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
   .lineup-head { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; margin-bottom: 0.25rem; }
@@ -271,6 +264,7 @@
 <div class="tabs">
   <button class="tab" class:active={view === 'scoreboard'} on:click={() => switchView('scoreboard')}>Scoreboard</button>
   <button class="tab" class:active={view === 'lineups'} on:click={() => switchView('lineups')}>Lineups</button>
+  <button class="tab" class:active={view === 'abs'} on:click={() => switchView('abs')}>ABS</button>
 </div>
 
 {#if loading}
@@ -291,10 +285,8 @@
       {@const innings = game.linescore?.innings ?? []}
       {@const awRHE = game.linescore?.teams?.away}
       {@const hwRHE = game.linescore?.teams?.home}
-      {@const awHRStr = formatHRs(game.gamePk, 'away', aw.team.abbreviation ?? aw.team.name)}
-      {@const hwHRStr = formatHRs(game.gamePk, 'home', hw.team.abbreviation ?? hw.team.name)}
-      {@const awABSStr = formatABS(game.gamePk, 'away', aw.team.abbreviation ?? aw.team.name)}
-      {@const hwABSStr = formatABS(game.gamePk, 'home', hw.team.abbreviation ?? hw.team.name)}
+      {@const awHRStr = formatHRs(boxscores[game.gamePk]?.teams?.away, aw.team.abbreviation ?? aw.team.name)}
+      {@const hwHRStr = formatHRs(boxscores[game.gamePk]?.teams?.home, hw.team.abbreviation ?? hw.team.name)}
       {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
       <div class="card" class:as-game={asGame}>
         <div class="matchup">
@@ -360,12 +352,6 @@
           </div>
         {/if}
 
-        {#if awABSStr || hwABSStr}
-          <div class="meta">
-            <span class="meta-label">ABS: </span>{[awABSStr, hwABSStr].filter(Boolean).join('. ')}
-          </div>
-        {/if}
-
         {#if isFinal && game.decisions}
           <div class="meta">
             W: {game.decisions.winner?.fullName ?? '—'} ·
@@ -381,7 +367,7 @@
     {/each}
   </div>
 
-{:else}
+{:else if view === 'lineups'}
   {#if bsLoading}
     <p class="loading">Loading lineups…</p>
   {/if}
@@ -448,6 +434,50 @@
           <div class="meta">
             SP: {spName(bs.teams.away, aw.probablePitcher?.fullName)} vs {spName(bs.teams.home, hw.probablePitcher?.fullName)}
           </div>
+        {/if}
+      </div>
+    {/each}
+  </div>
+
+{:else if view === 'abs'}
+  {#if bsLoading}
+    <p class="loading">Loading…</p>
+  {/if}
+  <div class="games">
+    {#each games as game}
+      {@const aw = game.teams.away}
+      {@const hw = game.teams.home}
+      {@const st = gameStatus(game)}
+      {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
+      {@const abs = absData[game.gamePk]}
+      <div class="card" class:as-game={asGame}>
+        <div class="matchup">
+          <div class="team-block"><span class="abbr">{aw.team.name}</span></div>
+          <span class="status" class:live={st.live}>{st.text}</span>
+          <div class="team-block"><span class="abbr">{hw.team.name}</span></div>
+        </div>
+
+        {#if game.status.abstractGameState === 'Preview'}
+          <p class="none" style="font-size:0.83rem">Game not yet started.</p>
+        {:else if abs === undefined}
+          <p class="loading">Loading…</p>
+        {:else if abs === null}
+          <p class="none" style="font-size:0.83rem">Challenge data unavailable.</p>
+        {:else if !abs.away.length && !abs.home.length}
+          <p class="none" style="font-size:0.83rem">No ABS challenges recorded.</p>
+        {:else}
+          {#if abs.away.length}
+            <div class="abs-row">
+              <span class="abs-team">{aw.team.abbreviation ?? aw.team.name}:</span>
+              {abs.away.map(p => `${p.name} ${p.success}/${p.attempts}`).join(', ')}
+            </div>
+          {/if}
+          {#if abs.home.length}
+            <div class="abs-row">
+              <span class="abs-team">{hw.team.abbreviation ?? hw.team.name}:</span>
+              {abs.home.map(p => `${p.name} ${p.success}/${p.attempts}`).join(', ')}
+            </div>
+          {/if}
         {/if}
       </div>
     {/each}
