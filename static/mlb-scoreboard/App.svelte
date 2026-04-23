@@ -84,6 +84,7 @@
         if (rd.isOverturned) map[id].success++;
 
         const spd = ev.pitchData?.startSpeed;
+        const pd  = ev.pitchData;
         sorted.push({
           playId:       ev.playId,
           isOverturned: rd.isOverturned,
@@ -96,6 +97,12 @@
           playerName:   player.fullName,
           batter:       play.matchup?.batter?.fullName ?? null,
           pitcher:      play.matchup?.pitcher?.fullName ?? null,
+          batSide:      play.matchup?.batSide?.code ?? null,
+          pX:           pd?.coordinates?.pX ?? null,
+          pZ:           pd?.coordinates?.pZ ?? null,
+          szTop:        pd?.strikeZoneTop ?? null,
+          szBot:        pd?.strikeZoneBottom ?? null,
+          szW:          pd?.strikeZoneWidth ?? 17,
           side,
         });
       }
@@ -150,6 +157,41 @@
     const d = new Date(`${dateStr}T12:00:00`);
     d.setDate(d.getDate() + delta);
     go(d.toISOString().slice(0, 10));
+  }
+
+  // pX/pZ are in feet; strikeZoneWidth is in inches; szTop/szBot are in feet.
+  function zoneInfo(c) {
+    const { pX, pZ, szTop, szBot, szW, batSide } = c;
+    if (pX == null || pZ == null || szTop == null || szBot == null) return null;
+
+    const halfW = (szW ?? 17) / 2 / 12; // convert inches → feet
+
+    const hOut = (Math.abs(pX) - halfW) * 12;          // inches beyond horizontal edge
+    const vOut = pZ < szBot ? (szBot - pZ) * 12
+               : pZ > szTop ? (pZ - szTop) * 12
+               : 0;
+
+    const parts = [];
+
+    if (hOut > 0.2) {
+      const isRHB   = batSide !== 'L';
+      const pitchLeft = pX < 0;
+      const dir = (isRHB ? pitchLeft : !pitchLeft) ? 'inside' : 'outside';
+      parts.push(`${hOut.toFixed(1)}" ${dir}`);
+    }
+    if (vOut > 0.2) {
+      parts.push(`${vOut.toFixed(1)}" ${pZ < szBot ? 'low' : 'high'}`);
+    }
+
+    if (parts.length === 0) {
+      const margin = Math.min(
+        (halfW - Math.abs(pX)) * 12,
+        (szTop - pZ) * 12,
+        (pZ - szBot) * 12
+      );
+      return `in zone (${margin.toFixed(1)}" from edge)`;
+    }
+    return parts.join(', ') + ' from zone';
   }
 
   function expandPlay(playId) {
@@ -570,6 +612,9 @@
                     {c.originalCall}{c.pitchType ? ` · ${c.pitchType}${c.speed ? ` ${c.speed}mph` : ''}${c.count ? ` · ${c.count}` : ''}` : c.count ? ` · ${c.count}` : ''}
                     {#if c.batter || c.pitcher}
                       <div>{c.batter ?? ''}{c.batter && c.pitcher ? ' vs ' : ''}{c.pitcher ?? ''}</div>
+                    {/if}
+                    {#if zoneInfo(c)}
+                      <div>{zoneInfo(c)}</div>
                     {/if}
                     {#if expandedPlays.has(c.playId)}
                       <iframe
