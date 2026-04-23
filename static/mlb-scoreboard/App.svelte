@@ -132,8 +132,10 @@
       const data = await res.json();
       const map = {};
       const items = data.highlights?.highlights?.items ?? [];
+      const kwTypes = new Set();
       for (const item of items) {
         for (const kw of (item.keywordsAll ?? [])) {
+          kwTypes.add(kw.type);
           if (kw.type === 'mlbtax__playID') {
             const url = item.playbacks?.find(p => p.name === 'mp4Avc')?.url
                      ?? item.playbacks?.[0]?.url;
@@ -141,8 +143,7 @@
           }
         }
       }
-      // store debug info alongside the map so we can surface it in the UI
-      map.__debug = `${items.length} highlights, ${Object.keys(map).filter(k => k !== '__debug').length} matched`;
+      map.__debug = `${items.length} highlights, ${Object.keys(map).filter(k => k !== '__debug').length} matched. kw types: ${[...kwTypes].join(', ')}`;
       contentData = { ...contentData, [pk]: map };
     } catch (e) {
       contentData = { ...contentData, [pk]: { __debug: `error: ${e.message}` } };
