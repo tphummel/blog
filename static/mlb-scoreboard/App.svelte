@@ -1,6 +1,8 @@
 <script>
   import { onMount } from 'svelte';
 
+  const AS_ID = 133;
+
   function todayStr() {
     return new Date().toLocaleDateString('en-CA');
   }
@@ -13,7 +15,19 @@
   let loading = true;
   let error = null;
   let boxscores = {};
-  let lineupsLoading = false;
+  let bsLoading = false;
+
+  function sortGames(gs) {
+    const isAs = g => g.teams.away.team.id === AS_ID || g.teams.home.team.id === AS_ID;
+    const isFinal = g => g.status.abstractGameState === 'Final';
+    return [...gs].sort((a, b) => {
+      const aAs = isAs(a), bAs = isAs(b);
+      if (aAs !== bAs) return aAs ? -1 : 1;
+      const aFin = isFinal(a), bFin = isFinal(b);
+      if (aFin !== bFin) return aFin ? 1 : -1;
+      return new Date(a.gameDate) - new Date(b.gameDate);
+    });
+  }
 
   async function loadSchedule(date) {
     loading = true;
@@ -22,17 +36,16 @@
     boxscores = {};
     try {
       const res = await fetch(
-        `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${date}&hydrate=linescore,team,probablePitcher`
+        `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${date}&hydrate=linescore,team,probablePitcher,decisions`
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      games = (data.dates?.[0]?.games ?? [])
-        .sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate));
+      games = sortGames(data.dates?.[0]?.games ?? []);
     } catch (e) {
       error = e.message;
     }
     loading = false;
-    if (view === 'lineups' && games.length) await loadAllLineups();
+    if (games.length) fetchStartedBoxscores();
   }
 
   async function fetchBoxscore(pk) {
@@ -46,14 +59,14 @@
     }
   }
 
-  async function loadAllLineups() {
-    lineupsLoading = true;
+  async function fetchStartedBoxscores() {
+    bsLoading = true;
     await Promise.all(
       games
         .filter(g => g.status.abstractGameState !== 'Preview')
         .map(g => fetchBoxscore(g.gamePk))
     );
-    lineupsLoading = false;
+    bsLoading = false;
   }
 
   function pushUrl() {
@@ -77,7 +90,8 @@
   function switchView(v) {
     view = v;
     pushUrl();
-    if (v === 'lineups' && games.length && !lineupsLoading) loadAllLineups();
+    // boxscores already fetching; if any Preview games have since started, fetch them
+    if (v === 'lineups' && !bsLoading) fetchStartedBoxscores();
   }
 
   onMount(() => loadSchedule(dateStr));
@@ -100,6 +114,10 @@
       };
     }
     return { text: '—', live: false };
+  }
+
+  function teamHRs(pk, side) {
+    return boxscores[pk]?.teams?.[side]?.teamStats?.batting?.homeRuns ?? 0;
   }
 
   function starters(teamData) {
@@ -159,7 +177,9 @@
   .linescore td:first-child, .linescore th:first-child { text-align: left; font-weight: bold; }
   .sep { border-left: 2px solid #aaa !important; }
 
-  .probable { font-size: 0.8rem; color: #666; margin-top: 0.35rem; }
+  .meta { font-size: 0.8rem; color: #666; margin-top: 0.35rem; }
+  .hr-line { font-size: 0.8rem; color: #444; margin-top: 0.3rem; }
+  .hr-label { color: #999; }
 
   .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
   .lineup-head { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; margin-bottom: 0.25rem; }
@@ -203,9 +223,12 @@
       {@const hw = game.teams.home}
       {@const st = gameStatus(game)}
       {@const started = game.status.abstractGameState !== 'Preview'}
+      {@const isFinal = game.status.abstractGameState === 'Final'}
       {@const innings = game.linescore?.innings ?? []}
       {@const awRHE = game.linescore?.teams?.away}
       {@const hwRHE = game.linescore?.teams?.home}
+      {@const awHR = teamHRs(game.gamePk, 'away')}
+      {@const hwHR = teamHRs(game.gamePk, 'home')}
       <div class="card">
         <div class="matchup">
           <div class="team-block" class:winner={aw.isWinner}>
@@ -253,7 +276,7 @@
                 <tr>
                   <td>{hw.team.abbreviation ?? hw.team.name}</td>
                   {#each innings as inn}
-                    <td>{inn.home?.runs ?? (game.status.abstractGameState === 'Final' ? 'x' : '—')}</td>
+                    <td>{inn.home?.runs ?? (isFinal ? 'x' : '—')}</td>
                   {/each}
                   <td class="sep">{hwRHE?.runs ?? ''}</td>
                   <td>{hwRHE?.hits ?? ''}</td>
@@ -264,8 +287,21 @@
           </div>
         {/if}
 
-        {#if aw.probablePitcher || hw.probablePitcher}
-          <div class="probable">
+        {#if started && (awHR > 0 || hwHR > 0)}
+          <div class="hr-line">
+            <span class="hr-label">HR: </span>
+            {aw.team.abbreviation ?? aw.team.name} {awHR} · {hw.team.abbreviation ?? hw.team.name} {hwHR}
+          </div>
+        {/if}
+
+        {#if isFinal && game.decisions}
+          <div class="meta">
+            W: {game.decisions.winner?.fullName ?? '—'} ·
+            L: {game.decisions.loser?.fullName ?? '—'}
+            {#if game.decisions.save} · S: {game.decisions.save.fullName}{/if}
+          </div>
+        {:else if aw.probablePitcher || hw.probablePitcher}
+          <div class="meta">
             {aw.probablePitcher?.fullName ?? 'TBD'} vs {hw.probablePitcher?.fullName ?? 'TBD'}
           </div>
         {/if}
@@ -274,7 +310,7 @@
   </div>
 
 {:else}
-  {#if lineupsLoading}
+  {#if bsLoading}
     <p class="loading">Loading lineups…</p>
   {/if}
   <div class="games">
@@ -295,7 +331,7 @@
         </div>
 
         {#if game.status.abstractGameState === 'Preview'}
-          <div class="probable">
+          <div class="meta">
             Probable: {aw.probablePitcher?.fullName ?? 'TBD'} vs {hw.probablePitcher?.fullName ?? 'TBD'}
           </div>
           <p class="loading" style="font-size:0.83rem;margin-top:0.3rem">Lineups not yet available.</p>
@@ -336,7 +372,7 @@
               {/if}
             </div>
           </div>
-          <div class="probable">
+          <div class="meta">
             SP: {spName(bs.teams.away, aw.probablePitcher?.fullName)} vs {spName(bs.teams.home, hw.probablePitcher?.fullName)}
           </div>
         {/if}
