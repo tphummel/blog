@@ -1,14 +1,16 @@
 <script context="module">
   const EXCITING_TYPES = new Set([
     'stolen_base_2b', 'stolen_base_3b', 'stolen_base_home',
-    'double_play', 'grounded_into_double_play', 'strikeout_double_play', 'lined_into_double_play',
+    'double_play', 'strikeout_double_play', 'lined_into_double_play',
     'triple_play', 'grounded_into_triple_play', 'lined_into_triple_play',
   ]);
 
   const ODDITY_TYPES = new Set([
     'balk',
-    'catcher_interf',
+    'catcher_interf', 'batter_interference', 'runner_interference',
+    'fan_interference', 'umpire_interference', 'interference',
     'obstruction',
+    'ground_rule_double',
   ]);
 </script>
 
@@ -139,8 +141,10 @@
     const seen = new Set();
     const result = [];
     for (const play of allPlays) {
-      const inning = play.about?.inning ?? 0;
-      const half   = play.about?.halfInning ?? 'top';
+      const inning  = play.about?.inning ?? 0;
+      const half    = play.about?.halfInning ?? 'top';
+      const batter  = play.matchup?.batter?.fullName ?? null;
+      const pitcher = play.matchup?.pitcher?.fullName ?? null;
       const pitchEvents = (play.playEvents ?? []).filter(e => e.type === 'pitch');
       const lastPitchId = pitchEvents.length ? pitchEvents[pitchEvents.length - 1].playId : null;
 
@@ -152,10 +156,11 @@
         const key = `${inning}:${half}:${et}:${desc}`;
         if (seen.has(key)) return;
         seen.add(key);
-        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '', playId: lastPitchId });
+        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '',
+          playId: lastPitchId, batter, pitcher });
       };
 
-      const checkAction = (ev) => {
+      const checkAction = (ev, pitchesBefore) => {
         const et    = ev.details?.eventType;
         const event = ev.details?.event;
         const desc  = ev.details?.description;
@@ -163,12 +168,21 @@
         const key = `${inning}:${half}:${et}:${desc}`;
         if (seen.has(key)) return;
         seen.add(key);
-        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '', playId: ev.playId ?? null });
+        // Action events may not have their own playId; fall back to last pitch before the action
+        const pid = ev.playId ?? (pitchesBefore.length ? pitchesBefore[pitchesBefore.length - 1].playId : null);
+        const count = ev.count
+          ? `${ev.count.balls}-${ev.count.strikes}, ${ev.count.outs} out${ev.count.outs !== 1 ? 's' : ''}`
+          : null;
+        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '',
+          playId: pid, batter, pitcher, count,
+          runner: ev.player?.fullName ?? null });
       };
 
       checkResult();
+      const seenPitches = [];
       for (const ev of (play.playEvents ?? [])) {
-        if (ev.type === 'action') checkAction(ev);
+        if (ev.type === 'pitch') seenPitches.push(ev);
+        if (ev.type === 'action') checkAction(ev, seenPitches.slice());
       }
     }
     return result;
@@ -820,29 +834,25 @@
         {:else}
           <div class="play-list">
             {#each plays as p}
-              {#if p.playId}
-                <details class="abs-challenge" on:toggle={e => e.target.open && expandPlay(p.playId)}>
-                  <summary>
-                    {p.halfInning === 'top' ? '▲' : '▼'}{p.inning} · {p.description || p.event}
-                  </summary>
-                  <div class="abs-body">
-                    {#if expandedPlays.has(p.playId)}
-                      <iframe
-                        class="abs-iframe"
-                        src="https://baseballsavant.mlb.com/sporty-videos?playId={p.playId}"
-                        title="Play video"
-                        allow="autoplay; fullscreen"
-                        sandbox="allow-scripts allow-same-origin allow-popups"
-                      ></iframe>
-                    {/if}
-                  </div>
-                </details>
-              {:else}
-                <div class="play-entry">
-                  <span class="play-inn">{p.halfInning === 'top' ? '▲' : '▼'}{p.inning}</span>
-                  <span class="play-desc">{p.description || p.event}</span>
+              <details class="abs-challenge" on:toggle={e => e.target.open && p.playId && expandPlay(p.playId)}>
+                <summary>
+                  {p.halfInning === 'top' ? '▲' : '▼'}{p.inning} · {p.description || p.event}
+                </summary>
+                <div class="abs-body">
+                  {#if p.runner}<div>Runner: {p.runner}</div>{/if}
+                  {#if p.batter && p.pitcher}<div>{p.batter} vs {p.pitcher}</div>{/if}
+                  {#if p.count}<div>{p.count}</div>{/if}
+                  {#if p.playId && expandedPlays.has(p.playId)}
+                    <iframe
+                      class="abs-iframe"
+                      src="https://baseballsavant.mlb.com/sporty-videos?playId={p.playId}"
+                      title="Play video"
+                      allow="autoplay; fullscreen"
+                      sandbox="allow-scripts allow-same-origin allow-popups"
+                    ></iframe>
+                  {/if}
                 </div>
-              {/if}
+              </details>
             {/each}
           </div>
         {/if}
