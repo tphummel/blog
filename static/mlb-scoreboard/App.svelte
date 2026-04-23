@@ -65,7 +65,7 @@
       error = e.message;
     }
     loading = false;
-    if (games.length) fetchStartedBoxscores();
+    if (games.length) fetchStartedBoxscores().catch(() => {});
   }
 
   async function fetchBoxscore(pk) {
@@ -224,9 +224,9 @@
   async function fetchPlayByPlay(game) {
     const pk = game.gamePk;
     if (playData[pk] !== undefined) return;
-    const awayTeamId = game.teams.away.team.id;
-    const homeTeamId = game.teams.home.team.id;
     try {
+      const awayTeamId = game.teams.away.team.id;
+      const homeTeamId = game.teams.home.team.id;
       const res = await fetch(`https://statsapi.mlb.com/api/v1/game/${pk}/playByPlay`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const all = (await res.json()).allPlays ?? [];
@@ -246,12 +246,15 @@
 
   async function fetchStartedBoxscores() {
     bsLoading = true;
-    const started = games.filter(g => g.status.abstractGameState !== 'Preview');
-    await Promise.all([
-      ...started.map(g => fetchBoxscore(g.gamePk)),
-      ...started.map(g => fetchPlayByPlay(g)),
-    ]);
-    bsLoading = false;
+    try {
+      const started = games.filter(g => g.status.abstractGameState !== 'Preview');
+      await Promise.all([
+        ...started.map(g => fetchBoxscore(g.gamePk)),
+        ...started.map(g => fetchPlayByPlay(g)),
+      ]);
+    } finally {
+      bsLoading = false;
+    }
   }
 
   function pushUrl() {
@@ -383,12 +386,11 @@
     return null;
   }
 
-  // Returns pitchers who earned a SV, HLD, or BS in this game, with season totals.
-  // winnerPk/loserPk excluded since they're shown separately as W/L.
+  // Returns { savers, holders } where each is [{name, count}], ordered W/L excluded.
   function reliefPitchers(bsData, winId, loseId) {
-    if (!bsData?.teams) return [];
+    if (!bsData?.teams) return { savers: [], holders: [] };
     const exclude = new Set([winId, loseId].filter(Boolean));
-    const result = [];
+    const savers = [], holders = [];
     for (const side of ['away', 'home']) {
       const td = bsData.teams[side];
       if (!td?.pitchers || !td?.players) continue;
@@ -397,26 +399,15 @@
         const p = td.players[`ID${id}`];
         const g = p?.stats?.pitching;
         if (!g) continue;
-        const gameSv  = g.saves      ?? 0;
-        const gameHld = g.holds      ?? 0;
-        const gameBs  = g.blownSaves ?? 0;
-        if (gameSv === 0 && gameHld === 0 && gameBs === 0) continue;
-        const sp  = p.seasonStats?.pitching ?? {};
-        const sv  = sp.saves      ?? 0;
-        const hld = sp.holds      ?? 0;
-        const bs  = sp.blownSaves ?? 0;
-        result.push({ name: p.person?.fullName ?? '?', sv, hld, bs, gameSv, gameHld, gameBs });
+        const gameSv  = g.saves  ?? 0;
+        const gameHld = g.holds  ?? 0;
+        const name    = p.person?.fullName ?? '?';
+        const sp      = p.seasonStats?.pitching ?? {};
+        if (gameSv  > 0) savers.push({ name, count: sp.saves ?? 0 });
+        if (gameHld > 0) holders.push({ name, count: sp.holds ?? 0 });
       }
     }
-    return result;
-  }
-
-  function fmtRelief(p) {
-    const parts = [];
-    if (p.gameSv  > 0) parts.push(`SV ${p.sv}`);
-    if (p.gameHld > 0) parts.push(`HLD ${p.hld}`);
-    if (p.gameBs  > 0) parts.push(`BS ${p.bs}`);
-    return `${p.name} (${parts.join(', ')})`;
+    return { savers, holders };
   }
 </script>
 
@@ -605,7 +596,8 @@
           <div class="meta">
             W: {game.decisions.winner?.fullName ?? '—'}{wr ? ` (${wr.wins}-${wr.losses})` : ''}
             · L: {game.decisions.loser?.fullName ?? '—'}{lr ? ` (${lr.wins}-${lr.losses})` : ''}
-            {#each rp as p} · {fmtRelief(p)}{/each}
+            {#if rp.savers.length} · SV: {rp.savers.map(p => `${p.name} (${p.count})`).join(', ')}{/if}
+            {#if rp.holders.length} · H: {rp.holders.map(p => `${p.name} (${p.count})`).join(', ')}{/if}
           </div>
         {:else if aw.probablePitcher || hw.probablePitcher}
           <div class="meta">
