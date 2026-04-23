@@ -67,6 +67,7 @@
   // reviewType "MJ" = Automated Ball-Strike; "MI" = Manager instant replay.
   function parseABS(allPlays, awayTeamId, homeTeamId) {
     const map = {};
+    const sorted = [];
     for (const play of allPlays) {
       for (const ev of (play.playEvents ?? [])) {
         const rd = ev.reviewDetails;
@@ -77,14 +78,32 @@
         const side = rd.challengeTeamId === awayTeamId ? 'away' : 'home';
         const id = player.id;
         if (!map[id]) {
-          map[id] = { name: player.fullName, side, success: 0, attempts: 0, challenges: [] };
+          map[id] = { name: player.fullName, side, success: 0, attempts: 0 };
         }
         map[id].attempts++;
         if (rd.isOverturned) map[id].success++;
-        map[id].challenges.push({ playId: ev.playId, isOverturned: rd.isOverturned });
+
+        const spd = ev.pitchData?.startSpeed;
+        sorted.push({
+          playId:       ev.playId,
+          isOverturned: rd.isOverturned,
+          inning:       play.about?.inning ?? 0,
+          halfInning:   play.about?.halfInning ?? 'top',
+          originalCall: ev.details?.description ?? '',
+          pitchType:    ev.details?.type?.description ?? null,
+          speed:        spd ? Math.round(spd) : null,
+          count:        ev.count ? `${ev.count.balls}-${ev.count.strikes}` : null,
+          playerName:   player.fullName,
+          batter:       play.matchup?.batter?.fullName ?? null,
+          pitcher:      play.matchup?.pitcher?.fullName ?? null,
+          side,
+        });
       }
     }
-    const result = { away: [], home: [] };
+    sorted.sort((a, b) =>
+      a.inning - b.inning || (a.halfInning === 'top' ? 0 : 1) - (b.halfInning === 'top' ? 0 : 1)
+    );
+    const result = { away: [], home: [], sorted };
     for (const d of Object.values(map)) result[d.side].push(d);
     return result;
   }
@@ -302,9 +321,10 @@
   .hr-label { color: #999; }
 
   .abs-section { margin-top: 0.4rem; }
-  .abs-team-row { font-size: 0.83rem; margin-top: 0.2rem; }
+  .abs-summary { font-size: 0.83rem; margin-bottom: 0.3rem; }
   .abs-team-label { color: #888; margin-right: 0.25rem; }
-  .abs-player { margin-right: 0.5rem; }
+  .abs-player { margin-right: 0.75rem; }
+  .abs-ctx { font-size: 0.78rem; color: #666; margin: 0.15rem 0 0.25rem; }
 
   .abs-challenges { margin-top: 0.3rem; padding-left: 0.75rem; }
   .abs-challenge { margin-top: 0.2rem; font-size: 0.8rem; }
@@ -544,41 +564,43 @@
           <p class="loading">Loading…</p>
         {:else if abs === null}
           <p class="none" style="font-size:0.83rem">Challenge data unavailable.</p>
-        {:else if !abs.away.length && !abs.home.length}
+        {:else if !abs.sorted?.length}
           <p class="none" style="font-size:0.83rem">No ABS challenges recorded.</p>
         {:else}
           <div class="abs-section">
-            {#each [{team: aw, players: abs.away}, {team: hw, players: abs.home}] as {team, players}}
-              {#if players.length}
-                <div class="abs-team-row">
+            <div class="abs-summary">
+              {#each [{team: aw, players: abs.away}, {team: hw, players: abs.home}] as {team, players}}
+                {#if players.length}
                   <span class="abs-team-label">{team.team.abbreviation ?? team.team.name}:</span>
-                  {#each players as player}
-                    <span class="abs-player">{player.name} {player.success}/{player.attempts}</span>
-                  {/each}
-                </div>
-                <div class="abs-challenges">
-                  {#each players as player}
-                    {#each player.challenges as c, i}
-                      <details
-                        class="abs-challenge"
-                        on:toggle={e => e.target.open && loadContent(game.gamePk)}
-                      >
-                        <summary class:overturned={c.isOverturned} class:upheld={!c.isOverturned}>
-                          {player.name} #{i + 1} — {c.isOverturned ? 'Overturned' : 'Upheld'}
-                        </summary>
-                        {#if cd === null}
-                          <p class="loading" style="font-size:0.8rem;margin:0.25rem 0">Loading video…</p>
-                        {:else if cd?.[c.playId]}
-                          <video class="abs-video" src={cd[c.playId]} controls playsinline></video>
-                        {:else if cd !== undefined}
-                          <p class="none" style="font-size:0.8rem;margin:0.25rem 0">No video available.</p>
-                        {/if}
-                      </details>
-                    {/each}
-                  {/each}
-                </div>
-              {/if}
-            {/each}
+                  {#each players as player}<span class="abs-player">{player.name} {player.success}/{player.attempts}</span>{/each}
+                {/if}
+              {/each}
+            </div>
+            <div class="abs-challenges">
+              {#each abs.sorted as c}
+                <details
+                  class="abs-challenge"
+                  on:toggle={e => e.target.open && loadContent(game.gamePk)}
+                >
+                  <summary class:overturned={c.isOverturned} class:upheld={!c.isOverturned}>
+                    {c.halfInning === 'top' ? '▲' : '▼'}{c.inning}
+                    · {c.playerName}
+                    · {c.originalCall}{c.pitchType ? ` (${c.pitchType}${c.speed ? ` ${c.speed}mph` : ''}${c.count ? `, ${c.count}` : ''})` : c.count ? ` (${c.count})` : ''}
+                    · {c.isOverturned ? 'Overturned' : 'Upheld'}
+                  </summary>
+                  {#if c.batter || c.pitcher}
+                    <div class="abs-ctx">{c.batter ?? ''}{c.batter && c.pitcher ? ' vs ' : ''}{c.pitcher ?? ''}</div>
+                  {/if}
+                  {#if cd === null}
+                    <p class="loading" style="font-size:0.8rem;margin:0.25rem 0">Loading video…</p>
+                  {:else if cd?.[c.playId]}
+                    <video class="abs-video" src={cd[c.playId]} controls playsinline></video>
+                  {:else if cd !== undefined}
+                    <p class="none" style="font-size:0.8rem;margin:0.25rem 0">No video available.</p>
+                  {/if}
+                </details>
+              {/each}
+            </div>
           </div>
         {/if}
       </div>
