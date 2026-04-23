@@ -16,6 +16,7 @@
   let error = null;
   let boxscores = {};
   let absData = {};
+  let expandedPlays = new Set();
   let bsLoading = false;
 
   function sortGames(gs) {
@@ -36,6 +37,7 @@
     games = [];
     boxscores = {};
     absData = {};
+    expandedPlays = new Set();
     try {
       const res = await fetch(
         `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${date}&hydrate=linescore,team,probablePitcher,decisions`
@@ -148,6 +150,11 @@
     const d = new Date(`${dateStr}T12:00:00`);
     d.setDate(d.getDate() + delta);
     go(d.toISOString().slice(0, 10));
+  }
+
+  function expandPlay(playId) {
+    expandedPlays.add(playId);
+    expandedPlays = expandedPlays; // trigger reactivity
   }
 
   function switchView(v) {
@@ -310,6 +317,7 @@
   .abs-challenge summary.overturned { color: #15803d; border-color: #86efac; background: #f0fdf4; }
   .abs-challenge summary.upheld { color: #9a3412; border-color: #fca5a5; background: #fff7ed; }
   .abs-body { padding: 0.25rem 0.4rem; font-size: 0.78rem; color: #555; border-left: 2px solid #ddd; margin-top: 0.2rem; }
+  .abs-iframe { display: block; width: 100%; max-width: 560px; height: 315px; border: 0; margin-top: 0.4rem; }
 
   .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
   .lineup-head { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; margin-bottom: 0.25rem; }
@@ -554,7 +562,7 @@
             </div>
             <div class="abs-challenges">
               {#each abs.sorted as c}
-                <details class="abs-challenge">
+                <details class="abs-challenge" on:toggle={e => e.target.open && expandPlay(c.playId)}>
                   <summary class:overturned={c.isOverturned} class:upheld={!c.isOverturned}>
                     {c.halfInning === 'top' ? '▲' : '▼'}{c.inning} · {c.playerName} · {c.isOverturned ? 'Overturned' : 'Upheld'}
                   </summary>
@@ -562,6 +570,15 @@
                     {c.originalCall}{c.pitchType ? ` · ${c.pitchType}${c.speed ? ` ${c.speed}mph` : ''}${c.count ? ` · ${c.count}` : ''}` : c.count ? ` · ${c.count}` : ''}
                     {#if c.batter || c.pitcher}
                       <div>{c.batter ?? ''}{c.batter && c.pitcher ? ' vs ' : ''}{c.pitcher ?? ''}</div>
+                    {/if}
+                    {#if expandedPlays.has(c.playId)}
+                      <iframe
+                        class="abs-iframe"
+                        src="https://baseballsavant.mlb.com/sporty-videos?playId={c.playId}"
+                        title="ABS challenge video"
+                        allow="autoplay; fullscreen"
+                        sandbox="allow-scripts allow-same-origin allow-popups"
+                      ></iframe>
                     {/if}
                   </div>
                 </details>
