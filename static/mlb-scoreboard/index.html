@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tom Hummel :: MLB Scoreboard</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "svelte":          "https://cdn.jsdelivr.net/npm/svelte@3.59.2/index.mjs",
+      "svelte/internal": "https://cdn.jsdelivr.net/npm/svelte@3.59.2/internal/index.mjs"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    function log(msg) {
+      let pre = document.getElementById('log');
+      if (!pre) {
+        pre = document.createElement('pre');
+        pre.id = 'log';
+        pre.style.color = 'red';
+        pre.style.whiteSpace = 'pre-wrap';
+        document.body.appendChild(pre);
+      }
+      pre.textContent += (pre.textContent ? '\n' : '') + msg;
+    }
+
+    window.addEventListener('error', (e) => log(e.error?.stack || e.message));
+    window.addEventListener('unhandledrejection', (e) => {
+      const r = e.reason;
+      if (r) log(r instanceof Error ? (r.stack || r.message) : String(r));
+    });
+  </script>
+  <script type="module">
+    import { compile } from 'https://cdn.jsdelivr.net/npm/svelte@3.59.2/compiler.mjs';
+
+    async function main() {
+      try {
+        const res = await fetch('App.svelte');
+        if (!res.ok) throw new Error(`failed to load App.svelte: ${res.status}`);
+        const source = await res.text();
+
+        const { js, css } = compile(source, { generate: 'dom', format: 'esm', name: 'App' });
+
+        if (css.code) {
+          const style = document.createElement('style');
+          style.textContent = css.code;
+          document.head.appendChild(style);
+        }
+
+        const blob = new Blob([js.code], { type: 'text/javascript' });
+        const blobUrl = URL.createObjectURL(blob);
+        const { default: App } = await import(blobUrl);
+        new App({ target: document.getElementById('app') });
+      } catch (err) {
+        log(err instanceof Error ? (err.stack || err.message) : String(err));
+        console.error(err);
+      }
+    }
+    main();
+  </script>
+</body>
+</html>
