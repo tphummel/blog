@@ -267,14 +267,18 @@
         const sv  = sp.saves      ?? 0;
         const hld = sp.holds      ?? 0;
         const bs  = sp.blownSaves ?? 0;
-        result.push({ name: p.person?.fullName ?? '?', sv, hld, bs, net: sv + hld - bs });
+        result.push({ name: p.person?.fullName ?? '?', sv, hld, bs, gameSv, gameHld, gameBs });
       }
     }
     return result;
   }
 
   function fmtRelief(p) {
-    return `${p.name} (${p.sv}sv+${p.hld}hld-${p.bs}bs=${p.net})`;
+    const parts = [];
+    if (p.gameSv  > 0) parts.push(`SV ${p.sv}`);
+    if (p.gameHld > 0) parts.push(`HLD ${p.hld}`);
+    if (p.gameBs  > 0) parts.push(`BS ${p.bs}`);
+    return `${p.name} (${parts.join(', ')})`;
   }
 </script>
 
