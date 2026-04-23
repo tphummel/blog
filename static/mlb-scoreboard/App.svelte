@@ -116,8 +116,20 @@
     return { text: '—', live: false };
   }
 
-  function teamHRs(pk, side) {
-    return boxscores[pk]?.teams?.[side]?.teamStats?.batting?.homeRuns ?? 0;
+  function formatHRs(pk, side, abbr) {
+    const team = boxscores[pk]?.teams?.[side];
+    if (!team?.players) return '';
+    const players = Object.values(team.players)
+      .filter(p => (p.stats?.batting?.homeRuns ?? 0) > 0)
+      .map(p => {
+        const gameHR = p.stats.batting.homeRuns;
+        const seasonHR = p.seasonStats?.batting?.homeRuns ?? gameHR;
+        const nums = [];
+        for (let i = seasonHR - gameHR + 1; i <= seasonHR; i++) nums.push(i);
+        const countStr = gameHR > 1 ? ` ${gameHR}` : '';
+        return `${p.person?.fullName ?? '?'}${countStr} (${nums.join(',')})`;
+      });
+    return players.length ? `${abbr}: ${players.join(', ')}` : '';
   }
 
   function starters(teamData) {
@@ -158,6 +170,7 @@
   .games { display: flex; flex-direction: column; gap: 0.75rem; }
 
   .card { border: 1px solid #ccc; padding: 0.6rem 0.75rem; }
+  .card.as-game { background: #fffbeb; border-color: #e5c84a; }
 
   .matchup { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
   .team-block { display: flex; align-items: baseline; gap: 0.4rem; }
@@ -227,9 +240,10 @@
       {@const innings = game.linescore?.innings ?? []}
       {@const awRHE = game.linescore?.teams?.away}
       {@const hwRHE = game.linescore?.teams?.home}
-      {@const awHR = teamHRs(game.gamePk, 'away')}
-      {@const hwHR = teamHRs(game.gamePk, 'home')}
-      <div class="card">
+      {@const awHRStr = formatHRs(game.gamePk, 'away', aw.team.abbreviation ?? aw.team.name)}
+      {@const hwHRStr = formatHRs(game.gamePk, 'home', hw.team.abbreviation ?? hw.team.name)}
+      {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
+      <div class="card" class:as-game={asGame}>
         <div class="matchup">
           <div class="team-block" class:winner={aw.isWinner}>
             <span class="abbr">{aw.team.abbreviation ?? aw.team.name}</span>
@@ -287,10 +301,9 @@
           </div>
         {/if}
 
-        {#if started && (awHR > 0 || hwHR > 0)}
+        {#if awHRStr || hwHRStr}
           <div class="hr-line">
-            <span class="hr-label">HR: </span>
-            {aw.team.abbreviation ?? aw.team.name} {awHR} · {hw.team.abbreviation ?? hw.team.name} {hwHR}
+            <span class="hr-label">HR: </span>{[awHRStr, hwHRStr].filter(Boolean).join('. ')}
           </div>
         {/if}
 
@@ -319,7 +332,8 @@
       {@const hw = game.teams.home}
       {@const st = gameStatus(game)}
       {@const bs = boxscores[game.gamePk]}
-      <div class="card">
+      {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
+      <div class="card" class:as-game={asGame}>
         <div class="matchup">
           <div class="team-block">
             <span class="abbr">{aw.team.name}</span>
