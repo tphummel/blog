@@ -225,6 +225,38 @@
     }
     return null;
   }
+
+  // Returns pitchers who earned a SV, HLD, or BS in this game, with season totals.
+  // winnerPk/loserPk excluded since they're shown separately as W/L.
+  function reliefPitchers(bsData, winId, loseId) {
+    if (!bsData?.teams) return [];
+    const exclude = new Set([winId, loseId].filter(Boolean));
+    const result = [];
+    for (const side of ['away', 'home']) {
+      const td = bsData.teams[side];
+      if (!td?.pitchers || !td?.players) continue;
+      for (const id of td.pitchers) {
+        if (exclude.has(id)) continue;
+        const p = td.players[`ID${id}`];
+        const g = p?.stats?.pitching;
+        if (!g) continue;
+        const gameSv  = g.saves      ?? 0;
+        const gameHld = g.holds      ?? 0;
+        const gameBs  = g.blownSaves ?? 0;
+        if (gameSv === 0 && gameHld === 0 && gameBs === 0) continue;
+        const sp  = p.seasonStats?.pitching ?? {};
+        const sv  = sp.saves      ?? 0;
+        const hld = sp.holds      ?? 0;
+        const bs  = sp.blownSaves ?? 0;
+        result.push({ name: p.person?.fullName ?? '?', sv, hld, bs, net: sv + hld - bs });
+      }
+    }
+    return result;
+  }
+
+  function fmtRelief(p) {
+    return `${p.name} (${p.sv}sv+${p.hld}hld-${p.bs}bs=${p.net})`;
+  }
 </script>
 
 <style>
@@ -400,11 +432,11 @@
           {@const bs = boxscores[game.gamePk]}
           {@const wr = pitcherRecord(bs, game.decisions.winner?.id)}
           {@const lr = pitcherRecord(bs, game.decisions.loser?.id)}
-          {@const sr = pitcherRecord(bs, game.decisions.save?.id)}
+          {@const rp = reliefPitchers(bs, game.decisions.winner?.id, game.decisions.loser?.id)}
           <div class="meta">
             W: {game.decisions.winner?.fullName ?? '—'}{wr ? ` (${wr.wins}-${wr.losses})` : ''}
             · L: {game.decisions.loser?.fullName ?? '—'}{lr ? ` (${lr.wins}-${lr.losses})` : ''}
-            {#if game.decisions.save} · S: {game.decisions.save.fullName}{sr ? ` (${sr.saves})` : ''}{/if}
+            {#each rp as p} · {fmtRelief(p)}{/each}
           </div>
         {:else if aw.probablePitcher || hw.probablePitcher}
           <div class="meta">
