@@ -16,6 +16,7 @@
   let error = null;
   let boxscores = {};
   let absData = {};
+  let contentData = {};
   let bsLoading = false;
 
   function sortGames(gs) {
@@ -36,6 +37,7 @@
     games = [];
     boxscores = {};
     absData = {};
+    contentData = {};
     try {
       const res = await fetch(
         `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${date}&hydrate=linescore,team,probablePitcher,decisions`
@@ -61,46 +63,68 @@
     }
   }
 
-  async function fetchPlayByPlay(pk) {
+  // Parses ABS (Machine Judge) challenges from play-by-play events.
+  // reviewType "MJ" = Automated Ball-Strike; "MI" = Manager instant replay.
+  function parseABS(allPlays, awayTeamId, homeTeamId) {
+    const map = {};
+    for (const play of allPlays) {
+      for (const ev of (play.playEvents ?? [])) {
+        const rd = ev.reviewDetails;
+        if (!rd || rd.reviewType !== 'MJ' || rd.inProgress) continue;
+        const player = rd.player;
+        if (!player?.id) continue;
+
+        const side = rd.challengeTeamId === awayTeamId ? 'away' : 'home';
+        const id = player.id;
+        if (!map[id]) {
+          map[id] = { name: player.fullName, side, success: 0, attempts: 0, challenges: [] };
+        }
+        map[id].attempts++;
+        if (rd.isOverturned) map[id].success++;
+        map[id].challenges.push({ playId: ev.playId, isOverturned: rd.isOverturned });
+      }
+    }
+    const result = { away: [], home: [] };
+    for (const d of Object.values(map)) result[d.side].push(d);
+    return result;
+  }
+
+  async function fetchPlayByPlay(game) {
+    const pk = game.gamePk;
     if (absData[pk] !== undefined) return;
+    const awayTeamId = game.teams.away.team.id;
+    const homeTeamId = game.teams.home.team.id;
     try {
       const res = await fetch(`https://statsapi.mlb.com/api/v1/game/${pk}/playByPlay`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      absData = { ...absData, [pk]: parseABS(data.allPlays ?? []) };
+      absData = { ...absData, [pk]: parseABS(data.allPlays ?? [], awayTeamId, homeTeamId) };
     } catch (e) {
       absData = { ...absData, [pk]: null };
     }
   }
 
-  function parseABS(allPlays) {
-    const map = {};
-    for (const play of allPlays) {
-      const side = play.about?.halfInning === 'top' ? 'away' : 'home';
-      for (const ev of (play.playEvents ?? [])) {
-        const desc = (ev.details?.description ?? '').toLowerCase();
-        const isChallenge =
-          ev.details?.eventType === 'abs_challenge' ||
-          desc.includes('abs challenge') ||
-          desc.includes('automatic ball-strike');
-        if (!isChallenge) continue;
-
-        const id = ev.player?.id ?? play.matchup?.batter?.id;
-        const name = ev.player?.fullName ?? play.matchup?.batter?.fullName;
-        if (!id || !name) continue;
-
-        if (!map[id]) map[id] = { name, side, success: 0, attempts: 0 };
-        map[id].attempts++;
-        if (desc.includes('overturned') || desc.includes('successful')) {
-          map[id].success++;
+  async function loadContent(pk) {
+    if (contentData[pk] !== undefined) return;
+    contentData = { ...contentData, [pk]: null }; // loading sentinel
+    try {
+      const res = await fetch(`https://statsapi.mlb.com/api/v1/game/${pk}/content`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const map = {};
+      for (const item of (data.highlights?.highlights?.items ?? [])) {
+        for (const kw of (item.keywordsAll ?? [])) {
+          if (kw.type === 'mlbtax__playID') {
+            const url = item.playbacks?.find(p => p.name === 'mp4Avc')?.url
+                     ?? item.playbacks?.[0]?.url;
+            if (url) map[kw.value] = url;
+          }
         }
       }
+      contentData = { ...contentData, [pk]: map };
+    } catch (e) {
+      contentData = { ...contentData, [pk]: {} };
     }
-    const result = { away: [], home: [] };
-    for (const d of Object.values(map)) {
-      if (d.attempts > 0) result[d.side].push(d);
-    }
-    return result;
   }
 
   async function fetchStartedBoxscores() {
@@ -108,7 +132,7 @@
     const started = games.filter(g => g.status.abstractGameState !== 'Preview');
     await Promise.all([
       ...started.map(g => fetchBoxscore(g.gamePk)),
-      ...started.map(g => fetchPlayByPlay(g.gamePk)),
+      ...started.map(g => fetchPlayByPlay(g)),
     ]);
     bsLoading = false;
   }
@@ -191,6 +215,16 @@
     const id = teamData.pitchers[0];
     return teamData.players[`ID${id}`]?.person?.fullName ?? fallback ?? 'TBD';
   }
+
+  // Look up a pitcher's season stats from the already-fetched boxscore
+  function pitcherRecord(bsData, playerId) {
+    if (!bsData || !playerId) return null;
+    for (const side of ['away', 'home']) {
+      const p = bsData.teams?.[side]?.players?.[`ID${playerId}`];
+      if (p?.seasonStats?.pitching) return p.seasonStats.pitching;
+    }
+    return null;
+  }
 </script>
 
 <style>
@@ -235,8 +269,18 @@
   .hr-line { font-size: 0.8rem; color: #444; margin-top: 0.3rem; }
   .hr-label { color: #999; }
 
-  .abs-row { font-size: 0.83rem; margin-top: 0.25rem; }
-  .abs-team { color: #888; margin-right: 0.2rem; }
+  .abs-section { margin-top: 0.4rem; }
+  .abs-team-row { font-size: 0.83rem; margin-top: 0.2rem; }
+  .abs-team-label { color: #888; margin-right: 0.25rem; }
+  .abs-player { margin-right: 0.5rem; }
+
+  .abs-challenges { margin-top: 0.3rem; padding-left: 0.75rem; }
+  .abs-challenge { margin-top: 0.2rem; font-size: 0.8rem; }
+  .abs-challenge summary { cursor: pointer; display: inline-block; padding: 0.1rem 0.3rem; border: 1px solid #ccc; }
+  .abs-challenge summary.overturned { color: #15803d; border-color: #86efac; background: #f0fdf4; }
+  .abs-challenge summary.upheld { color: #9a3412; border-color: #fca5a5; background: #fff7ed; }
+  .abs-challenge[open] summary { margin-bottom: 0.3rem; }
+  .abs-video { display: block; max-width: 100%; width: 480px; margin-top: 0.25rem; }
 
   .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
   .lineup-head { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; margin-bottom: 0.25rem; }
@@ -353,10 +397,14 @@
         {/if}
 
         {#if isFinal && game.decisions}
+          {@const bs = boxscores[game.gamePk]}
+          {@const wr = pitcherRecord(bs, game.decisions.winner?.id)}
+          {@const lr = pitcherRecord(bs, game.decisions.loser?.id)}
+          {@const sr = pitcherRecord(bs, game.decisions.save?.id)}
           <div class="meta">
-            W: {game.decisions.winner?.fullName ?? '—'} ·
-            L: {game.decisions.loser?.fullName ?? '—'}
-            {#if game.decisions.save} · S: {game.decisions.save.fullName}{/if}
+            W: {game.decisions.winner?.fullName ?? '—'}{wr ? ` (${wr.wins}-${wr.losses})` : ''}
+            · L: {game.decisions.loser?.fullName ?? '—'}{lr ? ` (${lr.wins}-${lr.losses})` : ''}
+            {#if game.decisions.save} · S: {game.decisions.save.fullName}{sr ? ` (${sr.saves})` : ''}{/if}
           </div>
         {:else if aw.probablePitcher || hw.probablePitcher}
           <div class="meta">
@@ -450,6 +498,7 @@
       {@const st = gameStatus(game)}
       {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
       {@const abs = absData[game.gamePk]}
+      {@const cd = contentData[game.gamePk]}
       <div class="card" class:as-game={asGame}>
         <div class="matchup">
           <div class="team-block"><span class="abbr">{aw.team.name}</span></div>
@@ -466,18 +515,39 @@
         {:else if !abs.away.length && !abs.home.length}
           <p class="none" style="font-size:0.83rem">No ABS challenges recorded.</p>
         {:else}
-          {#if abs.away.length}
-            <div class="abs-row">
-              <span class="abs-team">{aw.team.abbreviation ?? aw.team.name}:</span>
-              {abs.away.map(p => `${p.name} ${p.success}/${p.attempts}`).join(', ')}
-            </div>
-          {/if}
-          {#if abs.home.length}
-            <div class="abs-row">
-              <span class="abs-team">{hw.team.abbreviation ?? hw.team.name}:</span>
-              {abs.home.map(p => `${p.name} ${p.success}/${p.attempts}`).join(', ')}
-            </div>
-          {/if}
+          <div class="abs-section">
+            {#each [{team: aw, players: abs.away}, {team: hw, players: abs.home}] as {team, players}}
+              {#if players.length}
+                <div class="abs-team-row">
+                  <span class="abs-team-label">{team.team.abbreviation ?? team.team.name}:</span>
+                  {#each players as player}
+                    <span class="abs-player">{player.name} {player.success}/{player.attempts}</span>
+                  {/each}
+                </div>
+                <div class="abs-challenges">
+                  {#each players as player}
+                    {#each player.challenges as c, i}
+                      <details
+                        class="abs-challenge"
+                        on:toggle={e => e.target.open && loadContent(game.gamePk)}
+                      >
+                        <summary class:overturned={c.isOverturned} class:upheld={!c.isOverturned}>
+                          {player.name} #{i + 1} — {c.isOverturned ? 'Overturned' : 'Upheld'}
+                        </summary>
+                        {#if cd === null}
+                          <p class="loading" style="font-size:0.8rem;margin:0.25rem 0">Loading video…</p>
+                        {:else if cd?.[c.playId]}
+                          <video class="abs-video" src={cd[c.playId]} controls playsinline></video>
+                        {:else if cd !== undefined}
+                          <p class="none" style="font-size:0.8rem;margin:0.25rem 0">No video available.</p>
+                        {/if}
+                      </details>
+                    {/each}
+                  {/each}
+                </div>
+              {/if}
+            {/each}
+          </div>
         {/if}
       </div>
     {/each}
