@@ -15,7 +15,7 @@
   let loading = true;
   let error = null;
   let boxscores = {};
-  let absData = {};
+  let playData = {};
   let expandedPlays = new Set();
   let bsLoading = false;
 
@@ -36,7 +36,7 @@
     error = null;
     games = [];
     boxscores = {};
-    absData = {};
+    playData = {};
     expandedPlays = new Set();
     try {
       const res = await fetch(
@@ -85,9 +85,12 @@
 
         const spd = ev.pitchData?.startSpeed;
         const pd  = ev.pitchData;
+        const batterId = play.matchup?.batter?.id;
+        const role = player.id === batterId ? 'B' : 'C';
         sorted.push({
           playId:       ev.playId,
           isOverturned: rd.isOverturned,
+          role,
           inning:       play.about?.inning ?? 0,
           halfInning:   play.about?.halfInning ?? 'top',
           originalCall: ev.details?.description ?? '',
@@ -115,18 +118,59 @@
     return result;
   }
 
+  const EXCITING_TYPES = new Set([
+    'stolen_base_2b', 'stolen_base_3b', 'stolen_base_home',
+    'double_play', 'grounded_into_double_play', 'strikeout_double_play', 'lined_into_double_play',
+    'triple_play', 'grounded_into_triple_play', 'lined_into_triple_play',
+  ]);
+
+  const ODDITY_TYPES = new Set([
+    'balk',
+    'catcher_interf',
+    'obstruction',
+  ]);
+
+  function parsePlays(allPlays, typeSet) {
+    const seen = new Set();
+    const result = [];
+    for (const play of allPlays) {
+      const inning  = play.about?.inning ?? 0;
+      const half    = play.about?.halfInning ?? 'top';
+      const check   = (et, event, desc) => {
+        if (!et || !typeSet.has(et)) return;
+        const key = `${inning}:${half}:${et}:${desc}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        result.push({ inning, halfInning: half, event: event ?? et, description: desc ?? '' });
+      };
+      check(play.result?.eventType, play.result?.event, play.result?.description);
+      for (const ev of (play.playEvents ?? [])) {
+        if (ev.type === 'action') {
+          check(ev.details?.eventType, ev.details?.event, ev.details?.description);
+        }
+      }
+    }
+    return result;
+  }
+
   async function fetchPlayByPlay(game) {
     const pk = game.gamePk;
-    if (absData[pk] !== undefined) return;
+    if (playData[pk] !== undefined) return;
     const awayTeamId = game.teams.away.team.id;
     const homeTeamId = game.teams.home.team.id;
     try {
       const res = await fetch(`https://statsapi.mlb.com/api/v1/game/${pk}/playByPlay`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      absData = { ...absData, [pk]: parseABS(data.allPlays ?? [], awayTeamId, homeTeamId) };
+      const all = (await res.json()).allPlays ?? [];
+      playData = {
+        ...playData, [pk]: {
+          abs:      parseABS(all, awayTeamId, homeTeamId),
+          exciting: parsePlays(all, EXCITING_TYPES),
+          oddities: parsePlays(all, ODDITY_TYPES),
+        }
+      };
     } catch (e) {
-      absData = { ...absData, [pk]: null };
+      playData = { ...playData, [pk]: null };
     }
   }
 
@@ -353,6 +397,11 @@
   .abs-summary { font-size: 0.83rem; margin-bottom: 0.3rem; }
   .abs-team-label { color: #888; margin-right: 0.25rem; }
   .abs-player { margin-right: 0.75rem; }
+  .play-list { margin-top: 0.3rem; }
+  .play-entry { display: flex; gap: 0.5rem; font-size: 0.83rem; margin-top: 0.2rem; }
+  .play-inn { color: #888; white-space: nowrap; flex-shrink: 0; min-width: 2.5ch; }
+  .play-desc { color: #333; }
+
   .abs-challenges { margin-top: 0.3rem; }
   .abs-challenge { margin-top: 0.25rem; font-size: 0.8rem; }
   .abs-challenge summary { cursor: pointer; display: inline-block; padding: 0.1rem 0.3rem; border: 1px solid #ccc; }
@@ -388,6 +437,8 @@
   <button class="tab" class:active={view === 'scoreboard'} on:click={() => switchView('scoreboard')}>Scoreboard</button>
   <button class="tab" class:active={view === 'lineups'} on:click={() => switchView('lineups')}>Lineups</button>
   <button class="tab" class:active={view === 'abs'} on:click={() => switchView('abs')}>ABS</button>
+  <button class="tab" class:active={view === 'plays'} on:click={() => switchView('plays')}>Plays</button>
+  <button class="tab" class:active={view === 'oddities'} on:click={() => switchView('oddities')}>Oddities</button>
 </div>
 
 {#if loading}
@@ -576,7 +627,8 @@
       {@const hw = game.teams.home}
       {@const st = gameStatus(game)}
       {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
-      {@const abs = absData[game.gamePk]}
+      {@const pd = playData[game.gamePk]}
+      {@const abs = pd?.abs}
       <div class="card" class:as-game={asGame}>
         <div class="matchup">
           <div class="team-block"><span class="abbr">{aw.team.name}</span></div>
@@ -586,11 +638,11 @@
 
         {#if game.status.abstractGameState === 'Preview'}
           <p class="none" style="font-size:0.83rem">Game not yet started.</p>
-        {:else if abs === undefined}
+        {:else if pd === undefined}
           <p class="loading">Loading…</p>
-        {:else if abs === null}
-          <p class="none" style="font-size:0.83rem">Challenge data unavailable.</p>
-        {:else if !abs.sorted?.length}
+        {:else if pd === null}
+          <p class="none" style="font-size:0.83rem">Data unavailable.</p>
+        {:else if !abs?.sorted?.length}
           <p class="none" style="font-size:0.83rem">No ABS challenges recorded.</p>
         {:else}
           <div class="abs-section">
@@ -606,7 +658,7 @@
               {#each abs.sorted as c}
                 <details class="abs-challenge" on:toggle={e => e.target.open && expandPlay(c.playId)}>
                   <summary class:overturned={c.isOverturned} class:upheld={!c.isOverturned}>
-                    {c.halfInning === 'top' ? '▲' : '▼'}{c.inning} · {c.playerName} · {c.isOverturned ? 'Overturned' : 'Upheld'}
+                    {c.role} · {c.halfInning === 'top' ? '▲' : '▼'}{c.inning} · {c.playerName} · {c.isOverturned ? 'Overturned' : 'Upheld'}
                   </summary>
                   <div class="abs-body">
                     {c.originalCall}{c.pitchType ? ` · ${c.pitchType}${c.speed ? ` ${c.speed}mph` : ''}${c.count ? ` · ${c.count}` : ''}` : c.count ? ` · ${c.count}` : ''}
@@ -629,6 +681,47 @@
                 </details>
               {/each}
             </div>
+          </div>
+        {/if}
+      </div>
+    {/each}
+  </div>
+
+{:else if view === 'plays' || view === 'oddities'}
+  {#if bsLoading}
+    <p class="loading">Loading…</p>
+  {/if}
+  <div class="games">
+    {#each games as game}
+      {@const aw = game.teams.away}
+      {@const hw = game.teams.home}
+      {@const st = gameStatus(game)}
+      {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
+      {@const pd = playData[game.gamePk]}
+      {@const plays = view === 'plays' ? pd?.exciting : pd?.oddities}
+      <div class="card" class:as-game={asGame}>
+        <div class="matchup">
+          <div class="team-block"><span class="abbr">{aw.team.abbreviation ?? aw.team.name}</span></div>
+          <span class="status" class:live={st.live}>{st.text}</span>
+          <div class="team-block"><span class="abbr">{hw.team.abbreviation ?? hw.team.name}</span></div>
+        </div>
+
+        {#if game.status.abstractGameState === 'Preview'}
+          <p class="none" style="font-size:0.83rem">Game not yet started.</p>
+        {:else if pd === undefined}
+          <p class="loading">Loading…</p>
+        {:else if pd === null}
+          <p class="none" style="font-size:0.83rem">Data unavailable.</p>
+        {:else if !plays?.length}
+          <p class="none" style="font-size:0.83rem">None recorded.</p>
+        {:else}
+          <div class="play-list">
+            {#each plays as p}
+              <div class="play-entry">
+                <span class="play-inn">{p.halfInning === 'top' ? '▲' : '▼'}{p.inning}</span>
+                <span class="play-desc">{p.description || p.event}</span>
+              </div>
+            {/each}
           </div>
         {/if}
       </div>
