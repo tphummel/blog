@@ -85,8 +85,11 @@
 
         const spd = ev.pitchData?.startSpeed;
         const pd  = ev.pitchData;
-        const batterId = play.matchup?.batter?.id;
-        const role = player.id === batterId ? 'B' : 'C';
+        const batterId  = play.matchup?.batter?.id;
+        const pitcherId = play.matchup?.pitcher?.id;
+        const role = player.id === batterId  ? 'B'
+                   : player.id === pitcherId ? 'P'
+                   : 'C';
         sorted.push({
           playId:       ev.playId,
           isOverturned: rd.isOverturned,
