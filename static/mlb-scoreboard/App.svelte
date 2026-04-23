@@ -15,6 +15,7 @@
   let loading = true;
   let error = null;
   let boxscores = {};
+  let absData = {};
   let bsLoading = false;
 
   function sortGames(gs) {
@@ -45,6 +46,7 @@
       error = e.message;
     }
     loading = false;
+    absData = {};
     if (games.length) fetchStartedBoxscores();
   }
 
@@ -59,13 +61,63 @@
     }
   }
 
+  async function fetchPlayByPlay(pk) {
+    if (absData[pk] !== undefined) return;
+    try {
+      const res = await fetch(`https://statsapi.mlb.com/api/v1/game/${pk}/playByPlay`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      absData = { ...absData, [pk]: parseABS(data.allPlays ?? []) };
+    } catch (e) {
+      absData = { ...absData, [pk]: null };
+    }
+  }
+
+  function parseABS(allPlays) {
+    const map = {};
+    for (const play of allPlays) {
+      const side = play.about?.halfInning === 'top' ? 'away' : 'home';
+      for (const ev of (play.playEvents ?? [])) {
+        const desc = (ev.details?.description ?? '').toLowerCase();
+        const isChallenge =
+          ev.details?.eventType === 'abs_challenge' ||
+          desc.includes('abs challenge') ||
+          desc.includes('automatic ball-strike');
+        if (!isChallenge) continue;
+
+        const id = ev.player?.id ?? play.matchup?.batter?.id;
+        const name = ev.player?.fullName ?? play.matchup?.batter?.fullName;
+        if (!id || !name) continue;
+
+        if (!map[id]) map[id] = { name, side, success: 0, attempts: 0 };
+        map[id].attempts++;
+        if (desc.includes('overturned') || desc.includes('successful')) {
+          map[id].success++;
+        }
+      }
+    }
+    const result = { away: [], home: [] };
+    for (const d of Object.values(map)) {
+      if (d.attempts > 0) result[d.side].push(d);
+    }
+    return (result.away.length || result.home.length) ? result : null;
+  }
+
+  function formatABS(pk, side, abbr) {
+    const d = absData[pk];
+    if (!d) return '';
+    const players = d[side];
+    if (!players?.length) return '';
+    return `${abbr}: ${players.map(p => `${p.name} ${p.success}/${p.attempts}`).join(', ')}`;
+  }
+
   async function fetchStartedBoxscores() {
     bsLoading = true;
-    await Promise.all(
-      games
-        .filter(g => g.status.abstractGameState !== 'Preview')
-        .map(g => fetchBoxscore(g.gamePk))
-    );
+    const started = games.filter(g => g.status.abstractGameState !== 'Preview');
+    await Promise.all([
+      ...started.map(g => fetchBoxscore(g.gamePk)),
+      ...started.map(g => fetchPlayByPlay(g.gamePk)),
+    ]);
     bsLoading = false;
   }
 
@@ -124,10 +176,8 @@
       .map(p => {
         const gameHR = p.stats.batting.homeRuns;
         const seasonHR = p.seasonStats?.batting?.homeRuns ?? gameHR;
-        const nums = [];
-        for (let i = seasonHR - gameHR + 1; i <= seasonHR; i++) nums.push(i);
         const countStr = gameHR > 1 ? ` ${gameHR}` : '';
-        return `${p.person?.fullName ?? '?'}${countStr} (${nums.join(',')})`;
+        return `${p.person?.fullName ?? '?'}${countStr} (${seasonHR})`;
       });
     return players.length ? `${abbr}: ${players.join(', ')}` : '';
   }
@@ -193,6 +243,7 @@
   .meta { font-size: 0.8rem; color: #666; margin-top: 0.35rem; }
   .hr-line { font-size: 0.8rem; color: #444; margin-top: 0.3rem; }
   .hr-label { color: #999; }
+  .meta-label { color: #999; }
 
   .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
   .lineup-head { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; margin-bottom: 0.25rem; }
@@ -242,6 +293,8 @@
       {@const hwRHE = game.linescore?.teams?.home}
       {@const awHRStr = formatHRs(game.gamePk, 'away', aw.team.abbreviation ?? aw.team.name)}
       {@const hwHRStr = formatHRs(game.gamePk, 'home', hw.team.abbreviation ?? hw.team.name)}
+      {@const awABSStr = formatABS(game.gamePk, 'away', aw.team.abbreviation ?? aw.team.name)}
+      {@const hwABSStr = formatABS(game.gamePk, 'home', hw.team.abbreviation ?? hw.team.name)}
       {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
       <div class="card" class:as-game={asGame}>
         <div class="matchup">
@@ -304,6 +357,12 @@
         {#if awHRStr || hwHRStr}
           <div class="hr-line">
             <span class="hr-label">HR: </span>{[awHRStr, hwHRStr].filter(Boolean).join('. ')}
+          </div>
+        {/if}
+
+        {#if awABSStr || hwABSStr}
+          <div class="meta">
+            <span class="meta-label">ABS: </span>{[awABSStr, hwABSStr].filter(Boolean).join('. ')}
           </div>
         {/if}
 
