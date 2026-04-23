@@ -196,17 +196,25 @@
       const half   = play.about?.halfInning ?? 'top';
       const pitchEvents = (play.playEvents ?? []).filter(e => e.type === 'pitch');
       const lastPitch = pitchEvents.length ? pitchEvents[pitchEvents.length - 1] : null;
-      const hd = lastPitch?.hitData ?? {};
+      const hd  = lastPitch?.hitData ?? {};
+      const cnt = lastPitch?.count;
       result.push({
         inning,
-        halfInning: half,
+        halfInning:  half,
         batter:      play.matchup?.batter?.fullName ?? null,
+        batSide:     play.matchup?.batSide?.code ?? null,
         pitcher:     play.matchup?.pitcher?.fullName ?? null,
+        pitchHand:   play.matchup?.pitchHand?.code ?? null,
         description: play.result?.description ?? '',
+        rbi:         play.result?.rbi ?? null,
+        pitchType:   lastPitch?.details?.type?.description ?? null,
+        pitchSpeed:  lastPitch?.pitchData?.startSpeed ? Math.round(lastPitch.pitchData.startSpeed) : null,
+        count:       cnt ? `${cnt.balls}-${cnt.strikes}` : null,
         distance:    hd.totalDistance ?? null,
         launchAngle: hd.launchAngle ?? null,
         launchSpeed: hd.launchSpeed ?? null,
         hardness:    hd.hardness ?? null,
+        trajectory:  hd.trajectory ?? null,
         playId:      lastPitch?.playId ?? null,
       });
     }
@@ -784,8 +792,13 @@
                   {hr.halfInning === 'top' ? '▲' : '▼'}{hr.inning} · {hr.batter ?? '?'}{hr.distance != null ? ` · ${hr.distance}ft` : ''}{hr.launchSpeed != null ? ` · ${hr.launchSpeed.toFixed(1)}mph EV` : ''}{hr.launchAngle != null ? ` · ${hr.launchAngle.toFixed(0)}°` : ''}{hr.hardness === 'Barrel' ? ' · Barrel' : ''}
                 </summary>
                 <div class="abs-body">
-                  {#if hr.pitcher}vs {hr.pitcher}<br>{/if}
-                  {hr.description}
+                  {#if hr.pitcher}<div>vs {hr.pitcher}{hr.pitchHand ? ` (${hr.pitchHand}HP)` : ''}{hr.batSide ? ` · ${hr.batSide}HB` : ''}</div>{/if}
+                  {#if hr.pitchType || hr.pitchSpeed || hr.count}
+                    <div>{[hr.pitchType, hr.pitchSpeed ? `${hr.pitchSpeed}mph` : null, hr.count ? `${hr.count} count` : null].filter(Boolean).join(' · ')}</div>
+                  {/if}
+                  {#if hr.rbi != null}<div>{hr.rbi} RBI{hr.rbi !== 1 ? 's' : ''}</div>{/if}
+                  {#if hr.trajectory}<div>{hr.trajectory.replace(/_/g, ' ')}</div>{/if}
+                  <div style="margin-top:0.2rem">{hr.description}</div>
                   {#if hr.playId && expandedPlays.has(hr.playId)}
                     <iframe
                       class="abs-iframe"
