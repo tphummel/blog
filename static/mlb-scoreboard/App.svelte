@@ -16,7 +16,6 @@
   let error = null;
   let boxscores = {};
   let absData = {};
-  let contentData = {};
   let bsLoading = false;
 
   function sortGames(gs) {
@@ -37,7 +36,6 @@
     games = [];
     boxscores = {};
     absData = {};
-    contentData = {};
     try {
       const res = await fetch(
         `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${date}&hydrate=linescore,team,probablePitcher,decisions`
@@ -123,32 +121,6 @@
     }
   }
 
-  async function loadContent(pk) {
-    if (contentData[pk] !== undefined) return;
-    contentData = { ...contentData, [pk]: null }; // loading sentinel
-    try {
-      const res = await fetch(`https://statsapi.mlb.com/api/v1/game/${pk}/content`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      const map = {};
-      const items = data.highlights?.highlights?.items ?? [];
-      const kwTypes = new Set();
-      for (const item of items) {
-        for (const kw of (item.keywordsAll ?? [])) {
-          kwTypes.add(kw.type);
-          if (kw.type === 'mlbtax__playID') {
-            const url = item.playbacks?.find(p => p.name === 'mp4Avc')?.url
-                     ?? item.playbacks?.[0]?.url;
-            if (url) map[kw.value] = url;
-          }
-        }
-      }
-      map.__debug = `${items.length} highlights, ${Object.keys(map).filter(k => k !== '__debug').length} matched. kw types: ${[...kwTypes].join(', ')}`;
-      contentData = { ...contentData, [pk]: map };
-    } catch (e) {
-      contentData = { ...contentData, [pk]: { __debug: `error: ${e.message}` } };
-    }
-  }
 
   async function fetchStartedBoxscores() {
     bsLoading = true;
@@ -332,15 +304,12 @@
   .abs-summary { font-size: 0.83rem; margin-bottom: 0.3rem; }
   .abs-team-label { color: #888; margin-right: 0.25rem; }
   .abs-player { margin-right: 0.75rem; }
-  .abs-ctx { font-size: 0.78rem; color: #666; margin: 0.15rem 0 0.25rem; }
-
-  .abs-challenges { margin-top: 0.3rem; padding-left: 0.75rem; }
-  .abs-challenge { margin-top: 0.2rem; font-size: 0.8rem; }
+  .abs-challenges { margin-top: 0.3rem; }
+  .abs-challenge { margin-top: 0.25rem; font-size: 0.8rem; }
   .abs-challenge summary { cursor: pointer; display: inline-block; padding: 0.1rem 0.3rem; border: 1px solid #ccc; }
   .abs-challenge summary.overturned { color: #15803d; border-color: #86efac; background: #f0fdf4; }
   .abs-challenge summary.upheld { color: #9a3412; border-color: #fca5a5; background: #fff7ed; }
-  .abs-challenge[open] summary { margin-bottom: 0.3rem; }
-  .abs-video { display: block; max-width: 100%; width: 480px; margin-top: 0.25rem; }
+  .abs-body { padding: 0.25rem 0.4rem; font-size: 0.78rem; color: #555; border-left: 2px solid #ddd; margin-top: 0.2rem; }
 
   .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
   .lineup-head { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; margin-bottom: 0.25rem; }
@@ -558,7 +527,6 @@
       {@const st = gameStatus(game)}
       {@const asGame = aw.team.id === AS_ID || hw.team.id === AS_ID}
       {@const abs = absData[game.gamePk]}
-      {@const cd = contentData[game.gamePk]}
       <div class="card" class:as-game={asGame}>
         <div class="matchup">
           <div class="team-block"><span class="abbr">{aw.team.name}</span></div>
@@ -586,26 +554,16 @@
             </div>
             <div class="abs-challenges">
               {#each abs.sorted as c}
-                <details
-                  class="abs-challenge"
-                  on:toggle={e => e.target.open && loadContent(game.gamePk)}
-                >
+                <details class="abs-challenge">
                   <summary class:overturned={c.isOverturned} class:upheld={!c.isOverturned}>
-                    {c.halfInning === 'top' ? '▲' : '▼'}{c.inning}
-                    · {c.playerName}
-                    · {c.originalCall}{c.pitchType ? ` (${c.pitchType}${c.speed ? ` ${c.speed}mph` : ''}${c.count ? `, ${c.count}` : ''})` : c.count ? ` (${c.count})` : ''}
-                    · {c.isOverturned ? 'Overturned' : 'Upheld'}
+                    {c.halfInning === 'top' ? '▲' : '▼'}{c.inning} · {c.playerName} · {c.isOverturned ? 'Overturned' : 'Upheld'}
                   </summary>
-                  {#if c.batter || c.pitcher}
-                    <div class="abs-ctx">{c.batter ?? ''}{c.batter && c.pitcher ? ' vs ' : ''}{c.pitcher ?? ''}</div>
-                  {/if}
-                  {#if cd === null}
-                    <p class="loading" style="font-size:0.8rem;margin:0.25rem 0">Loading video…</p>
-                  {:else if cd?.[c.playId]}
-                    <video class="abs-video" src={cd[c.playId]} controls playsinline></video>
-                  {:else if cd !== undefined}
-                    <p class="none" style="font-size:0.8rem;margin:0.25rem 0">No video available. {cd.__debug ?? ''}</p>
-                  {/if}
+                  <div class="abs-body">
+                    {c.originalCall}{c.pitchType ? ` · ${c.pitchType}${c.speed ? ` ${c.speed}mph` : ''}${c.count ? ` · ${c.count}` : ''}` : c.count ? ` · ${c.count}` : ''}
+                    {#if c.batter || c.pitcher}
+                      <div>{c.batter ?? ''}{c.batter && c.pitcher ? ' vs ' : ''}{c.pitcher ?? ''}</div>
+                    {/if}
+                  </div>
                 </details>
               {/each}
             </div>
