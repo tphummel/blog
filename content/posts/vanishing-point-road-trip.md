@@ -13,7 +13,7 @@ tags:
   - california
 ---
 
-Denver to San Francisco, close to the most direct route without being the fastest one. The catch: it only works in summer, since it crosses Sonora Pass, which is buried under snow the rest of the year.
+Denver to San Francisco, through Cisco, Utah and over Sonora Pass into the Sierra Nevada.
 
 {{< figure src="/img/vanishing-point-road-trip/map.svg" title="Denver to San Francisco via Cisco, UT and Sonora Pass" alt="Map of a road trip route from Denver, Colorado through Cisco, Utah, across Nevada, and over Sonora Pass in California to San Francisco" >}}
 
