@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 655" role="img" aria-labelledby="mapTitle mapDesc">
+  <title id="mapTitle">Denver to San Francisco road trip map</title>
+  <desc id="mapDesc">A route map showing a drive from Denver, Colorado through Cisco, Utah and across Nevada to Sonora Pass in California, ending in San Francisco. The route is close to the most direct path but not the fastest, and requires Sonora Pass to be open, which only happens in summer.</desc>
+  <style>
+    svg {
+      --ink: #000;
+      --ink-dim: rgba(0,0,0,0.45);
+      --ink-faint: rgba(0,0,0,0.18);
+      --paper: none;
+      font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --ink: #fff;
+        --ink-dim: rgba(255,255,255,0.5);
+        --ink-faint: rgba(255,255,255,0.22);
+      }
+    }
+    .state { fill: none; stroke: var(--ink-faint); stroke-width: 1.5; stroke-linejoin: round; }
+    .state-label { fill: var(--ink-dim); font-size: 15px; letter-spacing: 3px; }
+    .route { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1 9; }
+    .route-arrow { fill: var(--ink); }
+    .stop { fill: var(--paper); stroke: var(--ink); stroke-width: 2.5; }
+    .stop-end { fill: var(--ink); stroke: var(--ink); stroke-width: 2.5; }
+    .city-name { fill: var(--ink); font-size: 14px; font-weight: 700; }
+    .city-sub { fill: var(--ink-dim); font-size: 11px; }
+    .title { fill: var(--ink); font-size: 23px; font-weight: 700; letter-spacing: 1px; }
+    .subtitle { fill: var(--ink-dim); font-size: 13px; }
+    .chrome { fill: var(--ink-dim); font-size: 11px; }
+    .chrome-line { stroke: var(--ink-dim); stroke-width: 1.5; }
+    .footnote { fill: var(--ink-dim); font-size: 11.5px; }
+    .peak { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+  </style>
+
+  <!-- title -->
+  <text class="title" x="50" y="38">DENVER &#8594; SAN FRANCISCO</text>
+  <text class="subtitle" x="50" y="60">Colorado &#183; Utah &#183; Nevada &#183; California &#8212; close to the most direct route, not the fastest</text>
+
+  <!-- state outlines -->
+  <g class="state">
+    <path d="M 642.1,162.8 L 909.5,162.8 L 909.5,356.8 L 642.1,356.8 Z"/>
+    <path d="M 451.1,114.2 L 565.7,114.2 L 565.7,162.8 L 642.1,162.8 L 642.1,356.8 L 451.1,356.8 Z"/>
+    <path d="M 221.9,114.2 L 451.1,114.2 L 451.1,405.2 L 428.2,453.8 L 229.5,259.8 Z"/>
+    <path d="M 61.5,114.2 L 65.3,187.0 L 76.7,284.0 L 126.4,318.0 L 145.5,376.1 L 149.3,405.2 L 199.0,473.1 L 279.2,507.1 L 313.6,550.8 L 332.7,570.1 L 428.2,565.3 L 428.2,453.8 L 229.5,259.8 L 221.9,114.2 Z"/>
+  </g>
+
+  <g class="state-label">
+    <text x="760.5" y="279.1" text-anchor="middle">COLORADO</text>
+    <text x="546.8" y="330" text-anchor="middle">UTAH</text>
+    <text x="336.5" y="191.9" text-anchor="middle">NEVADA</text>
+    <text x="183.7" y="444.0" text-anchor="middle">CALIFORNIA</text>
+  </g>
+
+  <!-- route -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="route-arrow" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+  </defs>
+  <path class="route" marker-end="url(#arrow)"
+    d="M 795.3,223.9 L 706.1,233.1 L 659.3,256.7 L 629.8,260.6 L 597.9,260.5 L 533.1,262.5 L 417.1,247.7 L 376.5,235.1 L 333.7,235.8 L 268.6,236.8 L 230.8,251.8 L 238.9,275.3 L 236.9,292.4 L 207.4,303.4 L 183.8,325.8 L 154.4,323.7 L 135.1,317.7 L 129.5,319.2"/>
+
+  <!-- Sonora Pass summit glyph, anchored above the waypoint dot -->
+  <g class="peak" transform="translate(236.9,292.4)">
+    <path d="M -8,-10 L 0,-27 L 8,-10 Z"/>
+  </g>
+
+  <!-- waypoints -->
+  <circle class="stop-end" cx="795.3" cy="223.9" r="4.5"/>
+  <circle class="stop" cx="629.8" cy="260.6" r="4"/>
+  <circle class="stop" cx="236.9" cy="292.4" r="4"/>
+  <circle class="stop-end" cx="129.5" cy="319.2" r="4.5"/>
+
+  <g class="city-name">
+    <text x="806" y="219">DENVER</text>
+    <text x="608" y="246">CISCO</text>
+    <text x="252" y="266">SONORA PASS</text>
+    <text x="70" y="345" text-anchor="middle">SAN FRANCISCO</text>
+  </g>
+  <g class="city-sub">
+    <text x="806" y="233">CO &#8212; start</text>
+    <text x="608" y="286" text-anchor="middle">UT</text>
+    <text x="252" y="280">CA-108, 9,624ft &#8212; summer only *</text>
+    <text x="70" y="359" text-anchor="middle">CA &#8212; finish</text>
+  </g>
+
+  <!-- compass -->
+  <g transform="translate(918,128)">
+    <line class="chrome-line" x1="0" y1="14" x2="0" y2="-14"/>
+    <path class="chrome" d="M 0,-14 L 4,-5 L 0,-8.5 L -4,-5 Z" style="fill: var(--ink); stroke: none;"/>
+    <text class="chrome" x="0" y="27" text-anchor="middle">N</text>
+  </g>
+
+  <!-- scale bar: ~1.43 mi/px -->
+  <g transform="translate(60,590)" class="chrome-line">
+    <line x1="0" y1="0" x2="140" y2="0"/>
+    <line x1="0" y1="-4" x2="0" y2="4"/>
+    <line x1="70" y1="-4" x2="70" y2="4"/>
+    <line x1="140" y1="-4" x2="140" y2="4"/>
+    <text class="chrome" x="0" y="18" text-anchor="middle">0</text>
+    <text class="chrome" x="70" y="18" text-anchor="middle">100 mi</text>
+    <text class="chrome" x="140" y="18" text-anchor="middle">200 mi</text>
+  </g>
+
+  <!-- footnote -->
+  <text class="footnote" x="480" y="638" text-anchor="middle">* Sonora Pass closes with the first heavy snowfall and reopens in late spring &#8212; this route only works in summer.</text>
+</svg>
