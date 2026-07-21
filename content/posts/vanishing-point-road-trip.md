@@ -25,6 +25,6 @@ Denver to San Francisco, through Cisco, Utah and over Sonora Pass into the Sierr
 
 Total trip: about 20 hours of driving.
 
-This is the route covered in the [Vanishing Point](https://www.themoviedb.org/movie/11951-vanishing-point) movie.
+This is the intended route from the [Vanishing Point](https://www.themoviedb.org/movie/11951-vanishing-point) movie.
 
 White Dodge Challenger optional.
