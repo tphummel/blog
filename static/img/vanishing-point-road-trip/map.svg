@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 622" role="img" aria-labelledby="mapTitle mapDesc">
   <title id="mapTitle">Denver to San Francisco road trip map</title>
   <desc id="mapDesc">A route map showing a drive from Denver, Colorado through Cisco, Utah and across Nevada to Sonora Pass in California, ending in San Francisco.</desc>
+  <rect class="bg" x="0" y="0" width="960" height="622"/>
   <style>
     svg {
       --ink: #000;
@@ -10,14 +11,7 @@
       --paper-solid: #fff;
       font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
     }
-    @media (prefers-color-scheme: dark) {
-      svg {
-        --ink: #fff;
-        --ink-dim: rgba(255,255,255,0.5);
-        --ink-faint: rgba(255,255,255,0.22);
-        --paper-solid: #000;
-      }
-    }
+    .bg { fill: #fff; }
     .state { fill: none; stroke: var(--ink-faint); stroke-width: 1.5; stroke-linejoin: round; }
     .state-label { fill: var(--ink-dim); font-size: 15px; letter-spacing: 3px; }
     .route { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1 9; }
