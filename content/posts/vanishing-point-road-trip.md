@@ -25,6 +25,6 @@ Denver to San Francisco, through Cisco, Utah and over Sonora Pass into the Sierr
 
 Total trip: about 20 hours of driving.
 
-## Why Sonora Pass
+This is the route covered in the [Vanishing Point](https://www.themoviedb.org/movie/11951-vanishing-point) movie.
 
-Sonora Pass (CA-108) crests at 9,624 ft in the Sierra Nevada and is one of the steepest, most direct ways through the range &mdash; and one of the last passes to open each year. Caltrans typically closes it with the first heavy snowfall in the late fall and doesn't reopen it until late spring, so this exact route only exists for a few months a year.
+White Dodge Challenger optional.
