@@ -88,6 +88,13 @@
     <text x="70" y="359" text-anchor="middle">CA &#8212; finish</text>
   </g>
 
+  <!-- compass -->
+  <g transform="translate(918,128)">
+    <line class="chrome-line" x1="0" y1="14" x2="0" y2="-14"/>
+    <path d="M 0,-14 L 4,-5 L 0,-8.5 L -4,-5 Z" style="fill: var(--ink); stroke: none;"/>
+    <text class="chrome" x="0" y="27" text-anchor="middle">N</text>
+  </g>
+
   <!-- scale bar: ~1.43 mi/px -->
   <g transform="translate(60,588)" class="chrome-line">
     <line x1="0" y1="0" x2="140" y2="0"/>
