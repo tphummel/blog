@@ -15,16 +15,13 @@
     .state { fill: none; stroke: var(--ink-faint); stroke-width: 1.5; stroke-linejoin: round; }
     .state-label { fill: var(--ink-dim); font-size: 15px; letter-spacing: 3px; }
     .route { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1 9; }
-    .route-arrow { fill: var(--ink); }
-    .stop { fill: var(--paper); stroke: var(--ink); stroke-width: 2.5; }
-    .stop-end { fill: var(--ink); stroke: var(--ink); stroke-width: 2.5; }
+    .stop { fill: var(--ink); stroke: none; }
     .city-name { fill: var(--ink); font-size: 14px; font-weight: 700; }
     .city-sub { fill: var(--ink-dim); font-size: 11px; }
     .title { fill: var(--ink); font-size: 23px; font-weight: 700; letter-spacing: 1px; }
     .subtitle { fill: var(--ink-dim); font-size: 13px; }
     .chrome { fill: var(--ink-dim); font-size: 11px; }
     .chrome-line { stroke: var(--ink-dim); stroke-width: 1.5; }
-    .peak { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
     .hwy-pill { fill: var(--paper-solid); stroke: var(--ink); stroke-width: 1.3; }
     .hwy-label { fill: var(--ink); font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; }
   </style>
@@ -49,12 +46,7 @@
   </g>
 
   <!-- route -->
-  <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path class="route-arrow" d="M 0 0 L 10 5 L 0 10 z"/>
-    </marker>
-  </defs>
-  <path class="route" marker-end="url(#arrow)"
+  <path class="route"
     d="M 795.3,223.9 L 706.1,233.1 L 659.3,256.7 L 629.8,260.6 L 597.9,260.5 L 533.1,262.5 L 417.1,247.7 L 376.5,235.1 L 333.7,235.8 L 268.6,236.8 L 230.8,251.8 L 238.9,275.3 L 236.9,292.4 L 207.4,303.4 L 183.8,325.8 L 154.4,323.7 L 135.1,317.7 L 129.5,319.2"/>
 
   <!-- highway shields -->
@@ -77,16 +69,11 @@
     </g>
   </g>
 
-  <!-- Sonora Pass summit glyph, anchored above the waypoint dot -->
-  <g class="peak" transform="translate(236.9,292.4)">
-    <path d="M -8,-10 L 0,-27 L 8,-10 Z"/>
-  </g>
-
   <!-- waypoints -->
-  <circle class="stop-end" cx="795.3" cy="223.9" r="4.5"/>
-  <circle class="stop" cx="629.8" cy="260.6" r="4"/>
-  <circle class="stop" cx="236.9" cy="292.4" r="4"/>
-  <circle class="stop-end" cx="129.5" cy="319.2" r="4.5"/>
+  <circle class="stop" cx="795.3" cy="223.9" r="4.5"/>
+  <circle class="stop" cx="629.8" cy="260.6" r="4.5"/>
+  <circle class="stop" cx="236.9" cy="292.4" r="4.5"/>
+  <circle class="stop" cx="129.5" cy="319.2" r="4.5"/>
 
   <g class="city-name">
     <text x="806" y="219">DENVER</text>
@@ -99,13 +86,6 @@
     <text x="608" y="286" text-anchor="middle">UT</text>
     <text x="252" y="280">9,624 ft</text>
     <text x="70" y="359" text-anchor="middle">CA &#8212; finish</text>
-  </g>
-
-  <!-- compass -->
-  <g transform="translate(918,128)">
-    <line class="chrome-line" x1="0" y1="14" x2="0" y2="-14"/>
-    <path class="chrome" d="M 0,-14 L 4,-5 L 0,-8.5 L -4,-5 Z" style="fill: var(--ink); stroke: none;"/>
-    <text class="chrome" x="0" y="27" text-anchor="middle">N</text>
   </g>
 
   <!-- scale bar: ~1.43 mi/px -->
