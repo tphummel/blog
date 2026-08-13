@@ -33,35 +33,54 @@
       history: []
     }
 
+    const OP_DEFAULTS = {
+      add: { min: 0, max: 500, quantity: 2 },
+      multiply: { min: 0, max: 12, quantity: 2 }
+    }
+
+    function getOperation () {
+      const urlParams = new URLSearchParams(window.location.search)
+      const op = urlParams.get('op')
+      return op === 'multiply' ? 'multiply' : 'add'
+    }
+
     function createPrompt () {
       const urlParams = new URLSearchParams(window.location.search)
-      const min = urlParams.get('min') ? parseInt(urlParams.get('min'), 10) : 0
-      const max = urlParams.get('max') ? parseInt(urlParams.get('max'), 10) : 500
-      const quantity = urlParams.get('quantity') || 2
+      const op = getOperation()
+      const defaults = OP_DEFAULTS[op]
+      const min = urlParams.get('min') ? parseInt(urlParams.get('min'), 10) : defaults.min
+      const max = urlParams.get('max') ? parseInt(urlParams.get('max'), 10) : defaults.max
+      const quantity = urlParams.get('quantity') || defaults.quantity
 
       const numbers = []
-      let sum = 0
+      let solution = op === 'multiply' ? 1 : 0
       const range = (max - min + 1)
       while (numbers.length < quantity) {
         const randomByRange = Math.floor(Math.random() * range)
         const randomInRange = randomByRange + min
         numbers.push(randomInRange)
-        sum += randomInRange
+        if (op === 'multiply') {
+          solution *= randomInRange
+        } else {
+          solution += randomInRange
+        }
       }
 
       return {
+        op,
         numbers,
-        solution: sum
+        solution
       }
     }
 
     function showMathProblem () {
       const prompt = createPrompt()
+      const operator = prompt.op === 'multiply' ? ' × ' : ' + '
       const displayPrompt = prompt.numbers.reduce((memo, number) => {
         if (memo == '') {
           memo = `${number}`
         } else {
-          memo += ` + ${number}`
+          memo += `${operator}${number}`
         }
         return memo
       }, '')
@@ -121,6 +140,12 @@
 
 <body>
   <p>Hello! Welcome to the math game</p>
+  <p>
+    Mode:
+    <a href="?op=add">Addition</a>
+    |
+    <a href="?op=multiply">Multiplication</a>
+  </p>
   <p>Problem: <span id="prompt"></span></p>
   <div id="expected" hidden></div>
   <p>
@@ -146,13 +171,15 @@
   <p>
     <details>
       <summary>Instructions</summary>
-      You can add querystring arguments to configure the game. Defaults:
+      You can add querystring arguments to configure the game.
       <ul>
-        <li>min=0</li>
-        <li>max=500</li>
-        <li>quantity=2</li>
+        <li>op=add or op=multiply (default: add)</li>
+        <li>min (default: 0)</li>
+        <li>max (default: 500 for addition, 12 for multiplication)</li>
+        <li>quantity (default: 2)</li>
       </ul>
-      <p>example: <a href="https://tomhummel.com/math-game?min=50&max=750&quantity=5">/math-game?min=50&max=750&quantity=5</a></p>
+      <p>addition example: <a href="https://tomhummel.com/math-game?op=add&min=50&max=750&quantity=5">/math-game?op=add&min=50&max=750&quantity=5</a></p>
+      <p>multiplication example: <a href="https://tomhummel.com/math-game?op=multiply&min=0&max=12&quantity=2">/math-game?op=multiply&min=0&max=12&quantity=2</a></p>
     </details>
   </p>
   <p>History</p>
