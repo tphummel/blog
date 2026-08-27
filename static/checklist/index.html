@@ -46,11 +46,16 @@
             justify-content: space-between;
             font-size: 11pt;
         }
+        .info-field {
+            display: flex;
+            align-items: baseline;
+            width: 45%;
+        }
         .info-line {
-            width: 40%;
+            flex: 1;
             border-bottom: 1px solid #000;
-            display: inline-block;
             height: 1em;
+            margin-left: 6px;
         }
         .grid {
             display: grid;
@@ -110,8 +115,8 @@
             <div class="header-block">
                 <h1>Morning Routine</h1>
                 <div class="user-info">
-                    <span>Name: <span class="info-line"></span></span>
-                    <span>Week Of: <span class="info-line"></span></span>
+                    <span class="info-field">Name: <span class="info-line"></span></span>
+                    <span class="info-field">Week Of: <span class="info-line"></span></span>
                 </div>
             </div>
             <div class="grid">
@@ -143,8 +148,8 @@
             <div class="header-block">
                 <h1>Evening Routine</h1>
                 <div class="user-info">
-                    <span>Name: <span class="info-line"></span></span>
-                    <span>Week Of: <span class="info-line"></span></span>
+                    <span class="info-field">Name: <span class="info-line"></span></span>
+                    <span class="info-field">Week Of: <span class="info-line"></span></span>
                 </div>
             </div>
             <div class="grid">
