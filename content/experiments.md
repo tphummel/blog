@@ -12,3 +12,4 @@ date: 2020-09-01T08:00:00
 - [Card Shuffle](/card-shuffle-svelte)
 - [Craps Simulator](/craps)
 - [MLB Scoreboard](/mlb-scoreboard)
+- [Checklist](/checklist)
