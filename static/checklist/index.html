@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: 8.5in 11in;
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0.4in;
+            box-sizing: border-box;
+            color: #000;
+        }
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            height: 10.2in;
+        }
+        .half-page {
+            flex: 1;
+            border: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0.2in;
+            position: relative;
+        }
+        .half-page:last-child {
+            margin-bottom: 0;
+        }
+        .header-block {
+            padding: 10px;
+            border-bottom: 1px solid #000;
+            text-align: center;
+        }
+        .header-block h1 {
+            margin: 0 0 8px 0;
+            font-size: 18pt;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11pt;
+        }
+        .info-field {
+            display: flex;
+            align-items: baseline;
+            width: 45%;
+        }
+        .info-line {
+            flex: 1;
+            border-bottom: 1px solid #000;
+            height: 1em;
+            margin-left: 6px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(5, 1fr); /* Label col + 5 days */
+            flex: 1;
+        }
+        .column {
+            border-right: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+        }
+        .column:last-child {
+            border-right: none;
+        }
+        .day-label {
+            text-align: center;
+            font-weight: bold;
+            padding: 5px 0;
+            border-bottom: 1px solid #000;
+            font-size: 12pt;
+        }
+        .task-row {
+            height: 40px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10pt;
+        }
+        .task-text {
+            justify-content: flex-start;
+            padding-left: 10px;
+        }
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #000;
+            flex-shrink: 0;
+        }
+        .fold-guide {
+            text-align: center;
+            font-size: 8pt;
+            font-style: italic;
+            margin-bottom: 0.2in;
+            border-top: 1px dashed #ccc;
+            padding-top: 5px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+
+        <!-- TOP HALF: MORNING -->
+        <div class="half-page">
+            <div class="header-block">
+                <h1>Morning Routine</h1>
+                <div class="user-info">
+                    <span class="info-field">Name: <span class="info-line"></span></span>
+                    <span class="info-field">Week Of: <span class="info-line"></span></span>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="column">
+                    <div class="day-label">Task</div>
+                    <div class="task-row task-text">Brush teeth</div>
+                    <div class="task-row task-text">Get dressed</div>
+                    <div class="task-row task-text">Eat breakfast</div>
+                    <div class="task-row task-text">Fill water bottles</div>
+                    <div class="task-row task-text">Pack backpack/folder</div>
+                    <div class="task-row task-text">Tidy room</div>
+                    <div class="task-row task-text">Love on Billie</div>
+                    <div class="task-row task-text">Put sunscreen on</div>
+                    <div class="task-row task-text"></div> <!-- Spacer -->
+                </div>
+                <!-- Days M-F -->
+                <div class="column"><div class="day-label">Mon</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Tue</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Wed</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Thu</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Fri</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div></div>
+            </div>
+        </div>
+
+        <div class="fold-guide">Fold or Cut Here</div>
+
+        <!-- BOTTOM HALF: EVENING -->
+        <div class="half-page">
+            <div class="header-block">
+                <h1>Evening Routine</h1>
+                <div class="user-info">
+                    <span class="info-field">Name: <span class="info-line"></span></span>
+                    <span class="info-field">Week Of: <span class="info-line"></span></span>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="column">
+                    <div class="day-label">Task</div>
+                    <div class="task-row task-text">Unpack lunch bag</div>
+                    <div class="task-row task-text">Unpack water bottle</div>
+                    <div class="task-row task-text">Hang up backpack</div>
+                    <div class="task-row task-text">Shoes put away</div>
+                    <div class="task-row task-text">Hands washed</div>
+                    <div class="task-row task-text">Do homework</div>
+                    <div class="task-row task-text">Do chores</div>
+                    <div class="task-row task-text"></div> <!-- Spacer -->
+                    <div class="task-row task-text"></div> <!-- Spacer -->
+                </div>
+                <!-- Days M-F -->
+                <div class="column"><div class="day-label">Mon</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Tue</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Wed</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Thu</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div><div class="task-row"></div></div>
+                <div class="column"><div class="day-label">Fri</div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"><div class="checkbox"></div></div><div class="task-row"></div><div class="task-row"></div></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
