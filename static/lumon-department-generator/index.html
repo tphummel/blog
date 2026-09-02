@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tomhummel.com - lumon department generator</title>
+    <style>
+        :root {
+            --lumon-blue: #2c3e50;
+            --lumon-beige: #e8e4d9;
+            --lumon-accent: #5d6d7e;
+            --lumon-text: #333;
+        }
+
+        body {
+            background-color: var(--lumon-beige);
+            font-family: "Courier New", Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: var(--lumon-text);
+            text-transform: uppercase;
+        }
+
+        .container {
+            text-align: center;
+            border: 2px solid var(--lumon-blue);
+            padding: 3rem;
+            background-color: #fdfbf7;
+            box-shadow: 10px 10px 0px var(--lumon-blue);
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            margin-bottom: 3rem;
+            color: var(--lumon-accent);
+        }
+
+        #result {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 3rem;
+            min-height: 3rem;
+            color: var(--lumon-blue);
+        }
+
+        button {
+            background-color: var(--lumon-blue);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--lumon-accent);
+        }
+
+        button:active {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Corporate Division Assignment</h1>
+        <div id="result">Click to Assign</div>
+        <button onclick="generateDepartment()">Generate Department</button>
+    </div>
+
+    <script>
+        const adjectives = [
+            "Macro", "Micro", "Lateral", "Core", "Systemic", "Passive", "Dynamic", "Virtual", "Static", "Linear", "Aggregate", "Peripheral", "Temporal", "Inverse", "Modular", "Kinetic", "Recursive", "Global", "Synthetic", "Ambient", "Binary", "Focal", "Discrete", "Unified", "Hybrid", "Astral", "Primal", "Sequential", "Nominal", "Optimal", "Relative", "Absolute", "Symmetrical", "Divergent", "Convergent", "Formal", "Implicit", "Explicit", "Neural", "Vertical", "Horizontal", "Diagonal", "Thermal", "Spectral", "Quantum", "Inert", "Active", "Reactive", "Proactive", "Fluid", "Rigid", "Elastic", "Scalar", "Vector", "Digital", "Analog", "Prime", "Secondary", "Tertiary", "External", "Internal", "Central", "Remote", "Localized", "Distributed", "Synchronized", "Asynchronous", "Coherent", "Diffuse", "Integrated", "Isolated", "Basic", "Advanced", "Complex", "Simple", "Generic", "Specific", "Universal", "Singular", "Collective", "Fragmented", "Holistic", "Variable", "Constant", "Stable", "Volatile", "Direct", "Indirect", "Latent", "Manifest", "Augmented", "Semantic", "Syntactic", "Logical", "Empirical", "Abstract", "Concrete", "Tonal", "Axial", "Polar", "Subliminal", "Intrinsic", "Extrinsic", "Sovereign", "Cyclical", "Linear"
+        ];
+
+        const nouns = [
+            "Data", "Array", "Interface", "Signal", "Buffer", "Logic", "Synthesis", "Tier", "Flux", "Flow", "Node", "Metric", "Sequence", "Matrix", "Sync", "Layer", "Stream", "Parameter", "Vector", "Grid", "Protocol", "Packet", "Element", "Variable", "Constant", "Input", "Output", "Feedback", "Loop", "Circuit", "Module", "Component", "System", "Network", "Lattice", "Mesh", "Cluster", "Segment", "Sector", "Zone", "Field", "Domain", "Sphere", "Volume", "Density", "Frequency", "Amplitude", "Phase", "Wave", "Pulse", "Bit", "Byte", "Key", "Index", "Registry", "Ledger", "Archive", "Repository", "Cache", "Portal", "Gateway", "Bridge", "Link", "Hub", "Core", "Shell", "Kernel", "Frame", "Template", "Schema", "Model", "Map", "Chart", "Graph", "Plot", "Coordinate", "Axis", "Plane", "Tensor", "Scalar", "Quantum", "Particle", "Waveform", "Spectrum", "Prism", "Lens", "Filter", "Valve", "Switch", "Relay", "Conduit", "Pipeline", "Thread", "Fiber", "String", "Value", "Entity", "Node", "Cortex", "Buffer", "Silo", "Array", "Mesh", "Lattice", "Tome", "Void"
+        ];
+
+        const processes = [
+            "Refinement", "Calibration", "Alignment", "Integration", "Filtering", "Modulation", "Synthesis", "Tiering", "Optimization", "Distribution", "Refactoring", "Scaling", "Sequencing", "Sorting", "Validation", "Analysis", "Processing", "Tuning", "Vectoring", "Stabilization", "Correlation", "Verification", "Reduction", "Expansion", "Compression", "Extraction", "Rotation", "Translation", "Iteration", "Migration", "Allocation", "Assignment", "Arrangement", "Classification", "Categorization", "Designation", "Evaluation", "Assessment", "Monitoring", "Observation", "Tracking", "Tracing", "Mapping", "Plotting", "Balancing", "Leveling", "Grading", "Sifting", "Scrubbing", "Purging", "Cleaning", "Polishing", "Shaping", "Forming", "Structuring", "Organizing", "Sequencing", "Ordering", "Prioritization", "Ranking", "Indexing", "Cataloging", "Archiving", "Retrieval", "Recovery", "Restoration", "Synchronization", "Harmonization", "Coordination", "Unification", "Separation", "Partitioning", "Segmentation", "Division", "Fragmentation", "Synthesis", "Fusion", "Bonding", "Coupling", "Linking", "Connection", "Bridging", "Routing", "Switching", "Directing", "Steering", "Navigation", "Orientation", "Rotation", "Oscillation", "Vibration", "Resonance", "Amplification", "Attenuation", "Dampening", "Regulation", "Modulation", "Variation", "Mutation", "Evolution"
+        ];
+
+        function getRandom(list) {
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function generateDepartment() {
+            const adj = getRandom(adjectives);
+            const noun = getRandom(nouns);
+            const proc = getRandom(processes);
+
+            document.getElementById('result').innerText = `${adj} ${noun} ${proc}`;
+        }
+    </script>
+</body>
+</html>

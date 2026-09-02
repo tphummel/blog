@@ -13,3 +13,4 @@ date: 2020-09-01T08:00:00
 - [Craps Simulator](/craps)
 - [MLB Scoreboard](/mlb-scoreboard)
 - [Kids Weekly Checklist](/checklist)
+- [Lumon Department Generator](/lumon-department-generator)
