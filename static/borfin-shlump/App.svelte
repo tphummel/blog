@@ -10,6 +10,11 @@
   const getUrl = `${base}/${id}.json`;
   const bumpUrl = `${base}/${id}/bump.json`;
 
+  function computeNightAir() {
+    const hour = new Date().getHours();
+    nightAir = hour >= 22 || hour < 6;
+  }
+
   function computeStatus() {
     const now = new Date();
     const six = new Date(now);
@@ -17,8 +22,7 @@
     if (updatedAt) {
       status = now > six && updatedAt < six ? 'shlumped' : 'unshlumped';
     }
-    const hour = now.getHours();
-    nightAir = hour >= 22 || hour < 6;
+    computeNightAir();
   }
 
   function setUpdated(data) {
@@ -37,6 +41,13 @@
     let data;
     try {
       const res = await fetch(getUrl, { mode: 'cors', headers: { Origin: window.location.origin } });
+      if (res.status === 404) {
+        updatedAt = undefined;
+        count = 0;
+        status = 'shlumped';
+        computeNightAir();
+        return;
+      }
       if (!res.ok) throw new Error(res.status);
       data = await res.json();
       count = data.count;
