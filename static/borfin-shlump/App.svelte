@@ -26,7 +26,7 @@
   }
 
   function setUpdated(data) {
-    const parsed = Date.parse(data.updated?.at);
+    const parsed = Date.parse(data.updated?.at ?? data.created?.at);
     if (isNaN(parsed)) {
       const err = new Error('invalid bumper response');
       err.data = data;
