@@ -31,4 +31,6 @@ tags:
 📰 News: Nope
 🎵 Music: Apple Music scrobbled to Last.fm with Sleeve
 🎤 Podcasts: Overcast
+🎧 Audiobooks: Spotify
+📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
 🔐 Password Management: 1Password, begrudgingly
