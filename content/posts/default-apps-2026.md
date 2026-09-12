@@ -8,10 +8,10 @@ tags:
   - default-apps
 ---
 
-📨 Mail Client:
-📮 Mail Server:
-📝 Notes:
-✅ To-Do:
+📨 Mail Client: Work uses Apple Mail. Personal I use hey.com's Mac and iOS apps.
+📮 Mail Server: Personal is hey.com, Gmail as a legacy fallback.
+📝 Notes: Notion
+✅ To-Do: Notion and paper journal
 📷 iPhone Photo Shooting:
 🟦 Photo Management:
 📆 Calendar:
