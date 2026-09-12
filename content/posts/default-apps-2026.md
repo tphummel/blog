@@ -13,9 +13,9 @@ tags:
 📝 Notes: Notion
 ✅ To-Do: Notion and paper journal
 📷 iPhone Photo Shooting: Camera.app
-🟦 Photo Management: Photos.app
-📆 Calendar:
-📁 Cloud File Storage:
+🟦 Photo Management: Photos.app, also backed up to Dropbox
+📆 Calendar: Google Calendar for work and family calendars, plus paper weekly, monthly, and annual planners
+📁 Cloud File Storage: Two NAS devices — an Asustor AS1102TL Drivestor 2 Lite (2 x 2TB enterprise HDD) and a Synology DS223J (2 x 8TB NAS archival HDD) — with offsite backup to Dropbox
 📖 RSS:
 🙍🏻‍♂️ Contacts:
 🌐 Browser:
