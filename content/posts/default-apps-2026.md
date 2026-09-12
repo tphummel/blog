@@ -19,6 +19,7 @@ tags:
 📖 RSS: NetNewsWire on iOS, backed by self-hosted FreshRSS
 🙍🏻‍♂️ Contacts: Contacts.app
 🌐 Browser: Brave on iOS, Mac, and Linux
+🔍 Search: Self-hosted SearXNG backed by the Kagi API on a pay-as-you-go usage-based plan
 💬 Chat: iMessage, WhatsApp, Slack, Campfire
 🔖 Bookmarks: Nothing that syncs across devices — a few static HTML landing/directory pages
 📑 Read It Later: FreshRSS starred items, plus self-hosted Karakeep
