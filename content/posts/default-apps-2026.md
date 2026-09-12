@@ -27,7 +27,7 @@ tags:
 📊 Presentations: Google Slides, reveal.js
 🛒 Shopping Lists: Pen and Post-it or weekly planner for tactical lists; longer-range lists go in Notion or a dedicated spot in my journal
 🍴 Meal Planning: Self-hosted Mealie, plus pen and paper in my weekly journal planner
-📰 News:
+📰 News: RSS reader, a handful of email newsletters, and an Apple News family subscription
 🎵 Music:
 🎤 Podcasts:
 🎧 Audiobooks: Spotify
