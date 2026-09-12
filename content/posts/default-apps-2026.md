@@ -18,8 +18,8 @@ tags:
 📁 Cloud File Storage: Two NAS devices — an Asustor AS1102TL Drivestor 2 Lite (2 x 2TB enterprise HDD) and a Synology DS223J (2 x 8TB NAS archival HDD) — with offsite backup to Dropbox
 📖 RSS: NetNewsWire on iOS, backed by self-hosted FreshRSS
 🙍🏻‍♂️ Contacts: Contacts.app
-🌐 Browser:
-💬 Chat:
+🌐 Browser: Brave on iOS, Mac, and Linux
+💬 Chat: iMessage, WhatsApp, Slack, Campfire
 🔖 Bookmarks:
 📑 Read It Later:
 📜 Word Processing:
