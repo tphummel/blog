@@ -20,8 +20,8 @@ tags:
 🙍🏻‍♂️ Contacts: Contacts.app
 🌐 Browser: Brave on iOS, Mac, and Linux
 💬 Chat: iMessage, WhatsApp, Slack, Campfire
-🔖 Bookmarks:
-📑 Read It Later:
+🔖 Bookmarks: Nothing that syncs across devices — a few static HTML landing/directory pages
+📑 Read It Later: FreshRSS starred items, plus self-hosted Karakeep
 📜 Word Processing:
 📈 Spreadsheets:
 📊 Presentations:
