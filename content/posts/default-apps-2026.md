@@ -28,7 +28,7 @@ tags:
 🛒 Shopping Lists: Pen and Post-it or weekly planner for tactical lists; longer-range lists go in Notion or a dedicated spot in my journal
 🍴 Meal Planning: Self-hosted Mealie, plus pen and paper in my weekly journal planner
 📰 News: RSS reader, a handful of email newsletters, and an Apple News family subscription
-🎵 Music:
+🎵 Music: Spotify. Evaluating a self-hosted workflow with Navidrome and Strawberry Player on Linux, ripping FLAC from my curated CD collection with abcde and organizing with beets.
 🎤 Podcasts:
 🎧 Audiobooks: Spotify
 📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
