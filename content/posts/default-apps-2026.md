@@ -26,8 +26,7 @@ tags:
 📈 Spreadsheets: Google Sheets, Notion databases, evaluating self-hosted Grist
 📊 Presentations: Google Slides, reveal.js
 🛒 Shopping Lists: Pen and Post-it or weekly planner for tactical lists; longer-range lists go in Notion or a dedicated spot in my journal
-🍴 Meal Planning:
-💰 Budgeting and Personal Finance:
+🍴 Meal Planning: Self-hosted Mealie, plus pen and paper in my weekly journal planner
 📰 News:
 🎵 Music:
 🎤 Podcasts:
