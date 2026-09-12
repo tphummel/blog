@@ -34,5 +34,8 @@ tags:
 🎧 Audiobooks: Spotify
 📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
 🔐 Password Management:
+🤖 AI Chat (Desktop/Mobile):
+📱 AI Code Assistant (Mobile):
+💻 AI Code Assistant (Desktop):
 
 *Inspired by [rknight.me's App Defaults 2026](https://rknight.me/blog/app-defaults-2026/).*
