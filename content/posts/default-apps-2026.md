@@ -29,7 +29,7 @@ tags:
 - 📊 **Presentations:** Google Slides, reveal.js
 - 🛒 **Shopping Lists:** Pen and Post-it or weekly planner for tactical lists; longer-range lists go in Notion or a dedicated spot in my journal
 - 🍴 **Meal Planning:** Self-hosted Mealie, plus pen and paper in my weekly journal planner
-- ❤️ **Health Tracking:** Apple Health, Garmin, self-hosted Nomie
+- ❤️ **Health Tracking:** Apple Health, Garmin, self-hosted Nomie deployed on Cloudflare Pages
 - 📰 **News:** RSS reader, a handful of email newsletters, and an Apple News family subscription
 - 🎵 **Music:** Spotify. Evaluating a self-hosted workflow with Navidrome and Strawberry Player on Linux, ripping FLAC from my curated CD collection with abcde and organizing with beets.
 - 🎤 **Podcasts:** Spotify, though I'll listen to some directly via RSS feeds on the web
