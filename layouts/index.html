@@ -29,12 +29,16 @@
 <hr />
 <div>
     <p>
+        {{ with .Site.GetPage "/tags/default-apps" }}
+        <a href="{{ .RelPermalink }}">Default Apps</a>
+        {{ end}}
+        /
         {{ with .Site.GetPage "colophon" }}
         <a href="{{ .RelPermalink }}">Colophon</a>
         {{ end}}
         /
         {{ with .Site.GetPage "advent-of-code" }}
-        <a href="{{ .RelPermalink }}">Advent of Code</a>
+        <a href="{{ .RelPermalink }}">AoC</a>
         {{ end}}
         /
         {{ with .Site.GetPage "experiments" }}
