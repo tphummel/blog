@@ -22,8 +22,8 @@ tags:
 💬 Chat: iMessage, WhatsApp, Slack, Campfire
 🔖 Bookmarks: Nothing that syncs across devices — a few static HTML landing/directory pages
 📑 Read It Later: FreshRSS starred items, plus self-hosted Karakeep
-📜 Word Processing:
-📈 Spreadsheets:
+📜 Word Processing: Notion, Google Docs
+📈 Spreadsheets: Google Sheets, Notion databases, evaluating self-hosted Grist
 📊 Presentations:
 🛒 Shopping Lists:
 🍴 Meal Planning:
