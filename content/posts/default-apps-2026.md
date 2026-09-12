@@ -12,6 +12,7 @@ tags:
 📮 Mail Server: Personal is hey.com, Gmail as a legacy fallback.
 📝 Notes: Notion
 ✅ To-Do: Notion and paper journal
+📋 Kanban: Personal self-hosted Fizzy for homelab tasks
 📷 iPhone Photo Shooting: Camera.app
 🟦 Photo Management: Photos.app, also backed up to Dropbox
 📆 Calendar: Google Calendar for work and family calendars, plus paper weekly, monthly, and annual planners
@@ -28,15 +29,18 @@ tags:
 📊 Presentations: Google Slides, reveal.js
 🛒 Shopping Lists: Pen and Post-it or weekly planner for tactical lists; longer-range lists go in Notion or a dedicated spot in my journal
 🍴 Meal Planning: Self-hosted Mealie, plus pen and paper in my weekly journal planner
+❤️ Health Tracking: Apple Health, Garmin, self-hosted Nomie
 📰 News: RSS reader, a handful of email newsletters, and an Apple News family subscription
 🎵 Music: Spotify. Evaluating a self-hosted workflow with Navidrome and Strawberry Player on Linux, ripping FLAC from my curated CD collection with abcde and organizing with beets.
 🎤 Podcasts: Spotify, though I'll listen to some directly via RSS feeds on the web
 🎧 Audiobooks: Spotify
 📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
+📺 Media Tracking: Self-hosted Yamtrack for TV, movies, and books
 🔐 Password Management: 1Password
 🤖 AI Chat (Desktop/Mobile): Self-hosted LibreChat with self-hosted LiteLLM. Primary models are gpt-oss-120b and qwen-3.8-27b on Cerebras, pay-as-you-go.
 📱 AI Code Assistant (Mobile): Claude mobile app, Codex mobile app
 💻 AI Code Assistant (Desktop): Claude Code
+🐙 Git Forge: Public repos on GitHub, private repos on self-hosted Gitea
 
 *I stay within the $20/mo Claude plan and $20/mo ChatGPT plan for the mobile and desktop assistants.*
 
