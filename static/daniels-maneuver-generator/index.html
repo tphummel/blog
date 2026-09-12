@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tomhummel.com - the daniels maneuver generator</title>
+    <style>
+        :root {
+            --paper: #ece6d6;
+            --paper-dark: #ddd4bb;
+            --ink: #2a2622;
+            --redact: #1a1a1a;
+            --stamp: #a3312a;
+        }
+
+        body {
+            background-color: var(--paper-dark);
+            font-family: "Courier New", Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ink);
+        }
+
+        .container {
+            position: relative;
+            text-align: center;
+            border: 1px solid var(--ink);
+            padding: 3rem;
+            background-color: var(--paper);
+            background-image:
+                repeating-linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02) 1px, transparent 1px, transparent 2px);
+            box-shadow: 0 0 0 6px var(--paper-dark), 0 0 0 7px var(--ink);
+            max-width: 620px;
+        }
+
+        .stamp {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.5rem;
+            border: 3px solid var(--stamp);
+            color: var(--stamp);
+            font-weight: bold;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            padding: 0.25rem 0.6rem;
+            transform: rotate(8deg);
+            opacity: 0.75;
+        }
+
+        h1 {
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            color: var(--ink);
+        }
+
+        .subhead {
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: #6b645a;
+            margin-bottom: 2.5rem;
+        }
+
+        #result {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 2.5rem;
+            min-height: 3rem;
+            color: var(--ink);
+        }
+
+        #result .redacted {
+            display: inline-block;
+        }
+
+        button {
+            background-color: var(--ink);
+            color: var(--paper);
+            border: none;
+            padding: 1rem 2rem;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--stamp);
+        }
+
+        button:active {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="stamp">Declassified</div>
+        <h1>Incident Designation Registry</h1>
+        <div class="subhead">Case Naming Authority &mdash; File Copy</div>
+        <div id="result">Click to Designate</div>
+        <button onclick="generateIncident()">Designate Incident</button>
+    </div>
+
+    <script>
+        const properNouns = [
+            "Daniels", "Purnell", "Steinberger", "Greenstreet", "Roosevelt", "Glassell",
+            "Kowalski", "Ashworth", "Calloway", "Whitfield", "Sutherland", "Blackwood",
+            "Harrington", "Delacroix", "Voss", "Kessler", "Ostrander", "Meredith",
+            "Falkner", "Winslow", "Castellan", "Dunmore", "Ravensworth", "Brennan",
+            "Sorrentino", "Whitmore", "Ashford", "Colgrave", "Nakamura", "Petrov",
+            "Okafor", "Lindqvist", "Alvarado", "Beaumont", "Carrow", "Devereux",
+            "Ellsworth", "Fenwick", "Garrity", "Holloway", "Ibarra", "Jessup",
+            "Kirchner", "Lachance", "Mercado", "Novak", "Osgood", "Pemberton",
+            "Quillan", "Renwick", "Sable", "Tremblay", "Underhill", "Vance",
+            "Wexford", "Yardley", "Zeller",
+            "Los Angeles", "Glassell Park", "Silver Lake", "Highland Park",
+            "Echo Park", "Atwater Village", "Eagle Rock", "Cheviot Hills",
+            "Angeleno Heights", "Boyle Heights", "Chinatown", "Mount Washington",
+            "San Pedro", "Sepulveda", "Wilshire", "Alameda", "Figueroa",
+            "Riverside", "Pershing Square", "Griffith Park", "Elysian Park"
+        ];
+
+        const actionNouns = [
+            "Maneuver", "Compromise", "Accord", "Message", "Meeting", "Question",
+            "Protocol", "Directive", "Incident", "Gambit", "Initiative", "Doctrine",
+            "Exchange", "Arrangement", "Ultimatum", "Campaign", "Operation",
+            "Resolution", "Negotiation", "Agreement", "Briefing", "Occupation",
+            "Mandate", "Precedent", "Ceasefire", "Overture", "Communique",
+            "Concession", "Contingency", "Deployment", "Disclosure", "Inquiry",
+            "Intervention", "Recall", "Recess", "Standoff", "Summit", "Transfer"
+        ];
+
+        function getRandom(list) {
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function generateIncident() {
+            const noun = getRandom(properNouns);
+            const action = getRandom(actionNouns);
+
+            document.getElementById('result').innerText = `The ${noun} ${action}.`;
+        }
+    </script>
+</body>
+</html>
