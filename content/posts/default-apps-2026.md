@@ -12,8 +12,8 @@ tags:
 📮 Mail Server: Personal is hey.com, Gmail as a legacy fallback.
 📝 Notes: Notion
 ✅ To-Do: Notion and paper journal
-📷 iPhone Photo Shooting:
-🟦 Photo Management:
+📷 iPhone Photo Shooting: Camera.app
+🟦 Photo Management: Photos.app
 📆 Calendar:
 📁 Cloud File Storage:
 📖 RSS:
