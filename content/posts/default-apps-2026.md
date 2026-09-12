@@ -8,7 +8,31 @@ tags:
   - default-apps
 ---
 
+📨 Mail Client:
+📮 Mail Server:
+📝 Notes:
+✅ To-Do:
+📷 iPhone Photo Shooting:
+🟦 Photo Management:
+📆 Calendar:
+📁 Cloud File Storage:
+📖 RSS:
+🙍🏻‍♂️ Contacts:
+🌐 Browser:
+💬 Chat:
+🔖 Bookmarks:
+📑 Read It Later:
+📜 Word Processing:
+📈 Spreadsheets:
+📊 Presentations:
+🛒 Shopping Lists:
+🍴 Meal Planning:
+💰 Budgeting and Personal Finance:
+📰 News:
+🎵 Music:
+🎤 Podcasts:
 🎧 Audiobooks: Spotify
 📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
+🔐 Password Management:
 
 *Inspired by [rknight.me's App Defaults 2026](https://rknight.me/blog/app-defaults-2026/).*
