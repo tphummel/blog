@@ -33,8 +33,10 @@ tags:
 🎧 Audiobooks: Spotify
 📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
 🔐 Password Management: 1Password
-🤖 AI Chat (Desktop/Mobile):
-📱 AI Code Assistant (Mobile):
-💻 AI Code Assistant (Desktop):
+🤖 AI Chat (Desktop/Mobile): Self-hosted LibreChat with self-hosted LiteLLM. Primary models are gpt-oss-120b and qwen-3.8-27b on Cerebras, pay-as-you-go.
+📱 AI Code Assistant (Mobile): Claude mobile app, Codex mobile app
+💻 AI Code Assistant (Desktop): Claude Code
+
+*I stay within the $20/mo Claude plan and $20/mo ChatGPT plan for the mobile and desktop assistants.*
 
 *Inspired by [rknight.me's App Defaults 2026](https://rknight.me/blog/app-defaults-2026/).*
