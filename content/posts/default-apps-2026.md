@@ -29,10 +29,10 @@ tags:
 🍴 Meal Planning: Self-hosted Mealie, plus pen and paper in my weekly journal planner
 📰 News: RSS reader, a handful of email newsletters, and an Apple News family subscription
 🎵 Music: Spotify. Evaluating a self-hosted workflow with Navidrome and Strawberry Player on Linux, ripping FLAC from my curated CD collection with abcde and organizing with beets.
-🎤 Podcasts:
+🎤 Podcasts: Spotify, though I'll listen to some directly via RSS feeds on the web
 🎧 Audiobooks: Spotify
 📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
-🔐 Password Management:
+🔐 Password Management: 1Password
 🤖 AI Chat (Desktop/Mobile):
 📱 AI Code Assistant (Mobile):
 💻 AI Code Assistant (Desktop):
