@@ -22,7 +22,7 @@ tags:
 - 🌐 **Browser:** Brave on iOS, Mac, and Linux
 - 🔍 **Search:** Self-hosted SearXNG backed by the Kagi API on a pay-as-you-go usage-based plan
 - 💬 **Chat:** iMessage, WhatsApp, Slack, Campfire
-- 🔖 **Bookmarks:** Nothing that syncs across devices — a few static HTML landing/directory pages
+- 🔖 **Bookmarks:** Nothing that syncs across devices — a few static HTML landing/directory pages. Per-device bookmarks, but nothing sophisticated.
 - 📑 **Read It Later:** FreshRSS starred items, plus self-hosted Karakeep
 - 📜 **Word Processing:** Notion, Google Docs
 - 📈 **Spreadsheets:** Google Sheets, Notion databases, evaluating self-hosted Grist
