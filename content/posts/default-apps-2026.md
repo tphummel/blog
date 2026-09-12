@@ -36,6 +36,7 @@ tags:
 🎧 Audiobooks: Spotify
 📚 Ebooks: Grimmory self hosted with an xteink x4 flashed with custom firmware. Loading ebooks from Grimmory over OPDS.
 📺 Media Tracking: Self-hosted Yamtrack for TV, movies, and books
+🧠 Spaced Repetition System: Anki iOS app backed by a self-hosted Anki sync server
 🔐 Password Management: 1Password
 🤖 AI Chat (Desktop/Mobile): Self-hosted LibreChat with self-hosted LiteLLM. Primary models are gpt-oss-120b and qwen-3.8-27b on Cerebras, pay-as-you-go.
 📱 AI Code Assistant (Mobile): Claude mobile app, Codex mobile app
