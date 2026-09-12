@@ -24,8 +24,8 @@ tags:
 📑 Read It Later: FreshRSS starred items, plus self-hosted Karakeep
 📜 Word Processing: Notion, Google Docs
 📈 Spreadsheets: Google Sheets, Notion databases, evaluating self-hosted Grist
-📊 Presentations:
-🛒 Shopping Lists:
+📊 Presentations: Google Slides, reveal.js
+🛒 Shopping Lists: Pen and Post-it or weekly planner for tactical lists; longer-range lists go in Notion or a dedicated spot in my journal
 🍴 Meal Planning:
 💰 Budgeting and Personal Finance:
 📰 News:
