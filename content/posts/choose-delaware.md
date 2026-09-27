@@ -13,7 +13,7 @@ When I was in eighth grade and we studied us history, we did a unit on us states
 
 Later, as a track and field athlete, it was common to feel nerves before a race. If the gun would just go off right now i could get running and I would calm down. It was the waiting to begin which can drive you crazy. A 7am race was great. Having your only race of the day be the final event of a meet was stressful. Hearing the gun go off over and over, seeing your teammates compete while you are still fresh, results in small, repeated adrenaline dumps which can drain you.[^1]
 
-As a professional if I've got 15 meetings to do over a week, and some will be more difficult than others, stack the hardest ones first, prepare for them thoroughly, and get them done well. Then get to the moderate and lowest risk last.
+As a professional if I've got 15 tasks or meetings to do over a week, and some will be more difficult than others, stack the hardest ones first, prepare for them thoroughly, and get them done well. Then get to the moderate and lowest risk last.
 
 Get after it. Don't delay. Get to work. Choose Delaware.
 
