@@ -382,3 +382,52 @@ Incumbent Gabriel Buelna is running against three challengers.
 - **Randall Winston.** Licensed architect and attorney, and Mayor Bass's deputy mayor of infrastructure and climate resilience. Former executive director of the California Strategic Growth Council under Jerry Brown, which oversaw more than $1.3 billion in investments. National Guard JAG officer. Teaches a public-sector leadership class at West LA College. **Endorsed by:** LA County Democratic Party, LA County Federation of Labor, AFT 1521 and 1521A, SEIU 721, IBEW 11, UTLA, SMART Local 105, LA League of Conservation Voters, BizFed PAC, Mayor Bass, Gov. Jerry Brown, Sheriff Robert Luna, Supervisors Hilda Solis and Janice Hahn, trustees Hoffman, Veres, and Vela, and Thrive LA (jointly with Arey).
 - **Tonia Arey.** Realtor and promotional products sales executive. Lost the June 2026 primary for LA County Supervisor, District 3. Runs on taxpayer accountability, campus safety, and career readiness, and says current trustees "can no longer be trusted." **Endorsed by:** former Sheriff Alex Villanueva, retired LASD Chief Patrick Jordan, LA County Deputy Probation Officers' Union Local 685, Back to Business California, and Thrive LA (jointly with Winston).
 - **Roberto David Lacarra.** Community college professor. He didn't answer the LA Times questionnaire and I found little else.
+
+## Appendix: endorsements on Props 40, 41, 42, and 43
+
+Side-by-side endorsements for the four tax-related propositions. Yes and No are the endorser's recommended vote. A dash means I found no position from them on that measure, not that they are neutral. Sources: the Secretary of State's voter guide (including the signed ballot arguments), KQED's endorsement lists, the Progressive Voters Guide, and each group's own guide. Lists of "notable" endorsers aren't exhaustive. Labels in parentheses mark a source's leaning: pro = progressive, mod = moderate, con = conservative.
+
+| Endorser | 40 (billionaire tax) | 41 (audits, spending limit) | 42 (ban personal property taxes) | 43 (two-thirds local special taxes) |
+|---|---|---|---|---|
+| **Parties and guides** | | | | |
+| California Democratic Party (pro) | Yes | No | No | No |
+| LA County Democratic Party (pro) | Yes | No | No | No |
+| California Republican Party (con) | — | — | — | Yes |
+| LA Forward (pro) | Yes | No | No | No |
+| Progressive Voters Guide (pro) | Yes | No | No | No |
+| Thrive LA (mod) | No | Yes | Yes | Yes |
+| Reform California (con) | No | Yes | Yes | Yes |
+| **Unions** | | | | |
+| SEIU-UHW (sponsors 40) | Yes | No | No | — |
+| California Nurses Association | Yes | — | — | — |
+| UNITE HERE Local 11 | Yes | — | — | — |
+| Teamsters California | Yes | — | — | — |
+| National Union of Healthcare Workers | Yes | — | — | — |
+| SEIU California | — | — | — | No |
+| California Federation of Labor Unions | — | No | No | — |
+| California Federation of Teachers | — | — | — | No |
+| California Teachers Association | No | — | — | — |
+| California Professional Firefighters | No | — | Yes | No |
+| State Building & Construction Trades Council | No | — | Yes | — |
+| **Business and taxpayer groups** | | | | |
+| California Taxpayers Association | No | Yes | Yes | Yes |
+| Howard Jarvis Taxpayers Association | — | — | — | Yes |
+| California Chamber of Commerce | — | Yes | — | — |
+| California Society of CPAs | — | Yes | — | — |
+| CalAsian Chamber of Commerce | — | Yes | — | — |
+| Family Business Association of California | — | — | — | Yes |
+| California Hispanic Chambers of Commerce | — | — | — | Yes |
+| **Health, education, and local government** | | | | |
+| California Medical Association | No | — | — | — |
+| Planned Parenthood Affiliates of California | No | — | — | — |
+| California Primary Care Association | No | — | — | — |
+| California Children's Hospital Association | No | — | — | — |
+| California School Boards Association | No | — | — | — |
+| California State Association of Counties | — | — | — | No |
+| **People** | | | | |
+| Gov. Gavin Newsom | No | — | Yes | — |
+| Xavier Becerra | No | — | — | — |
+| Steve Hilton | No | — | — | — |
+| Sergey Brin | No | Yes | Yes | — |
+| Sen. Bernie Sanders | Yes | No | No | — |
+| Rep. Ro Khanna | Yes | — | — | — |
