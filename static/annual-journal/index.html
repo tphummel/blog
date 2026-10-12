@@ -32,15 +32,15 @@
     <h1>Annual Journal Layout</h1>
     <form id="controls">
         <label>Year <input id="year" type="number" min="1900" max="2999"></label>
-        <label>Start page <input id="start" type="number" min="1" value="1"></label>
+        <label>Start page (even, left) <input id="start" type="number" min="2" step="2" value="2"></label>
     </form>
     <div class="summary" id="summary"></div>
     <table>
-        <thead><tr><th>Pages</th><th>Spread</th><th>Dates</th></tr></thead>
+        <thead><tr><th>Pages (left&ndash;right)</th><th>Spread</th><th>Dates</th></tr></thead>
         <tbody id="toc"></tbody>
     </table>
     <p class="note">
-        Each spread is two pages. A monthly spread opens each month. Weeks run Monday&ndash;Sunday.
+        Each spread is two facing pages: even page on the left, odd page on the right. A monthly spread opens each month. Weeks run Monday&ndash;Sunday.
         A week with 3+ days in the next month follows that month's monthly spread; a week with 1&ndash;2 days
         of spill-over comes before it. The week containing January 1 belongs to the prior year's journal
         (its final weekly spread), so the year starts with the January monthly and then the first
@@ -88,7 +88,9 @@ function buildSpreads(year) {
 
 function render() {
     const year = parseInt(document.getElementById("year").value, 10);
-    const start = parseInt(document.getElementById("start").value, 10) || 1;
+    let start = parseInt(document.getElementById("start").value, 10) || 2;
+    // Even pages are on the left, so a spread must start on an even page.
+    if (start % 2 !== 0) start += 1;
     const toc = document.getElementById("toc");
     toc.innerHTML = "";
     if (!year) return;
