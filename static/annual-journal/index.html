@@ -41,8 +41,8 @@
     </table>
     <p class="note">
         Each spread is two facing pages: even page on the left, odd page on the right. A monthly spread opens each month. Weeks run Monday&ndash;Sunday.
-        A week with 3+ days in the next month follows that month's monthly spread; a week with 1&ndash;2 days
-        of spill-over comes before it. The week containing January 1 belongs to the prior year's journal
+        A week that straddles two months stays before the next monthly spread if at least 3 of its days
+        fall in the ending month; with only 1&ndash;2 days in the ending month it goes after the next monthly spread. The week containing January 1 belongs to the prior year's journal
         (its final weekly spread), so the year starts with the January monthly and then the first
         Monday-start week. The week containing December 31 is this year's final weekly spread.
     </p>
@@ -69,9 +69,10 @@ function buildSpreads(year) {
         const sun = addDays(mon, 6);
         let month = mon.getUTCMonth();
         if (sun.getUTCMonth() !== month && sun.getUTCFullYear() === year) {
-            // spans two months within the year: 3+ days in the next month => next month
-            const daysInNext = sun.getUTCDate();
-            if (daysInNext >= 3) month += 1;
+            // spans two months within the year: 3+ days in the ending month => stays
+            // before the next monthly; 1-2 days => goes after the next monthly
+            const daysInEnding = 7 - sun.getUTCDate();
+            if (daysInEnding < 3) month += 1;
         }
         // A week spilling into the next year stays in December (final weekly spread).
         weekNo += 1;
