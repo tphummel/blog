@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tomhummel.com - annual journal layout</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 40rem;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            color: #222;
+            line-height: 1.4;
+        }
+        h1 { font-size: 1.4rem; }
+        form { display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; margin-bottom: 1rem; }
+        label { display: flex; flex-direction: column; font-size: 0.85rem; }
+        input { font: inherit; padding: 0.3rem; width: 7rem; }
+        button { font: inherit; padding: 0.4rem 0.8rem; }
+        .summary { color: #555; font-size: 0.9rem; margin-bottom: 1rem; }
+        table { border-collapse: collapse; width: 100%; }
+        td, th { padding: 0.2rem 0.5rem; text-align: left; }
+        th { border-bottom: 2px solid #222; font-size: 0.85rem; }
+        td.pages { font-variant-numeric: tabular-nums; white-space: nowrap; width: 6rem; }
+        tr.month td { font-weight: bold; border-top: 1px solid #aaa; padding-top: 0.6rem; }
+        tr.week td { color: #333; }
+        tr.week td.label { padding-left: 1.5rem; }
+        .note { font-size: 0.8rem; color: #666; margin-top: 1.5rem; }
+        @media print { form, button { display: none; } }
+    </style>
+</head>
+<body>
+    <h1>Annual Journal Layout</h1>
+    <form id="controls">
+        <label>Year <input id="year" type="number" min="1900" max="2999"></label>
+        <label>Start page <input id="start" type="number" min="1" value="1"></label>
+        <button type="button" onclick="window.print()">Print</button>
+    </form>
+    <div class="summary" id="summary"></div>
+    <table>
+        <thead><tr><th>Pages</th><th>Spread</th><th>Dates</th></tr></thead>
+        <tbody id="toc"></tbody>
+    </table>
+    <p class="note">
+        Each spread is two pages. A monthly spread opens each month. Weeks run Monday&ndash;Sunday.
+        A week with 3+ days in the next month follows that month's monthly spread; a week with 1&ndash;2 days
+        of spill-over comes before it. The week containing January 1 belongs to the prior year's journal
+        (its final weekly spread), so the year starts with the January monthly and then the first
+        Monday-start week. The week containing December 31 is this year's final weekly spread.
+    </p>
+
+<script>
+const MONTHS = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+const DAY_MS = 86400000;
+
+function utc(y, m, d) { return new Date(Date.UTC(y, m, d)); }
+function addDays(date, n) { return new Date(date.getTime() + n * DAY_MS); }
+function fmt(date) { return MONTHS[date.getUTCMonth()].slice(0, 3) + " " + date.getUTCDate(); }
+
+// Returns an ordered list of spreads: {type: "month"|"week", ...}
+function buildSpreads(year) {
+    // Weeks starting on a Monday from Jan 1 of the year through Dec 31.
+    // The week containing Jan 1 belongs to the prior year unless Jan 1 is a Monday.
+    const jan1 = utc(year, 0, 1);
+    const offset = (8 - jan1.getUTCDay()) % 7; // days until Monday (0 if Monday)
+    const weeksByMonth = Array.from({ length: 12 }, () => []);
+    let weekNo = 0;
+
+    for (let mon = addDays(jan1, offset); mon.getUTCFullYear() === year; mon = addDays(mon, 7)) {
+        const sun = addDays(mon, 6);
+        let month = mon.getUTCMonth();
+        if (sun.getUTCMonth() !== month && sun.getUTCFullYear() === year) {
+            // spans two months within the year: 3+ days in the next month => next month
+            const daysInNext = sun.getUTCDate();
+            if (daysInNext >= 3) month += 1;
+        }
+        // A week spilling into the next year stays in December (final weekly spread).
+        weekNo += 1;
+        weeksByMonth[month].push({ type: "week", number: weekNo, start: mon, end: sun });
+    }
+
+    const spreads = [];
+    MONTHS.forEach((name, m) => {
+        spreads.push({ type: "month", name, month: m });
+        spreads.push(...weeksByMonth[m]);
+    });
+    return spreads;
+}
+
+function render() {
+    const year = parseInt(document.getElementById("year").value, 10);
+    const start = parseInt(document.getElementById("start").value, 10) || 1;
+    const toc = document.getElementById("toc");
+    toc.innerHTML = "";
+    if (!year) return;
+
+    const spreads = buildSpreads(year);
+    let page = start;
+    let weeks = 0;
+    for (const s of spreads) {
+        const tr = document.createElement("tr");
+        tr.className = s.type;
+        const pages = document.createElement("td");
+        pages.className = "pages";
+        pages.textContent = page + "–" + (page + 1);
+        const label = document.createElement("td");
+        label.className = "label";
+        const dates = document.createElement("td");
+        if (s.type === "month") {
+            label.textContent = s.name + " " + year;
+        } else {
+            weeks += 1;
+            label.textContent = "Week " + s.number;
+            dates.textContent = fmt(s.start) + " – " + fmt(s.end);
+        }
+        tr.append(pages, label, dates);
+        toc.appendChild(tr);
+        page += 2;
+    }
+    document.getElementById("summary").textContent =
+        "12 monthly + " + weeks + " weekly spreads = " + spreads.length + " spreads, " +
+        (spreads.length * 2) + " pages (" + start + "–" + (page - 1) + ")";
+}
+
+document.getElementById("year").value = new Date().getFullYear() + 1;
+document.getElementById("controls").addEventListener("input", render);
+render();
+</script>
+</body>
+</html>

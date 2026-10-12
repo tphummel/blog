@@ -15,3 +15,4 @@ date: 2020-09-01T08:00:00
 - [Kids Weekly Checklist](/checklist)
 - [Lumon Department Generator](/lumon-department-generator)
 - [The Daniels Maneuver Generator](/daniels-maneuver-generator)
+- [Annual Journal Layout](/annual-journal)
