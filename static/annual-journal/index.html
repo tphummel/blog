@@ -17,7 +17,6 @@
         form { display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; margin-bottom: 1rem; }
         label { display: flex; flex-direction: column; font-size: 0.85rem; }
         input { font: inherit; padding: 0.3rem; width: 7rem; }
-        button { font: inherit; padding: 0.4rem 0.8rem; }
         .summary { color: #555; font-size: 0.9rem; margin-bottom: 1rem; }
         table { border-collapse: collapse; width: 100%; }
         td, th { padding: 0.2rem 0.5rem; text-align: left; }
@@ -27,7 +26,6 @@
         tr.week td { color: #333; }
         tr.week td.label { padding-left: 1.5rem; }
         .note { font-size: 0.8rem; color: #666; margin-top: 1.5rem; }
-        @media print { form, button { display: none; } }
     </style>
 </head>
 <body>
@@ -35,7 +33,6 @@
     <form id="controls">
         <label>Year <input id="year" type="number" min="1900" max="2999"></label>
         <label>Start page <input id="start" type="number" min="1" value="1"></label>
-        <button type="button" onclick="window.print()">Print</button>
     </form>
     <div class="summary" id="summary"></div>
     <table>
