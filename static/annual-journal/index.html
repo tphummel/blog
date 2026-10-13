@@ -21,6 +21,7 @@
         table { border-collapse: collapse; width: 100%; }
         td, th { padding: 0.2rem 0.5rem; text-align: left; }
         th { border-bottom: 2px solid #222; font-size: 0.85rem; }
+        td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
         td.pages { font-variant-numeric: tabular-nums; white-space: nowrap; width: 6rem; }
         tr.month td { font-weight: bold; border-top: 1px solid #aaa; padding-top: 0.6rem; }
         tr.week td { color: #333; }
@@ -33,10 +34,11 @@
     <form id="controls">
         <label>Year <input id="year" type="number" min="1900" max="2999"></label>
         <label>Start page (even, left) <input id="start" type="number" min="2" step="2" value="2"></label>
+        <label>Birthdate <input id="birth" type="date" value="1988-08-08" style="width: 9rem"></label>
     </form>
     <div class="summary" id="summary"></div>
     <table>
-        <thead><tr><th>Pages (left&ndash;right)</th><th>Spread</th><th>Dates</th></tr></thead>
+        <thead><tr><th>Pages (left&ndash;right)</th><th>Spread</th><th>Dates</th><th>Week of year</th><th>Life week</th><th>Life days</th></tr></thead>
         <tbody id="toc"></tbody>
     </table>
     <p class="note">
@@ -44,7 +46,8 @@
         A week that straddles two months stays before the next monthly spread if at least 3 of its days
         fall in the ending month; with only 1&ndash;2 days in the ending month it goes after the next monthly spread. The week containing January 1 belongs to the prior year's journal
         (its final weekly spread), so the year starts with the January monthly and then the first
-        Monday-start week. The week containing December 31 is this year's final weekly spread.
+        Monday-start week. Week of year counts Monday-start weeks from 1. Life day 1 is the birthdate; life week is
+        the life week containing the week's Monday, and life days run Monday through Sunday. The week containing December 31 is this year's final weekly spread.
     </p>
 
 <script>
@@ -54,6 +57,8 @@ const DAY_MS = 86400000;
 
 function utc(y, m, d) { return new Date(Date.UTC(y, m, d)); }
 function addDays(date, n) { return new Date(date.getTime() + n * DAY_MS); }
+// Life day 1 is the birthdate; life week N covers life days 7(N-1)+1 .. 7N.
+function lifeDay(date, birth) { return Math.round((date.getTime() - birth.getTime()) / DAY_MS) + 1; }
 function fmt(date) { return MONTHS[date.getUTCMonth()].slice(0, 3) + " " + date.getUTCDate(); }
 
 // Returns an ordered list of spreads: {type: "month"|"week", ...}
@@ -95,6 +100,8 @@ function render() {
     const toc = document.getElementById("toc");
     toc.innerHTML = "";
     if (!year) return;
+    const bv = document.getElementById("birth").value.split("-").map(Number);
+    const birth = bv.length === 3 && bv[0] ? utc(bv[0], bv[1] - 1, bv[2]) : null;
 
     const spreads = buildSpreads(year);
     let page = start;
@@ -108,14 +115,24 @@ function render() {
         const label = document.createElement("td");
         label.className = "label";
         const dates = document.createElement("td");
+        const weekNum = document.createElement("td");
+        const lifeWeek = document.createElement("td");
+        const lifeDays = document.createElement("td");
+        weekNum.className = lifeWeek.className = lifeDays.className = "num";
         if (s.type === "month") {
             label.textContent = s.name + " " + year;
         } else {
             weeks += 1;
             label.textContent = "Week " + s.number;
             dates.textContent = fmt(s.start) + " – " + fmt(s.end);
+            weekNum.textContent = s.number;
+            if (birth) {
+                const d1 = lifeDay(s.start, birth);
+                lifeWeek.textContent = Math.ceil(d1 / 7);
+                lifeDays.textContent = d1 + " – " + lifeDay(s.end, birth);
+            }
         }
-        tr.append(pages, label, dates);
+        tr.append(pages, label, dates, weekNum, lifeWeek, lifeDays);
         toc.appendChild(tr);
         page += 2;
     }
