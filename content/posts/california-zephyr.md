@@ -46,17 +46,17 @@ Eastbound, train 6, local times. Times are approximate, from secondary sources, 
 | Mid | Denver, CO | Day 2 | evening, about 7 PM MT |
 | Finish | Chicago, IL | Day 3 | about 2:40 PM CT |
 
-## Pricing
+## Family bedroom pricing
 
-Amtrak sells sleeping rooms as a package with the rail fare for everyone in the room, and the price climbs as the train fills.
+The family bedroom is the Superliner's private room for four: two adults and two children, on the lower level of the sleeping car. There is only one per sleeper car, so they sell out.
 
-A standard bedroom (sleeps two) on the full route is showing at:
+Amtrak sells sleeping rooms as a package with the rail fare for everyone in the room, and the price climbs as the train fills. For the full Emeryville to Chicago trip, the family bedroom is showing at:
 
 | When booked | Price |
 |---|---|
 | Months in advance | about $1,800 |
 | Closer to departure | about $2,300 |
 
-The family bedroom is the Superliner's private room for four: two adults and two children, on the lower level of the sleeping car. There is only one per sleeper car, so they sell out. A 2026 route guide estimates about $2,200&ndash;$2,500 one way for the full route. Older reported fares ranged from about $1,200 at the lowest fare bucket to about $2,100 at the highest.
+That is in line with a 2026 route guide estimate of about $2,200&ndash;$2,500 one way. Older reported fares ranged from about $1,200 at the lowest fare bucket to about $2,100 at the highest.
 
 Fares depend on the date and how early you book, so check [amtrak.com](https://www.amtrak.com) for the actual price.
