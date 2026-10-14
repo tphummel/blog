@@ -46,7 +46,7 @@
         A week that straddles two months stays before the next monthly spread if at least 3 of its days
         fall in the ending month; with only 1&ndash;2 days in the ending month it goes after the next monthly spread. The week containing January 1 belongs to the prior year's journal
         (its final weekly spread), so the year starts with the January monthly and then the first
-        Monday-start week. Week of year counts Monday-start weeks, with week 1 being the week containing January 1. Life days run Monday through Sunday and are counted so the birthdate is life day 2;
+        Monday-start week. Week of year counts Monday-start weeks, with week 1 being the first full week of January (the first Monday on or after January 1). Life days run Monday through Sunday and are counted so the birthdate is life day 2;
         the life week is the one containing the week's Sunday.
         Year done is the share of the year complete through the week's Sunday (capped at 100%), and squares is
         that share of a 6&times;8 grid (48 squares), where a partial square is fine. The week containing December 31 is this year's final weekly spread.
@@ -80,10 +80,10 @@ function buildSpreads(year) {
     // The week containing Jan 1 belongs to the prior year unless Jan 1 is a Monday.
     const jan1 = utc(year, 0, 1);
     const offset = (8 - jan1.getUTCDay()) % 7; // days until Monday (0 if Monday)
+    const firstMonday = addDays(jan1, offset);
     const weeksByMonth = Array.from({ length: 12 }, () => []);
-    // Week of year: week 1 is the Monday-start week containing Jan 1, even though that
-    // week is not in this year's journal, so the first listed week is usually 2.
-    const week1 = addDays(jan1, -((jan1.getUTCDay() + 6) % 7));
+    // Week of year: week 1 is the first full Monday-start week of January (the first
+    // Monday on or after Jan 1), which is the first weekly spread listed.
 
     for (let mon = addDays(jan1, offset); mon.getUTCFullYear() === year; mon = addDays(mon, 7)) {
         const sun = addDays(mon, 6);
@@ -95,7 +95,7 @@ function buildSpreads(year) {
             if (daysInEnding < 3) month += 1;
         }
         // A week spilling into the next year stays in December (final weekly spread).
-        const weekNo = Math.round((mon.getTime() - week1.getTime()) / (7 * DAY_MS)) + 1;
+        const weekNo = Math.round((mon.getTime() - firstMonday.getTime()) / (7 * DAY_MS)) + 1;
         weeksByMonth[month].push({ type: "week", number: weekNo, start: mon, end: sun });
     }
 
