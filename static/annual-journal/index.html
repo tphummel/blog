@@ -46,8 +46,8 @@
         A week that straddles two months stays before the next monthly spread if at least 3 of its days
         fall in the ending month; with only 1&ndash;2 days in the ending month it goes after the next monthly spread. The week containing January 1 belongs to the prior year's journal
         (its final weekly spread), so the year starts with the January monthly and then the first
-        Monday-start week. Week of year counts Monday-start weeks, with week 1 being the week containing January 1. Life day 1 is the birthdate; life week is
-        the life week containing the week's Monday, and life days run Monday through Sunday. The week containing December 31 is this year's final weekly spread.
+        Monday-start week. Week of year counts Monday-start weeks, with week 1 being the week containing January 1. Life days run Monday through Sunday and are counted so the birthdate is life day 2;
+        the life week is the one containing the week's Sunday. The week containing December 31 is this year's final weekly spread.
     </p>
 
 <script>
@@ -57,8 +57,11 @@ const DAY_MS = 86400000;
 
 function utc(y, m, d) { return new Date(Date.UTC(y, m, d)); }
 function addDays(date, n) { return new Date(date.getTime() + n * DAY_MS); }
-// Life day 1 is the birthdate; life week N covers life days 7(N-1)+1 .. 7N.
-function lifeDay(date, birth) { return Math.round((date.getTime() - birth.getTime()) / DAY_MS) + 1; }
+// Matches the journal's own convention: the birthdate is life day 2, so a date's life day is
+// days since birth + 2. A week's life week is the one its Sunday falls in; life week N covers
+// life days 7(N-1)+1 .. 7N.
+const LIFE_DAY_OFFSET = 2;
+function lifeDay(date, birth) { return Math.round((date.getTime() - birth.getTime()) / DAY_MS) + LIFE_DAY_OFFSET; }
 function fmt(date) { return MONTHS[date.getUTCMonth()].slice(0, 3) + " " + date.getUTCDate(); }
 
 // Returns an ordered list of spreads: {type: "month"|"week", ...}
@@ -129,9 +132,9 @@ function render() {
             dates.textContent = fmt(s.start) + " – " + fmt(s.end);
             weekNum.textContent = s.number;
             if (birth) {
-                const d1 = lifeDay(s.start, birth);
-                lifeWeek.textContent = Math.ceil(d1 / 7);
-                lifeDays.textContent = d1 + " – " + lifeDay(s.end, birth);
+                const d1 = lifeDay(s.start, birth), d7 = lifeDay(s.end, birth);
+                lifeWeek.textContent = Math.ceil(d7 / 7);
+                lifeDays.textContent = d1 + " – " + d7;
             }
         }
         tr.append(pages, label, dates, weekNum, lifeWeek, lifeDays);
