@@ -25,8 +25,7 @@ Amtrak's California Zephyr runs daily between Emeryville, across the bay from Sa
 
 - **Emeryville, CA** &mdash; the start. An Amtrak Thruway bus connects from San Francisco.
 - **Sacramento, CA** &mdash; across the Central Valley before the climb.
-- **Truckee, CA** &mdash; up and over Donner Pass in the Sierra Nevada.
-- **Reno, NV** &mdash; and then a long day across the Nevada desert.
+- **Reno, NV** &mdash; the train climbs over Donner Pass in the Sierra Nevada, then crosses the Nevada desert.
 - **Salt Lake City, UT** &mdash; across the Great Salt Lake desert, overnight.
 - **Grand Junction, CO** &mdash; through Ruby Canyon and into Colorado.
 - **Glenwood Springs, CO** &mdash; the train follows the Colorado River through Glenwood Canyon.
