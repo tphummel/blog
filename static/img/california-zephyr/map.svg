@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 466" role="img" aria-labelledby="mapTitle mapDesc">
-  <title id="mapTitle">California Zephyr route map, Chicago to Emeryville</title>
-  <desc id="mapDesc">A route map of Amtrak's California Zephyr from Chicago, Illinois across Iowa, Nebraska, Colorado, Utah and Nevada to Emeryville, California, with stops at Omaha, Denver, Glenwood Springs, Grand Junction, Salt Lake City, Reno, Truckee, and Sacramento.</desc>
+  <title id="mapTitle">California Zephyr route map, Emeryville to Chicago</title>
+  <desc id="mapDesc">A route map of Amtrak's California Zephyr from Emeryville, California across Nevada, Utah, Colorado, Nebraska and Iowa to Chicago, Illinois, with stops at Omaha, Denver, Glenwood Springs, Grand Junction, Salt Lake City, Reno, Truckee, and Sacramento.</desc>
   <rect class="bg" x="0" y="0" width="960" height="466"/>
   <style>
     svg {
@@ -24,7 +24,7 @@
   </style>
 
   <text class="title" x="330" y="370">CALIFORNIA ZEPHYR</text>
-  <text class="subtitle" x="330" y="392">Chicago &#8594; Emeryville (San Francisco) &#183; 2,438 miles &#183; about 52 hours</text>
+  <text class="subtitle" x="330" y="392">Emeryville (San Francisco) &#8594; Chicago &#183; 2,438 miles &#183; about 52 hours</text>
 
   <!-- state outlines (US states GeoJSON, Albers equal-area conic) -->
   <g class="state">
@@ -82,7 +82,7 @@
     <text x="80.4" y="24.0" text-anchor="start">EMERYVILLE</text>
   </g>
   <g class="city-sub">
-    <text x="906.7" y="77.2" text-anchor="end">IL — start</text>
+    <text x="906.7" y="77.2" text-anchor="end">IL — finish</text>
     <text x="709.8" y="163.6" text-anchor="middle">NE</text>
     <text x="497.4" y="223.4" text-anchor="middle">CO — mid</text>
     <text x="437.5" y="173.2" text-anchor="middle">Glenwood Canyon</text>
@@ -91,7 +91,7 @@
     <text x="148.8" y="89.0" text-anchor="start">NV</text>
     <text x="139.1" y="115.0" text-anchor="start">Donner Pass</text>
     <text x="103.7" y="63.0" text-anchor="start">CA</text>
-    <text x="80.4" y="37.0" text-anchor="start">CA — finish</text>
+    <text x="80.4" y="37.0" text-anchor="start">CA — start</text>
   </g>
 
   <!-- compass -->
