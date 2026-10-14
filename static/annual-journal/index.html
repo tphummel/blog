@@ -38,7 +38,7 @@
     </form>
     <div class="summary" id="summary"></div>
     <table>
-        <thead><tr><th>Pages (left&ndash;right)</th><th>Spread</th><th>Dates</th><th>Week of year</th><th>Life week</th><th>Life days</th></tr></thead>
+        <thead><tr><th>Pages (left&ndash;right)</th><th>Spread</th><th>Dates</th><th>Week of year</th><th>Life week</th><th>Life days</th><th>Year done</th><th>Squares (of 48)</th></tr></thead>
         <tbody id="toc"></tbody>
     </table>
     <p class="note">
@@ -47,7 +47,9 @@
         fall in the ending month; with only 1&ndash;2 days in the ending month it goes after the next monthly spread. The week containing January 1 belongs to the prior year's journal
         (its final weekly spread), so the year starts with the January monthly and then the first
         Monday-start week. Week of year counts Monday-start weeks, with week 1 being the week containing January 1. Life days run Monday through Sunday and are counted so the birthdate is life day 2;
-        the life week is the one containing the week's Sunday. The week containing December 31 is this year's final weekly spread.
+        the life week is the one containing the week's Sunday.
+        Year done is the share of the year complete through the week's Sunday (capped at 100%), and squares is
+        that share of a 6&times;8 grid (48 squares), where a partial square is fine. The week containing December 31 is this year's final weekly spread.
     </p>
 
 <script>
@@ -62,6 +64,14 @@ function addDays(date, n) { return new Date(date.getTime() + n * DAY_MS); }
 // life days 7(N-1)+1 .. 7N.
 const LIFE_DAY_OFFSET = 2;
 function lifeDay(date, birth) { return Math.round((date.getTime() - birth.getTime()) / DAY_MS) + LIFE_DAY_OFFSET; }
+// Fraction of the year complete through the end of the given date, capped at 100%.
+function yearDone(date, year) {
+    const dayOfYear = Math.round((date.getTime() - utc(year, 0, 1).getTime()) / DAY_MS) + 1;
+    const daysInYear = Math.round((utc(year + 1, 0, 1).getTime() - utc(year, 0, 1).getTime()) / DAY_MS);
+    return Math.min(1, dayOfYear / daysInYear);
+}
+// A 6 x 8 grid of squares to shade.
+const GRID_SQUARES = 6 * 8;
 function fmt(date) { return MONTHS[date.getUTCMonth()].slice(0, 3) + " " + date.getUTCDate(); }
 
 // Returns an ordered list of spreads: {type: "month"|"week", ...}
@@ -123,7 +133,9 @@ function render() {
         const weekNum = document.createElement("td");
         const lifeWeek = document.createElement("td");
         const lifeDays = document.createElement("td");
-        weekNum.className = lifeWeek.className = lifeDays.className = "num";
+        const done = document.createElement("td");
+        const squares = document.createElement("td");
+        weekNum.className = lifeWeek.className = lifeDays.className = done.className = squares.className = "num";
         if (s.type === "month") {
             label.textContent = s.name + " " + year;
         } else {
@@ -131,13 +143,16 @@ function render() {
             label.textContent = "Week " + s.number;
             dates.textContent = fmt(s.start) + " – " + fmt(s.end);
             weekNum.textContent = s.number;
+            const frac = yearDone(s.end, year);
+            done.textContent = (frac * 100).toFixed(1) + "%";
+            squares.textContent = (frac * GRID_SQUARES).toFixed(1);
             if (birth) {
                 const d1 = lifeDay(s.start, birth), d7 = lifeDay(s.end, birth);
                 lifeWeek.textContent = Math.ceil(d7 / 7);
                 lifeDays.textContent = d1 + " – " + d7;
             }
         }
-        tr.append(pages, label, dates, weekNum, lifeWeek, lifeDays);
+        tr.append(pages, label, dates, weekNum, lifeWeek, lifeDays, done, squares);
         toc.appendChild(tr);
         page += 2;
     }
