@@ -62,3 +62,43 @@ Amtrak sells sleeping rooms as a package with the rail fare for everyone in the 
 That is in line with a 2026 route guide estimate of about $2,200&ndash;$2,500 one way. Older reported fares ranged from about $1,200 at the lowest fare bucket to about $2,100 at the highest.
 
 Fares depend on the date and how early you book, so check [amtrak.com](https://www.amtrak.com) for the actual price.
+
+## Southwest Chief
+
+The other way to cross the country is the Southwest Chief, from Los Angeles to Chicago. It runs daily, about 2,265 miles and a little under 44 hours, with two nights aboard.
+
+{{< figure src="/img/california-zephyr/southwest-chief-map.svg" title="Los Angeles to Chicago on the Southwest Chief" alt="Map of the Southwest Chief route from Los Angeles, California across Arizona, New Mexico, Colorado, Kansas, Missouri and Iowa to Chicago, Illinois, with the top stops marked" >}}
+
+### Top stops
+
+- **Los Angeles, CA** &mdash; the start, from Union Station.
+- **Barstow, CA** &mdash; a Route 66 town in the Mojave Desert, with a Harvey House depot.
+- **Flagstaff, AZ** &mdash; the usual base for the Grand Canyon, though eastbound the train comes through in the middle of the night.
+- **Albuquerque, NM** &mdash; the halfway point, with a longer stop and Native art vendors on the platform.
+- **Lamy, NM** &mdash; the stop for Santa Fe, which is a short shuttle away.
+- **Raton, NM** &mdash; the climb over Raton Pass in the Sangre de Cristo Mountains, at the Colorado line.
+- **Dodge City, KS** &mdash; the Wild West history stop on the plains.
+- **Kansas City, MO** &mdash; jazz and barbecue.
+- **Chicago, IL** &mdash; the finish, at Union Station.
+
+### Timetable
+
+Eastbound, train 4, local times. Times are approximate, from secondary sources, so check Amtrak's current timetable before booking.
+
+| | Stop | Day | Time |
+|---|---|---|---|
+| Start | Los Angeles, CA | Day 1 | about 4:55 PM PT |
+| Mid | Albuquerque, NM | Day 2 | morning, about 10:50 AM MT |
+| | Kansas City, MO | Day 3 | morning, about 7 AM CT |
+| Finish | Chicago, IL | Day 3 | about 2:45 PM CT |
+
+### Family bedroom pricing
+
+Family sleepers on the full Los Angeles to Chicago trip are showing at:
+
+| When booked | Price |
+|---|---|
+| Months in advance | about $1,100 |
+| Later bookings | up to about $2,500 |
+
+As with the California Zephyr, check [amtrak.com](https://www.amtrak.com) for the actual price on your dates.
