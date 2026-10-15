@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 466" role="img" aria-labelledby="mapTitle mapDesc">
   <title id="mapTitle">California Zephyr route map, Emeryville to Chicago</title>
-  <desc id="mapDesc">A route map of Amtrak's California Zephyr from Emeryville, California across Nevada, Utah, Colorado, Nebraska and Iowa to Chicago, Illinois, with stops at Omaha, Denver, Glenwood Springs, Grand Junction, Salt Lake City, Reno, and Sacramento.</desc>
+  <desc id="mapDesc">A route map of Amtrak's California Zephyr from Emeryville, California across Nevada, Utah, Colorado, Nebraska and Iowa to Chicago, Illinois, with stops at Lincoln, Omaha, Denver, Glenwood Springs, Grand Junction, Salt Lake City, Reno, Winnemucca, Elko, and Sacramento.</desc>
   <rect class="bg" x="0" y="0" width="960" height="466"/>
   <style>
     svg {
@@ -48,7 +48,7 @@
   </g>
 
   <!-- route -->
-  <path class="route" d="M 898.7,82.2 L 884.0,88.7 L 840.7,122.1 L 824.3,129.0 L 792.8,126.6 L 747.1,131.0 L 709.8,128.6 L 693.0,144.3 L 653.8,154.4 L 601.6,169.8 L 525.9,170.5 L 497.4,186.4 L 475.9,182.0 L 475.0,175.6 L 464.2,176.4 L 453.0,189.6 L 441.5,192.2 L 411.5,206.7 L 388.5,207.7 L 372.5,206.9 L 357.2,184.2 L 339.0,165.7 L 334.4,148.4 L 284.4,145.0 L 244.0,137.9 L 198.5,127.8 L 153.0,165.1 L 142.8,165.8 L 133.1,170.8 L 113.6,174.9 L 103.6,184.4 L 97.7,188.7 L 91.7,189.1 L 79.4,203.7 L 74.4,208.6"/>
+  <path class="route" d="M 898.7,82.2 L 884.0,88.7 L 840.7,122.1 L 824.3,129.0 L 792.8,126.6 L 747.1,131.0 L 709.8,128.6 L 692.8,144.2 L 653.8,154.4 L 601.6,169.8 L 525.9,170.5 L 497.4,186.4 L 475.9,182.0 L 475.0,175.6 L 464.2,176.4 L 453.0,189.6 L 441.5,192.2 L 411.5,206.7 L 388.5,207.7 L 372.5,206.9 L 357.2,184.2 L 339.0,165.7 L 334.4,148.4 L 284.4,145.0 L 244.0,137.8 L 198.4,127.7 L 153.0,165.1 L 142.8,165.8 L 133.1,170.8 L 113.6,174.9 L 103.6,184.4 L 97.7,188.7 L 91.7,189.1 L 79.4,203.7 L 74.4,208.6"/>
 
   <g class="leader">
     <line x1="142.8" y1="165.8" x2="142.8" y2="80.0"/>
@@ -64,28 +64,37 @@
   <circle class="stop" cx="411.5" cy="206.7" r="4.5"/>
   <circle class="stop" cx="334.4" cy="148.4" r="4.5"/>
   <circle class="stop" cx="142.8" cy="165.8" r="4.5"/>
+  <circle class="stop" cx="198.4" cy="127.7" r="4.5"/>
+  <circle class="stop" cx="244.0" cy="137.8" r="4.5"/>
+  <circle class="stop" cx="692.8" cy="144.2" r="4.5"/>
   <circle class="stop" cx="97.7" cy="188.7" r="4.5"/>
   <circle class="stop" cx="74.4" cy="208.6" r="4.5"/>
 
   <g class="city-name">
     <text x="906.7" y="64.2" text-anchor="end">CHICAGO</text>
-    <text x="709.8" y="150.6" text-anchor="middle">OMAHA</text>
+    <text x="711.8" y="102.6" text-anchor="middle">OMAHA</text>
     <text x="497.4" y="210.4" text-anchor="middle">DENVER</text>
     <text x="437.5" y="160.2" text-anchor="middle">GLENWOOD SPRINGS</text>
     <text x="401.5" y="230.7" text-anchor="middle">GRAND JUNCTION</text>
     <text x="334.4" y="128.4" text-anchor="middle">SALT LAKE CITY</text>
     <text x="148.8" y="76.0" text-anchor="start">RENO</text>
+    <text x="214.4" y="101.7" text-anchor="middle">WINNEMUCCA</text>
+    <text x="244.0" y="163.8" text-anchor="middle">ELKO</text>
+    <text x="684.8" y="170.2" text-anchor="middle">LINCOLN</text>
     <text x="103.7" y="50.0" text-anchor="start">SACRAMENTO</text>
     <text x="80.4" y="24.0" text-anchor="start">EMERYVILLE</text>
   </g>
   <g class="city-sub">
     <text x="906.7" y="77.2" text-anchor="end">IL — finish</text>
-    <text x="709.8" y="163.6" text-anchor="middle">NE</text>
+    <text x="711.8" y="115.6" text-anchor="middle">NE</text>
     <text x="497.4" y="223.4" text-anchor="middle">CO — mid</text>
     <text x="437.5" y="173.2" text-anchor="middle">Glenwood Canyon</text>
     <text x="401.5" y="243.7" text-anchor="middle">Ruby Canyon</text>
     <text x="334.4" y="141.4" text-anchor="middle">UT</text>
     <text x="148.8" y="89.0" text-anchor="start">NV</text>
+    <text x="214.4" y="114.7" text-anchor="middle">NV</text>
+    <text x="244.0" y="176.8" text-anchor="middle">NV</text>
+    <text x="684.8" y="183.2" text-anchor="middle">NE</text>
     <text x="103.7" y="63.0" text-anchor="start">CA</text>
     <text x="80.4" y="37.0" text-anchor="start">CA — start</text>
   </g>

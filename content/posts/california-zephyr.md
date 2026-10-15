@@ -26,11 +26,14 @@ Amtrak's California Zephyr runs daily between Emeryville, across the bay from Sa
 - **Emeryville, CA** &mdash; the start. An Amtrak Thruway bus connects from San Francisco.
 - **Sacramento, CA** &mdash; across the Central Valley before the climb.
 - **Reno, NV** &mdash; the train climbs over Donner Pass in the Sierra Nevada, then crosses the Nevada desert.
+- **Winnemucca, NV** &mdash; a small town on the Humboldt River.
+- **Elko, NV** &mdash; the biggest town on the Nevada stretch.
 - **Salt Lake City, UT** &mdash; across the Great Salt Lake desert, overnight.
 - **Grand Junction, CO** &mdash; through Ruby Canyon and into Colorado.
 - **Glenwood Springs, CO** &mdash; the train follows the Colorado River through Glenwood Canyon.
 - **Moffat Tunnel, CO** &mdash; the climb to around 9,200 ft and a 6-mile tunnel under the Continental Divide.
 - **Denver, CO** &mdash; the halfway point, in the evening of day 2.
+- **Lincoln, NE** &mdash; the state capital, with the Capitol tower on the prairie.
 - **Omaha, NE** &mdash; the Missouri River crossing, overnight.
 - **Chicago, IL** &mdash; the finish, at Union Station.
 
