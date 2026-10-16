@@ -12,6 +12,7 @@ tags:
   - cloudflare
   - dropbox
   - 1password
+  - default-apps
 paid_services: 
   - name: Notion
     price: 48
