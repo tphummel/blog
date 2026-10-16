@@ -1,7 +1,7 @@
 ---
 title: "California to Chicago on Amtrak"
-date: 2026-10-14T09:00:00-07:00
-draft: true
+date: 2026-10-15T21:32:31-07:00
+draft: false
 toc: false
 images:
 tags:
