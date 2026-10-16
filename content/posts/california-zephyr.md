@@ -65,7 +65,7 @@ Fares depend on the date and how early you book, so check [amtrak.com](https://w
 
 ## Southwest Chief
 
-The other way to cross the country is the Southwest Chief, from Los Angeles to Chicago. It runs daily, about 2,265 miles and a little under 44 hours, with two nights aboard.
+Another way to cross the country is the Southwest Chief, from Los Angeles to Chicago. It runs daily, about 2,265 miles and a little under 44 hours, with two nights aboard.
 
 {{< figure src="/img/california-zephyr/southwest-chief-map.svg" title="Los Angeles to Chicago on the Southwest Chief" alt="Map of the Southwest Chief route from Los Angeles, California across Arizona, New Mexico, Colorado, Kansas, Missouri and Iowa to Chicago, Illinois, with the top stops marked" >}}
 
