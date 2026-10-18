@@ -5,6 +5,12 @@ date: 2020-09-01T08:00:00
 
 Also known as: how is this website built?
 
+# October 2026
+
+A new type of content has emerged on this site: the AI-driven research page. These pages don't contain original thoughts or insights. They are a helpful sync of research that is spread across other sites and pages, which I've pulled together into a single page for ease of learning or planning. Examples include [2026 General Election Research](/posts/2026-general-election-research/) and [California to Chicago on Amtrak](/posts/california-to-chicago-on-amtrak/).
+
+An AI assistant does the gathering and summarizing, and the sources it draws from remain the authority. Treat these pages as a starting point and check the linked sources before relying on anything important, especially details that change over time like schedules, fares, and election dates.
+
 # September 2024
 
 This website is built with [hugo][0]. The code for the website itself is [hosted on github][1]. The website is hosted in [cloudflare pages][2]. The domain is registered with cloudflare. The infrastructure plumbing code is [hosted on github][3] and uses [Terraform][6] run from my local workstation. I previously used a [fork][4] of a Hugo theme called [Hello Friend NG][5] so I could get some additional hook points to customize my website. I have since moved to a very small theme that includes [water.css](https://watercss.kognise.dev/) and lives entirely in this repository.
