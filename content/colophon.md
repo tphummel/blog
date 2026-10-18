@@ -7,7 +7,7 @@ Also known as: how is this website built?
 
 # October 2026
 
-A new type of content has emerged on this site: the AI-driven research page. These pages don't contain original thoughts or insights. They are a helpful sync of research that is spread across other sites and pages, which I've pulled together into a single page for ease of learning or planning. Examples include the 2026 general election and Amtrak from California to Chicago, IL.
+A new type of content has emerged on this site: the AI-driven research page. These pages don't contain original thoughts or insights. They are a helpful sync of research that is spread across other sites and pages, which I've pulled together into a single page for ease of learning or planning. Examples include [2026 General Election Research](/posts/2026-general-election-research/) and [California to Chicago on Amtrak](/posts/california-to-chicago-on-amtrak/).
 
 An AI assistant does the gathering and summarizing, and the sources it draws from remain the authority. Treat these pages as a starting point and check the linked sources before relying on anything important, especially details that change over time like schedules, fares, and election dates.
 
