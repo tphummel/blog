@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tomhummel.com - timecat</title>
+  <meta name="description" content="Type time cat, hit enter, then hit control-c at exactly 1.000 seconds.">
+  <style>
+    html, body { margin: 0; height: 100%; background: #111; }
+    body { color: #d6d6d6; font: 16px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    #term { box-sizing: border-box; min-height: 100%; padding: 1rem; white-space: pre-wrap; word-break: break-word; cursor: text; }
+    .dim { color: #888; }
+    .ok { color: #5fd75f; }
+    .bad { color: #ff6b6b; }
+    .cursor { display: inline-block; width: .6em; background: #d6d6d6; color: #111; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { background: transparent; color: inherit; } }
+    #input { position: fixed; left: -9999px; top: 0; opacity: 0; }
+    #ctrlc { display: none; position: fixed; right: 1rem; bottom: 1rem; padding: 1.2rem 1.6rem; font: inherit; font-size: 1.2rem;
+             background: #2a2a2a; color: #fff; border: 2px solid #888; border-radius: 8px; touch-action: manipulation; }
+    @media (pointer: coarse) { #ctrlc { display: block; } }
+  </style>
+</head>
+<body>
+  <div id="term" aria-live="polite"></div>
+  <input id="input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="terminal input">
+  <button id="ctrlc" type="button">^C</button>
+<script>
+(function () {
+  const term = document.getElementById('term')
+  const input = document.getElementById('input')
+  const ctrlc = document.getElementById('ctrlc')
+  const PROMPT = 'tom@blog:~$ '
+  const TARGET = 1000
+
+  let state = 'prompt' // prompt | running
+  let typed = ''
+  let startedAt = 0
+  let attempts = 0
+  let best = null
+  let out = ''
+
+  try {
+    best = JSON.parse(localStorage.getItem('timecat-best'))
+    attempts = Number(localStorage.getItem('timecat-attempts')) || 0
+  } catch (e) {}
+
+  function esc (s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;') }
+
+  function render () {
+    let html = out
+    if (state === 'prompt') html += esc(PROMPT + typed) + '<span class="cursor"> </span>'
+    term.innerHTML = html
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  function print (s, cls) {
+    out += (cls ? '<span class="' + cls + '">' + esc(s) + '</span>' : esc(s)) + '\n'
+  }
+
+  function fmt (ms) {
+    const s = ms / 1000
+    return Math.floor(s / 60) + 'm' + (s % 60).toFixed(3) + 's'
+  }
+
+  function submit () {
+    out += esc(PROMPT + typed) + '\n'
+    const cmd = typed.trim().replace(/\s+/g, ' ')
+    typed = ''
+    if (cmd === 'time cat') {
+      state = 'running'
+      startedAt = performance.now()
+    } else if (cmd === 'help') {
+      print('type "time cat", press enter, then press ctrl-c at exactly 1.000 seconds.')
+    } else if (cmd === 'clear') {
+      out = ''
+    } else if (cmd !== '') {
+      print('hint: try "time cat"', 'dim')
+    }
+    render()
+  }
+
+  function interrupt () {
+    const elapsed = performance.now() - startedAt
+    state = 'prompt'
+    out += '^C\n'
+    print('')
+    print('real\t' + fmt(elapsed))
+    print('user\t0m0.000s')
+    print('sys\t0m0.000s')
+    print('')
+    attempts++
+    const diff = elapsed - TARGET
+    const off = Math.abs(Math.round(diff))
+    const win = elapsed.toFixed(0) === '1000' // within the same millisecond as 1.000
+    const r = Math.abs(diff)
+    if (best === null || r < best) best = r
+    try {
+      localStorage.setItem('timecat-best', JSON.stringify(best))
+      localStorage.setItem('timecat-attempts', String(attempts))
+    } catch (e) {}
+    if (win) {
+      print('*** 1.000 seconds. you win. ***', 'ok')
+    } else {
+      print(off + 'ms too ' + (diff < 0 ? 'early' : 'late') + '. not 1.000.', 'bad')
+    }
+    print('attempts: ' + attempts + '   closest ever: ' + best.toFixed(0) + 'ms off', 'dim')
+    print('')
+    render()
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (state === 'running') {
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+        e.preventDefault()
+        interrupt()
+      }
+      return
+    }
+    if (e.ctrlKey || e.metaKey || e.altKey) return
+    if (e.key === 'Enter') { e.preventDefault(); submit() }
+    else if (e.key === 'Backspace') { e.preventDefault(); typed = typed.slice(0, -1); input.value = typed; render() }
+    else if (e.key.length === 1) { e.preventDefault(); typed += e.key; input.value = typed; render() }
+  })
+
+  // mobile soft keyboards don't send reliable keydown events
+  input.addEventListener('input', function () {
+    if (state === 'prompt') { typed = input.value; render() }
+  })
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && state === 'prompt') { e.stopPropagation(); e.preventDefault(); submit(); input.value = '' }
+    else if (state === 'prompt') e.stopPropagation()
+  })
+
+  ctrlc.addEventListener('pointerdown', function (e) {
+    e.preventDefault()
+    if (state === 'running') interrupt()
+  })
+  term.addEventListener('click', function () { input.focus() })
+
+  print('timecat')
+  print('type "time cat" at the prompt and press enter.')
+  print('then press ctrl-c at exactly 1.000 seconds to win.', 'dim')
+  print('')
+  render()
+})()
+</script>
+</body>
+</html>
