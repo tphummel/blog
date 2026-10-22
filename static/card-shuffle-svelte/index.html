@@ -46,7 +46,11 @@
           document.head.appendChild(style);
         }
 
-        const { default: App } = await import(`data:text/javascript,${encodeURIComponent(js.code)}`);
+        // import maps don't reliably apply to data:/blob: modules (Safari), so inline the URL
+        const code = js.code.replace(/(from\s*['"])svelte\/internal(['"])/g,
+          '$1https://cdn.jsdelivr.net/npm/svelte@3.59.2/internal/index.mjs$2');
+        const url = URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
+        const { default: App } = await import(url);
         new App({ target: document.getElementById('app') });
       } catch (err) {
         log(err.stack || err);
