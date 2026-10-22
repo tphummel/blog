@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: system-ui, sans-serif;
-            max-width: 40rem;
+            max-width: 64rem;
             margin: 2rem auto;
             padding: 0 1rem;
             color: #222;
@@ -24,8 +24,13 @@
         td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
         td.pages { font-variant-numeric: tabular-nums; white-space: nowrap; width: 6rem; }
         tr.month td { font-weight: bold; border-top: 1px solid #aaa; padding-top: 0.6rem; }
-        tr.week td { color: #333; }
+        tr.week td { color: #333; vertical-align: middle; }
+        tr.week td:nth-child(3) { white-space: nowrap; }
         tr.week td.label { padding-left: 1.5rem; }
+        td.grid { padding-top: 0.4rem; padding-bottom: 0.4rem; }
+        .mgrid { display: grid; grid-template-columns: repeat(7, 1.6rem); font-size: 0.7rem; text-align: center; line-height: 1.5; font-variant-numeric: tabular-nums; }
+        .mgrid .hd { font-weight: bold; border-bottom: 1px solid #222; }
+        .mgrid .in { background: #f6c8c8; }
         .note { font-size: 0.8rem; color: #666; margin-top: 1.5rem; }
     </style>
 </head>
@@ -38,11 +43,11 @@
     </form>
     <div class="summary" id="summary"></div>
     <table>
-        <thead><tr><th>Pages (left&ndash;right)</th><th>Spread</th><th>Dates</th><th>Week of year</th><th>Life week</th><th>Life days</th><th>Year done</th><th>Squares (of 48)</th></tr></thead>
+        <thead><tr><th>Pages (left&ndash;right)</th><th>Spread</th><th>Dates</th><th>Week of year</th><th>Life week</th><th>Life days</th><th>Year done</th><th>Squares (of 48)</th><th>Month grid</th></tr></thead>
         <tbody id="toc"></tbody>
     </table>
     <p class="note">
-        Each spread is two facing pages: even page on the left, odd page on the right. A monthly spread opens each month. Weeks run Monday&ndash;Sunday.
+        The month grid shows the month the week is filed under, with the week's days shaded (including any days that spill into the neighboring month). Each spread is two facing pages: even page on the left, odd page on the right. A monthly spread opens each month. Weeks run Monday&ndash;Sunday.
         A week that straddles two months stays before the next monthly spread if at least 3 of its days
         fall in the ending month; with only 1&ndash;2 days in the ending month it goes after the next monthly spread. The week containing January 1 belongs to the prior year's journal
         (its final weekly spread), so the year starts with the January monthly and then the first
@@ -72,6 +77,31 @@ function yearDone(date, year) {
 }
 // A 6 x 8 grid of squares to shade.
 const GRID_SQUARES = 6 * 8;
+const DAY_HEADERS = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
+// A Sunday-start grid of the month with the week's days shaded. Days of the week that fall
+// outside the month (leading or trailing) are shown too, so the shaded run is never cut off.
+function monthGrid(year, month, start, end) {
+    const grid = document.createElement("div");
+    grid.className = "mgrid";
+    for (const h of DAY_HEADERS) {
+        const c = document.createElement("div");
+        c.className = "hd";
+        c.textContent = h;
+        grid.appendChild(c);
+    }
+    const first = utc(year, month, 1);
+    const last = utc(year, month + 1, 0);
+    const from = addDays(first, -first.getUTCDay());
+    const to = addDays(end > last ? end : last, 6 - (end > last ? end : last).getUTCDay());
+    for (let d = from; d <= to; d = addDays(d, 1)) {
+        const c = document.createElement("div");
+        const inWeek = d >= start && d <= end;
+        if (inWeek) c.className = "in";
+        if (inWeek || d.getUTCMonth() === month) c.textContent = d.getUTCDate();
+        grid.appendChild(c);
+    }
+    return grid;
+}
 function fmt(date) { return MONTHS[date.getUTCMonth()].slice(0, 3) + " " + date.getUTCDate(); }
 
 const NEW_NUMBERING_FROM = 2027;
@@ -99,7 +129,7 @@ function buildSpreads(year) {
         }
         // A week spilling into the next year stays in December (final weekly spread).
         const weekNo = Math.round((mon.getTime() - week1.getTime()) / (7 * DAY_MS)) + 1;
-        weeksByMonth[month].push({ type: "week", number: weekNo, start: mon, end: sun });
+        weeksByMonth[month].push({ type: "week", number: weekNo, start: mon, end: sun, month });
     }
 
     const spreads = [];
@@ -138,6 +168,8 @@ function render() {
         const lifeDays = document.createElement("td");
         const done = document.createElement("td");
         const squares = document.createElement("td");
+        const grid = document.createElement("td");
+        grid.className = "grid";
         weekNum.className = lifeWeek.className = lifeDays.className = done.className = squares.className = "num";
         if (s.type === "month") {
             label.textContent = s.name + " " + year;
@@ -149,13 +181,14 @@ function render() {
             const frac = yearDone(s.end, year);
             done.textContent = (frac * 100).toFixed(1) + "%";
             squares.textContent = (frac * GRID_SQUARES).toFixed(1);
+            grid.appendChild(monthGrid(year, s.month, s.start, s.end));
             if (birth) {
                 const d1 = lifeDay(s.start, birth), d7 = lifeDay(s.end, birth);
                 lifeWeek.textContent = Math.ceil(d7 / 7);
                 lifeDays.textContent = d1 + " – " + d7;
             }
         }
-        tr.append(pages, label, dates, weekNum, lifeWeek, lifeDays, done, squares);
+        tr.append(pages, label, dates, weekNum, lifeWeek, lifeDays, done, squares, grid);
         toc.appendChild(tr);
         page += 2;
     }
