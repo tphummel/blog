@@ -26,7 +26,11 @@
       pre.textContent += (pre.textContent ? '\n' : '') + msg;
     }
 
-    window.addEventListener('error', (e) => log(e.error?.stack || e.message));
+    window.addEventListener('error', (e) => {
+      // cross-origin errors (extensions, injected scripts) are opaque and not from this page
+      if (e.message === 'Script error.' && !e.filename && !e.error) return;
+      log(e.error?.stack || e.message);
+    });
     window.addEventListener('unhandledrejection', (e) => log(e.reason?.stack || e.reason));
   </script>
   <script type="module">
