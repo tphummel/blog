@@ -207,7 +207,14 @@ function load() {
   tokens = r.tokens;
   game = r.s;
   tab = h.tab;
-  held = [false, false, false, false, false];
+  held = heldFrom(tokens);
+}
+
+// dice kept for the last re-roll stay frozen until the player changes them
+function heldFrom(toks) {
+  const last = (toks.match(TOKEN_RE) || []).pop();
+  const mask = last && last[0] === 'x' ? parseInt(last[1], 32) : 0;
+  return [0, 1, 2, 3, 4].map((i) => !!(mask & (1 << i)));
 }
 
 function commit(tok) {
@@ -217,7 +224,7 @@ function commit(tok) {
   tokens = next;
   game = r.s;
   history.pushState(null, '', hashFor(tokens, tab));
-  held = [false, false, false, false, false];
+  held = heldFrom(tokens);
   render();
 }
 
