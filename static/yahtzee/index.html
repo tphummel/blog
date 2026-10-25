@@ -178,7 +178,7 @@ function readHash() {
   let tokens = '';
   try { tokens = b64.dec(p.get('g') || ''); } catch (e) { tokens = ''; }
   if (!VALID_RE.test(tokens)) tokens = '';
-  return { tokens, tab: p.get('t') === 'score' ? 'score' : 'log' };
+  return { tokens, tab: p.get('t') === 'log' ? 'log' : 'score' };
 }
 
 function hashFor(tokens, tab) {
@@ -201,7 +201,7 @@ function replay(tokens) {
 
 // --- app state ---
 let tokens = '';
-let tab = 'log';
+let tab = 'score';
 let game = newState();
 let held = [false, false, false, false, false];
 
@@ -313,7 +313,6 @@ function roll() {
 function score(cat) { commit('s' + CAT_CHARS[cat]); }
 
 function newGame() {
-  if (tokens && !game.over && !confirm('Abandon this game and start over?')) return;
   tokens = '';
   game = newState();
   held = [false, false, false, false, false];
@@ -354,9 +353,12 @@ function renderControls() {
     status = `Turn ${game.turn} of 13 · tap dice to keep`;
   }
   return `<div class="bar"><span class="muted">${status}</span>` +
-    `<span><button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button> ` +
-    `<button data-act="new">New game</button></span></div>` +
-    `<div class="bar" style="margin-top:8px"><span class="muted">Export</span><span>` +
+    `<span>${game.over ? '<button class="primary" data-act="new">New game</button>'
+      : `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`}</span></div>`;
+}
+
+function renderExport() {
+  return `<div class="bar" style="margin-top:16px"><span class="muted">Export</span><span>` +
     `<button data-act="copy" ${tokens ? '' : 'disabled'}>Copy text</button> ` +
     `<button data-act="json" ${tokens ? '' : 'disabled'}>Download JSON</button></span></div>`;
 }
@@ -396,7 +398,7 @@ function render() {
   document.getElementById('app').innerHTML =
     renderDice() + renderControls() +
     `<div role="tablist">${tabBtn('log', 'Transcript')}${tabBtn('score', 'Scorecard')}</div>` +
-    `<div role="tabpanel">${tab === 'score' ? renderScorecard() : renderLog()}</div>`;
+    `<div role="tabpanel">${tab === 'score' ? renderScorecard() : renderLog()}${renderExport()}</div>`;
 }
 
 document.getElementById('app').addEventListener('click', (e) => {
