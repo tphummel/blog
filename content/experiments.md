@@ -18,3 +18,4 @@ date: 2020-09-01T08:00:00
 - [Annual Journal Layout](/annual-journal)
 - [timecat](/timecat)
 - [Yahtzee](/yahtzee)
+- [Pictionary Clue Generator](/pictionary)
