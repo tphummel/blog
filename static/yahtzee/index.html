@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tom Hummel :: Yahtzee</title>
+  <style>
+    :root { --bg:#fafafa; --fg:#222; --muted:#777; --line:#ccc; --accent:#2a6; --card:#fff; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#161616; --fg:#e8e8e8; --muted:#999; --line:#444; --accent:#4c8; --card:#202020; }
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; padding:16px; background:var(--bg); color:var(--fg); font:16px/1.4 system-ui, sans-serif; }
+    main { max-width:560px; margin:0 auto; }
+    h1 { font-size:1.4rem; margin:0 0 12px; }
+    button { font:inherit; color:inherit; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:8px 14px; cursor:pointer; }
+    button:disabled { opacity:.4; cursor:default; }
+    button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .dice { display:flex; gap:8px; justify-content:space-between; margin:12px 0; }
+    .die { flex:1; font-size:3.2rem; line-height:1.1; padding:4px 0; text-align:center; }
+    .die.held { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent) inset; }
+    .die.empty { color:var(--muted); }
+    .bar { display:flex; gap:8px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .muted { color:var(--muted); }
+    [role=tablist] { display:flex; border-bottom:1px solid var(--line); margin-top:20px; }
+    [role=tab] { border:0; border-bottom:3px solid transparent; border-radius:0; background:none; flex:1; }
+    [role=tab][aria-selected=true] { border-bottom-color:var(--accent); font-weight:600; }
+    table { width:100%; border-collapse:collapse; margin-top:8px; }
+    td, th { padding:6px 8px; border-bottom:1px solid var(--line); text-align:left; }
+    td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; }
+    tr.sum td { color:var(--muted); }
+    tr.total td { font-weight:700; }
+    td button { padding:2px 10px; border-color:var(--accent); }
+    ol.log { list-style:none; margin:8px 0 0; padding:0; }
+    ol.log li { padding:6px 0; border-bottom:1px solid var(--line); }
+    ol.log li:first-child { font-weight:600; }
+    .glyphs { font-size:1.3rem; letter-spacing:2px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Yahtzee</h1>
+  <div id="app"></div>
+</main>
+<script>
+const CATS = [
+  'Ones', 'Twos', 'Threes', 'Fours', 'Fives', 'Sixes',
+  'Three of a kind', 'Four of a kind', 'Full house',
+  'Small straight', 'Large straight', 'Yahtzee', 'Chance'
+];
+const YAHTZEE = 11;
+const FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+const CAT_CHARS = 'abcdefghijklm';
+const TOKEN_RE = /r[1-6]{5}|x[0-9a-v][1-6]{5}|s[a-m]/g;
+const VALID_RE = /^(?:r[1-6]{5}|x[0-9a-v][1-6]{5}|s[a-m])*$/;
+
+const glyphs = (dice) => dice.map((d) => FACES[d]).join('');
+const sum = (a) => a.reduce((x, y) => x + y, 0);
+
+function counts(dice) {
+  const c = [0, 0, 0, 0, 0, 0, 0];
+  dice.forEach((d) => c[d]++);
+  return c;
+}
+
+function isYahtzee(dice) { return dice.every((d) => d === dice[0]); }
+
+function hasRun(dice, len) {
+  const c = counts(dice);
+  for (let s = 1; s + len - 1 <= 6; s++) {
+    let ok = true;
+    for (let i = s; i < s + len; i++) if (!c[i]) { ok = false; break; }
+    if (ok) return true;
+  }
+  return false;
+}
+
+// joker = yahtzee rolled while the Yahtzee box is already filled
+function points(cat, dice, joker) {
+  const c = counts(dice);
+  const max = Math.max(...c);
+  if (cat < 6) return c[cat + 1] * (cat + 1);
+  switch (cat) {
+    case 6: return max >= 3 ? sum(dice) : 0;
+    case 7: return max >= 4 ? sum(dice) : 0;
+    case 8: return joker || (c.includes(3) && c.includes(2)) ? 25 : 0;
+    case 9: return joker || hasRun(dice, 4) ? 30 : 0;
+    case 10: return joker || hasRun(dice, 5) ? 40 : 0;
+    case 11: return isYahtzee(dice) ? 50 : 0;
+    default: return sum(dice);
+  }
+}
+
+function newState() {
+  return { scores: Array(13).fill(null), bonus: 0, turn: 1, rolls: 0, dice: [], log: [], over: false };
+}
+
+function isJoker(s) {
+  return s.dice.length === 5 && isYahtzee(s.dice) && s.scores[YAHTZEE] !== null;
+}
+
+function legalCats(s) {
+  const open = s.scores.map((v, i) => (v === null ? i : -1)).filter((i) => i >= 0);
+  if (!isJoker(s)) return open;
+  const upper = s.dice[0] - 1;
+  if (s.scores[upper] === null) return [upper];
+  const lower = open.filter((i) => i >= 6);
+  return lower.length ? lower : open;
+}
+
+// apply one token; returns false if the token is not legal in this state
+function apply(s, tok) {
+  const kind = tok[0];
+  if (s.over) return false;
+  if (kind === 'r') {
+    if (s.rolls !== 0) return false;
+    s.dice = tok.slice(1).split('').map(Number);
+    s.rolls = 1;
+    s.log.unshift(`Turn ${s.turn} · roll 1: <span class="glyphs">${glyphs(s.dice)}</span>`);
+    return true;
+  }
+  if (kind === 'x') {
+    if (s.rolls < 1 || s.rolls >= 3) return false;
+    const mask = parseInt(tok[1], 32);
+    if (mask === 31) return false;
+    const next = tok.slice(2).split('').map(Number);
+    for (let i = 0; i < 5; i++) if (mask & (1 << i) && next[i] !== s.dice[i]) return false;
+    const held = s.dice.filter((_, i) => mask & (1 << i));
+    s.dice = next;
+    s.rolls++;
+    s.log.unshift(`Turn ${s.turn} · roll ${s.rolls}: <span class="glyphs">${glyphs(next)}</span> ` +
+      `<span class="muted">(kept ${held.length ? glyphs(held) : 'none'})</span>`);
+    return true;
+  }
+  if (kind === 's') {
+    if (s.rolls < 1) return false;
+    const cat = CAT_CHARS.indexOf(tok[1]);
+    if (!legalCats(s).includes(cat)) return false;
+    const joker = isJoker(s);
+    const pts = points(cat, s.dice, joker);
+    let note = '';
+    if (isYahtzee(s.dice) && s.scores[YAHTZEE] === 50) { s.bonus++; note = ' + 100 Yahtzee bonus'; }
+    s.scores[cat] = pts;
+    s.log.unshift(`Turn ${s.turn} · scored <b>${CATS[cat]}</b>: ${pts}${note}`);
+    s.rolls = 0;
+    s.dice = [];
+    if (s.scores.every((v) => v !== null)) {
+      s.over = true;
+      s.log.unshift(`Game over · final score <b>${totals(s).total}</b>`);
+    } else {
+      s.turn++;
+    }
+    return true;
+  }
+  return false;
+}
+
+function totals(s) {
+  const upper = sum(s.scores.slice(0, 6).map((v) => v || 0));
+  const upperBonus = upper >= 63 ? 35 : 0;
+  const lower = sum(s.scores.slice(6).map((v) => v || 0));
+  const yb = s.bonus * 100;
+  return { upper, upperBonus, lower, yb, total: upper + upperBonus + lower + yb };
+}
+
+// --- URL encoding: base64url of the compact token string, in the hash ---
+const b64 = {
+  enc: (str) => btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''),
+  dec: (str) => atob(str.replace(/-/g, '+').replace(/_/g, '/')),
+};
+
+function readHash() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  let tokens = '';
+  try { tokens = b64.dec(p.get('g') || ''); } catch (e) { tokens = ''; }
+  if (!VALID_RE.test(tokens)) tokens = '';
+  return { tokens, tab: p.get('t') === 'score' ? 'score' : 'log' };
+}
+
+function hashFor(tokens, tab) {
+  const p = new URLSearchParams();
+  if (tokens) p.set('g', b64.enc(tokens));
+  p.set('t', tab);
+  return '#' + p.toString();
+}
+
+function replay(tokens) {
+  const s = newState();
+  const toks = tokens.match(TOKEN_RE) || [];
+  let good = '';
+  for (const t of toks) {
+    if (!apply(s, t)) break; // stop at first bad token; keep what was valid
+    good += t;
+  }
+  return { s, tokens: good };
+}
+
+// --- app state ---
+let tokens = '';
+let tab = 'log';
+let game = newState();
+let held = [false, false, false, false, false];
+
+function load() {
+  const h = readHash();
+  const r = replay(h.tokens);
+  tokens = r.tokens;
+  game = r.s;
+  tab = h.tab;
+  held = heldFrom(tokens);
+}
+
+// dice kept for the last re-roll stay frozen until the player changes them
+function heldFrom(toks) {
+  const last = (toks.match(TOKEN_RE) || []).pop();
+  const mask = last && last[0] === 'x' ? parseInt(last[1], 32) : 0;
+  return [0, 1, 2, 3, 4].map((i) => !!(mask & (1 << i)));
+}
+
+function commit(tok) {
+  const next = tokens + tok;
+  const r = replay(next);
+  if (r.tokens !== next) return;
+  tokens = next;
+  game = r.s;
+  history.pushState(null, '', hashFor(tokens, tab));
+  held = heldFrom(tokens);
+  render();
+}
+
+function randDie() {
+  // rejection sampling to avoid modulo bias
+  const buf = new Uint8Array(1);
+  do { crypto.getRandomValues(buf); } while (buf[0] >= 252);
+  return (buf[0] % 6) + 1;
+}
+
+function roll() {
+  if (game.over) return;
+  if (game.rolls === 0) {
+    commit('r' + Array.from({ length: 5 }, randDie).join(''));
+    return;
+  }
+  if (game.rolls >= 3) return;
+  let mask = 0;
+  const dice = game.dice.map((d, i) => {
+    if (held[i]) { mask |= 1 << i; return d; }
+    return randDie();
+  });
+  if (mask === 31) return;
+  commit('x' + mask.toString(32) + dice.join(''));
+}
+
+function score(cat) { commit('s' + CAT_CHARS[cat]); }
+
+function newGame() {
+  if (tokens && !game.over && !confirm('Abandon this game and start over?')) return;
+  tokens = '';
+  game = newState();
+  held = [false, false, false, false, false];
+  history.pushState(null, '', hashFor('', tab));
+  render();
+}
+
+function setTab(t) {
+  tab = t;
+  history.replaceState(null, '', hashFor(tokens, tab));
+  render();
+}
+
+// --- rendering ---
+function renderDice() {
+  const out = [];
+  for (let i = 0; i < 5; i++) {
+    const d = game.dice[i];
+    const can = game.rolls > 0 && game.rolls < 3;
+    out.push(`<button class="die ${d ? '' : 'empty'} ${held[i] ? 'held' : ''}" data-die="${i}" ` +
+      `aria-pressed="${held[i]}" aria-label="Die ${i + 1}: ${d || 'not rolled'}" ${can ? '' : 'disabled'}>${FACES[d] || '⚀'}</button>`);
+  }
+  return `<div class="dice">${out.join('')}</div>`;
+}
+
+function renderControls() {
+  let label, disabled = false, status;
+  if (game.over) {
+    label = 'Roll'; disabled = true;
+    status = `Game over · ${totals(game).total} points`;
+  } else if (game.rolls === 0) {
+    label = 'Roll dice'; status = `Turn ${game.turn} of 13`;
+  } else if (game.rolls >= 3) {
+    label = 'Roll again'; disabled = true;
+    status = `Turn ${game.turn} of 13 · pick a category on the scorecard`;
+  } else {
+    label = `Re-roll (${3 - game.rolls} left)`;
+    status = `Turn ${game.turn} of 13 · tap dice to keep`;
+  }
+  return `<div class="bar"><span class="muted">${status}</span>` +
+    `<span><button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button> ` +
+    `<button data-act="new">New game</button></span></div>`;
+}
+
+function renderScorecard() {
+  const t = totals(game);
+  const legal = game.rolls > 0 ? legalCats(game) : [];
+  const joker = isJoker(game);
+  const row = (i) => {
+    const v = game.scores[i];
+    let cell;
+    if (v !== null) cell = v;
+    else if (legal.includes(i)) cell = `<button data-score="${i}">+${points(i, game.dice, joker)}</button>`;
+    else cell = '<span class="muted">–</span>';
+    return `<tr><td>${CATS[i]}</td><td class="n">${cell}</td></tr>`;
+  };
+  const rows = [];
+  rows.push('<tr><th colspan="2">Upper</th></tr>');
+  for (let i = 0; i < 6; i++) rows.push(row(i));
+  rows.push(`<tr class="sum"><td>Bonus (63+ → 35) · ${t.upper}/63</td><td class="n">${t.upperBonus}</td></tr>`);
+  rows.push('<tr><th colspan="2">Lower</th></tr>');
+  for (let i = 6; i < 13; i++) rows.push(row(i));
+  rows.push(`<tr class="sum"><td>Yahtzee bonuses (×${game.bonus})</td><td class="n">${t.yb}</td></tr>`);
+  rows.push(`<tr class="total"><td>Total</td><td class="n">${t.total}</td></tr>`);
+  const hint = joker ? '<p class="muted">Joker rule in effect: bonus Yahtzee must go in its upper box if open.</p>' : '';
+  return `${hint}<table>${rows.join('')}</table>`;
+}
+
+function renderLog() {
+  if (!game.log.length) return '<p class="muted">No rolls yet. Roll the dice to begin.</p>';
+  return `<ol class="log">${game.log.map((l) => `<li>${l}</li>`).join('')}</ol>`;
+}
+
+function render() {
+  const tabBtn = (id, text) =>
+    `<button role="tab" aria-selected="${tab === id}" data-tab="${id}">${text}</button>`;
+  document.getElementById('app').innerHTML =
+    renderDice() + renderControls() +
+    `<div role="tablist">${tabBtn('log', 'Transcript')}${tabBtn('score', 'Scorecard')}</div>` +
+    `<div role="tabpanel">${tab === 'score' ? renderScorecard() : renderLog()}</div>`;
+}
+
+document.getElementById('app').addEventListener('click', (e) => {
+  const el = e.target.closest('button');
+  if (!el || el.disabled) return;
+  if (el.dataset.die !== undefined) {
+    const i = Number(el.dataset.die);
+    held[i] = !held[i];
+    render();
+  } else if (el.dataset.act === 'roll') roll();
+  else if (el.dataset.act === 'new') newGame();
+  else if (el.dataset.tab) setTab(el.dataset.tab);
+  else if (el.dataset.score !== undefined) score(Number(el.dataset.score));
+});
+
+window.addEventListener('popstate', () => { load(); render(); });
+window.addEventListener('hashchange', () => { load(); render(); });
+
+load();
+render();
+</script>
+</body>
+</html>
