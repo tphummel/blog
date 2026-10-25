@@ -1,0 +1,15 @@
+{
+  "name": "Yahtzee",
+  "short_name": "Yahtzee",
+  "description": "Play Yahtzee. Your game is saved in the URL.",
+  "start_url": "/yahtzee/",
+  "scope": "/yahtzee/",
+  "display": "standalone",
+  "background_color": "#1f6b45",
+  "theme_color": "#1f6b45",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
