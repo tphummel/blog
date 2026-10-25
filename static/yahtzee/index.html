@@ -92,7 +92,7 @@ function points(cat, dice, joker) {
 }
 
 function newState() {
-  return { scores: Array(13).fill(null), bonus: 0, turn: 1, rolls: 0, dice: [], log: [], over: false };
+  return { scores: Array(13).fill(null), bonus: 0, turn: 1, rolls: 0, dice: [], log: [], turns: [], cur: null, over: false };
 }
 
 function isJoker(s) {
@@ -116,6 +116,7 @@ function apply(s, tok) {
     if (s.rolls !== 0) return false;
     s.dice = tok.slice(1).split('').map(Number);
     s.rolls = 1;
+    s.cur = { turn: s.turn, rolls: [{ dice: [...s.dice], kept: [] }] };
     s.log.unshift(`Turn ${s.turn} · roll 1: <span class="glyphs">${glyphs(s.dice)}</span>`);
     return true;
   }
@@ -126,6 +127,7 @@ function apply(s, tok) {
     const next = tok.slice(2).split('').map(Number);
     for (let i = 0; i < 5; i++) if (mask & (1 << i) && next[i] !== s.dice[i]) return false;
     const held = s.dice.filter((_, i) => mask & (1 << i));
+    s.cur.rolls.push({ dice: next, kept: s.dice.map((_, i) => !!(mask & (1 << i))) });
     s.dice = next;
     s.rolls++;
     s.log.unshift(`Turn ${s.turn} · roll ${s.rolls}: <span class="glyphs">${glyphs(next)}</span> ` +
@@ -141,6 +143,8 @@ function apply(s, tok) {
     let note = '';
     if (isYahtzee(s.dice) && s.scores[YAHTZEE] === 50) { s.bonus++; note = ' + 100 Yahtzee bonus'; }
     s.scores[cat] = pts;
+    s.turns.push({ ...s.cur, category: CATS[cat], points: pts, yahtzeeBonus: note ? 100 : 0 });
+    s.cur = null;
     s.log.unshift(`Turn ${s.turn} · scored <b>${CATS[cat]}</b>: ${pts}${note}`);
     s.rolls = 0;
     s.dice = [];
@@ -174,7 +178,7 @@ function readHash() {
   let tokens = '';
   try { tokens = b64.dec(p.get('g') || ''); } catch (e) { tokens = ''; }
   if (!VALID_RE.test(tokens)) tokens = '';
-  return { tokens, tab: p.get('t') === 'score' ? 'score' : 'log' };
+  return { tokens, tab: p.get('t') === 'log' ? 'log' : 'score' };
 }
 
 function hashFor(tokens, tab) {
@@ -197,7 +201,7 @@ function replay(tokens) {
 
 // --- app state ---
 let tokens = '';
-let tab = 'log';
+let tab = 'score';
 let game = newState();
 let held = [false, false, false, false, false];
 
@@ -228,6 +232,61 @@ function commit(tok) {
   render();
 }
 
+// --- export ---
+function exportText() {
+  const t = totals(game);
+  const lines = ['Yahtzee', ''];
+  game.turns.forEach((turn) => {
+    lines.push(`Turn ${turn.turn}`);
+    turn.rolls.forEach((r, i) => {
+      const kept = r.kept.length ? ` (kept ${glyphs(r.dice.filter((_, j) => r.kept[j])) || 'none'})` : '';
+      lines.push(`  Roll ${i + 1}: ${glyphs(r.dice)}${kept}`);
+    });
+    lines.push(`  Scored ${turn.category}: ${turn.points}${turn.yahtzeeBonus ? ' + 100 Yahtzee bonus' : ''}`, '');
+  });
+  lines.push('Scorecard');
+  CATS.forEach((c, i) => lines.push(`  ${c}: ${game.scores[i] === null ? '-' : game.scores[i]}`));
+  lines.push(`  Upper bonus: ${t.upperBonus}`, `  Yahtzee bonuses: ${t.yb}`,
+    `Total: ${t.total}${game.over ? '' : ' (in progress)'}`, '', location.href);
+  return lines.join('\n');
+}
+
+function exportJson() {
+  const t = totals(game);
+  return JSON.stringify({
+    game: 'yahtzee',
+    complete: game.over,
+    url: location.href,
+    encoded: tokens,
+    turns: game.turns.map((turn) => ({
+      turn: turn.turn,
+      rolls: turn.rolls.map((r) => ({ dice: r.dice, kept: r.kept })),
+      category: turn.category,
+      points: turn.points,
+      yahtzeeBonus: turn.yahtzeeBonus,
+    })),
+    scorecard: Object.fromEntries(CATS.map((c, i) => [c, game.scores[i]])),
+    totals: { upper: t.upper, upperBonus: t.upperBonus, lower: t.lower, yahtzeeBonuses: t.yb, total: t.total },
+  }, null, 2);
+}
+
+async function copyText() {
+  const btn = document.querySelector('[data-act=copy]');
+  let ok = true;
+  try { await navigator.clipboard.writeText(exportText()); } catch (e) { ok = false; }
+  if (btn) btn.textContent = ok ? 'Copied!' : 'Copy failed';
+  setTimeout(() => { const b = document.querySelector('[data-act=copy]'); if (b) b.textContent = 'Copy text'; }, 1500);
+}
+
+function downloadJson() {
+  const url = URL.createObjectURL(new Blob([exportJson()], { type: 'application/json' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'yahtzee-game.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function randDie() {
   // rejection sampling to avoid modulo bias
   const buf = new Uint8Array(1);
@@ -254,7 +313,6 @@ function roll() {
 function score(cat) { commit('s' + CAT_CHARS[cat]); }
 
 function newGame() {
-  if (tokens && !game.over && !confirm('Abandon this game and start over?')) return;
   tokens = '';
   game = newState();
   held = [false, false, false, false, false];
@@ -295,8 +353,14 @@ function renderControls() {
     status = `Turn ${game.turn} of 13 · tap dice to keep`;
   }
   return `<div class="bar"><span class="muted">${status}</span>` +
-    `<span><button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button> ` +
-    `<button data-act="new">New game</button></span></div>`;
+    `<span>${game.over ? '<button class="primary" data-act="new">New game</button>'
+      : `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`}</span></div>`;
+}
+
+function renderExport() {
+  return `<div class="bar" style="margin-top:16px"><span class="muted">Export</span><span>` +
+    `<button data-act="copy" ${tokens ? '' : 'disabled'}>Copy text</button> ` +
+    `<button data-act="json" ${tokens ? '' : 'disabled'}>Download JSON</button></span></div>`;
 }
 
 function renderScorecard() {
@@ -334,7 +398,7 @@ function render() {
   document.getElementById('app').innerHTML =
     renderDice() + renderControls() +
     `<div role="tablist">${tabBtn('log', 'Transcript')}${tabBtn('score', 'Scorecard')}</div>` +
-    `<div role="tabpanel">${tab === 'score' ? renderScorecard() : renderLog()}</div>`;
+    `<div role="tabpanel">${tab === 'score' ? renderScorecard() : renderLog()}${renderExport()}</div>`;
 }
 
 document.getElementById('app').addEventListener('click', (e) => {
@@ -346,6 +410,8 @@ document.getElementById('app').addEventListener('click', (e) => {
     render();
   } else if (el.dataset.act === 'roll') roll();
   else if (el.dataset.act === 'new') newGame();
+  else if (el.dataset.act === 'copy') copyText();
+  else if (el.dataset.act === 'json') downloadJson();
   else if (el.dataset.tab) setTab(el.dataset.tab);
   else if (el.dataset.score !== undefined) score(Number(el.dataset.score));
 });
