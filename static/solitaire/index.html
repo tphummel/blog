@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tom Hummel :: Solitaire</title>
+<style>
+:root{
+  --cw:min(12.5vw,88px);--ch:calc(var(--cw)*1.4);--gap:calc(var(--cw)*.12);
+  --felt:#0b6b3a;--felt-dark:#084d2a;--red:#c62828;--ink:#1b1b1b;--sel:#ffd54f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--felt);color:#fff;font:16px/1.4 system-ui,sans-serif;min-height:100vh;
+  background-image:radial-gradient(circle at 50% 30%,#12844a,var(--felt-dark));}
+header{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:center;padding:10px 16px}
+header h1{font-size:18px;margin:0}
+.stats{display:flex;gap:14px;font-variant-numeric:tabular-nums}
+.stats b{font-weight:600}
+button{font:inherit;border:0;border-radius:6px;padding:6px 12px;background:#fff;color:var(--ink);cursor:pointer}
+button.danger{background:#ffcdd2}
+button:hover{filter:brightness(.93)}
+a{color:#fff}
+.board{width:calc(var(--cw)*7 + var(--gap)*6);margin:8px auto 40px}
+.top,.tab{display:grid;grid-template-columns:repeat(7,var(--cw));gap:var(--gap)}
+.top{height:var(--ch);margin-bottom:calc(var(--gap)*2)}
+.waste{grid-column:2/4}
+.f0{grid-column:4}.f1{grid-column:5}.f2{grid-column:6}.f3{grid-column:7}
+.pile{position:relative;border-radius:calc(var(--cw)*.08);min-height:var(--ch)}
+.slot{border:2px dashed rgba(255,255,255,.25);}
+.slot::after{content:attr(data-label);position:absolute;inset:0;display:grid;place-items:center;
+  font-size:calc(var(--cw)*.5);color:rgba(255,255,255,.25)}
+.card{position:absolute;left:0;width:var(--cw);height:var(--ch);border-radius:calc(var(--cw)*.08);
+  background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.45);user-select:none;cursor:pointer;
+  font-size:calc(var(--cw)*.27);font-weight:600;line-height:1;overflow:hidden}
+.card.red{color:var(--red)}
+.card .tl{position:absolute;top:calc(var(--cw)*.05);left:calc(var(--cw)*.07)}
+.card .mid{position:absolute;right:calc(var(--cw)*.08);bottom:calc(var(--cw)*.04);font-size:calc(var(--cw)*.5)}
+.card.down{background:repeating-linear-gradient(45deg,#1e4fa3 0 6px,#2a63c4 6px 12px);border:2px solid #fff;cursor:default}
+.card.sel{outline:3px solid var(--sel);outline-offset:-1px;z-index:50}
+.stockc{cursor:pointer}
+#panel{max-width:560px;margin:0 auto 16px;padding:14px 16px;background:rgba(0,0,0,.45);border-radius:10px}
+#panel h2{margin:0 0 6px;font-size:18px}
+#panel .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+.hint{font-size:13px;opacity:.75;text-align:center;padding:0 16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Daily Klondike · Draw 3</h1>
+  <div class="stats">
+    <span id="date"></span>
+    <span>Moves <b id="moves">0</b></span>
+    <span>Score <b id="score">0</b></span>
+    <span>Time <b id="time">0:00</b></span>
+  </div>
+  <button id="surrender" class="danger">Surrender</button>
+</header>
+<div id="panel" hidden></div>
+<div class="board" id="board"></div>
+<p class="hint" id="hint">Tap a card, then tap where it goes. Tap a selected card again to send it to a foundation. Game state lives in the URL — bookmark it to resume.</p>
+<div id="toast"></div>
+<script>
+'use strict';
+// ---------- cards ----------
+const SUITS=['♠','♥','♦','♣'], RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const suitOf=c=>c/13|0, rankOf=c=>c%13, isRed=c=>{const s=suitOf(c);return s===1||s===2};
+const cardName=c=>RANKS[rankOf(c)]+SUITS[suitOf(c)];
+
+// ---------- deterministic deal ----------
+function xmur3(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
+  return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
+function mulberry32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const seedString=date=>`klondike-draw3-${date}`;
+const pacificDate=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+
+function newGame(date){
+  const rng=mulberry32(xmur3(seedString(date))());
+  const deck=Array.from({length:52},(_,i)=>i);
+  for(let i=51;i>0;i--){const j=Math.floor(rng()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
+  let k=0;const tab=[];
+  for(let i=0;i<7;i++){const p=[];for(let j=0;j<=i;j++)p.push({c:deck[k++],up:j===i});tab.push(p)}
+  return {date,deck,initialTableau:tab.map(p=>p.map(x=>cardName(x.c))),
+    stock:deck.slice(k),waste:[],found:[[],[],[],[]],tab,score:0,log:[]};
+}
+
+// ---------- rules ----------
+function peek(g,addr,n){
+  if(addr==='w')return n===1&&g.waste.length?[g.waste[g.waste.length-1]]:null;
+  const i=+addr.slice(1);
+  if(addr[0]==='f')return n===1&&g.found[i].length?[g.found[i][g.found[i].length-1]]:null;
+  if(addr[0]==='t'){const p=g.tab[i];if(!(n>=1&&n<=p.length))return null;const s=p.slice(-n);return s.every(x=>x.up)?s.map(x=>x.c):null}
+  return null;
+}
+function canDrop(g,cards,from,to){
+  if(!cards||from===to)return false;
+  const i=+to.slice(1);
+  if(to[0]==='f')return cards.length===1&&suitOf(cards[0])===i&&g.found[i].length===rankOf(cards[0])&&from[0]!=='f';
+  if(to[0]==='t'){
+    const p=g.tab[i];if(!p.length)return rankOf(cards[0])===12;
+    const top=p[p.length-1].c;
+    return isRed(top)!==isRed(cards[0])&&rankOf(cards[0])===rankOf(top)-1;
+  }
+  return false;
+}
+// mv: {t, k:'d'|'r'|'m', from, to, n}; returns the full-fidelity record or null if illegal
+function apply(g,mv){
+  const before=g.score;let rec;
+  if(mv.k==='d'){
+    if(!g.stock.length)return null;
+    const cards=[];for(let i=0;i<3&&g.stock.length;i++){const c=g.stock.pop();g.waste.push(c);cards.push(c)}
+    rec={type:'draw',from:'s',to:'w',cards:cards.map(cardName)};
+  }else if(mv.k==='r'){
+    if(g.stock.length||!g.waste.length)return null;
+    g.stock=g.waste.reverse();g.waste=[];g.score=Math.max(0,g.score-100);
+    rec={type:'recycle',from:'w',to:'s',cards:[]};
+  }else if(mv.k==='m'){
+    const cards=peek(g,mv.from,mv.n);
+    if(!canDrop(g,cards,mv.from,mv.to))return null;
+    const fi=+mv.from.slice(1),ti=+mv.to.slice(1);let flipped=null,d=0;
+    if(mv.from==='w')g.waste.pop();
+    else if(mv.from[0]==='f')g.found[fi].pop();
+    else{const p=g.tab[fi];p.splice(-mv.n);const top=p[p.length-1];if(top&&!top.up){top.up=true;flipped=cardName(top.c);d+=5}}
+    if(mv.to[0]==='f'){g.found[ti].push(cards[0]);d+=10}
+    else{g.tab[ti].push(...cards.map(c=>({c,up:true})));if(mv.from==='w')d+=5;else if(mv.from[0]==='f')d-=15}
+    g.score=Math.max(0,g.score+d);
+    rec={type:'move',from:mv.from,to:mv.to,cards:cards.map(cardName),flipped};
+  }else return null;
+  g.log.push({n:g.log.length+1,t:mv.t,...rec,scoreDelta:g.score-before,score:g.score,
+    stockCount:g.stock.length,wasteCount:g.waste.length,foundationCount:g.found.reduce((a,f)=>a+f.length,0)});
+  return rec;
+}
+const foundCount=g=>g.found.reduce((a,f)=>a+f.length,0);
+
+// ---------- url state ----------
+// S = {v:1, d:'YYYY-MM-DD', s:startEpochMs|null, m:[[dtMs,'d'|'r'|'m',from,to,n]], e:null|[dtMs,'win'|'surrender']}
+const b64=o=>btoa(JSON.stringify(o)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const unb64=s=>JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
+const encodeState=S=>b64(S);
+function loadState(){
+  let note=null;
+  const m=/^#g=([\w-]+)$/.exec(location.hash);
+  if(m){
+    try{
+      const S=unb64(m[1]);
+      if(S.v!==1||!/^\d{4}-\d\d-\d\d$/.test(S.d)||!Array.isArray(S.m))throw 0;
+      const g=newGame(S.d);
+      for(const x of S.m){
+        const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4]});
+        if(!ok)throw 0;
+        g.log[g.log.length-1].at=new Date(S.s+x[0]).toISOString();
+      }
+      return {S,g,note};
+    }catch(e){note='Could not read the game in the URL — starting today’s game.'}
+  }
+  const d=pacificDate();
+  return {S:{v:1,d,s:null,m:[],e:null},g:newGame(d),note};
+}
+
+// ---------- game controller ----------
+let {S,g,note}=loadState();
+let sel=null; // {addr, idx, n}
+const $=id=>document.getElementById(id);
+const ended=()=>!!S.e;
+function save(){history.replaceState(null,'','#g='+encodeState(S))}
+function act(mv){
+  if(ended())return false;
+  const now=Date.now();if(S.s==null)S.s=now;
+  mv.t=now-S.s;
+  if(!apply(g,mv))return false;
+  g.log[g.log.length-1].at=new Date(now).toISOString();
+  S.m.push(mv.k==='m'?[mv.t,'m',mv.from,mv.to,mv.n]:[mv.t,mv.k]);
+  if(foundCount(g)===52)S.e=[mv.t,'win'];
+  save();return true;
+}
+function surrender(){
+  if(ended()||!confirm('Surrender and end this game?'))return;
+  const now=Date.now();if(S.s==null)S.s=now;
+  S.e=[now-S.s,'surrender'];sel=null;save();render();
+}
+
+function onClick(e){
+  if(ended())return;
+  const cardEl=e.target.closest('[data-idx]'),pileEl=e.target.closest('[data-pile]');
+  if(!pileEl)return;
+  const addr=pileEl.dataset.pile,idx=cardEl?+cardEl.dataset.idx:-1;
+  if(addr==='s'){sel=null;act({k:g.stock.length?'d':'r'});return render()}
+  if(sel){
+    const same=sel.addr===addr&&sel.idx===idx;
+    const cards=peek(g,sel.addr,sel.n);
+    if(same){
+      if(sel.n===1&&act({k:'m',from:sel.addr,to:'f'+suitOf(cards[0]),n:1})){sel=null;return render()}
+      sel=null;return render();
+    }
+    if(addr[0]==='f'||addr[0]==='t'){
+      const to=addr[0]==='f'?'f'+suitOf(cards[0]):addr;
+      if(act({k:'m',from:sel.addr,to,n:sel.n})){sel=null;return render()}
+    }
+    sel=null;
+  }
+  if(idx>=0||addr==='w'){
+    const i=idx<0?-1:idx;
+    if(addr==='w'&&g.waste.length&&(i<0||i===g.waste.length-1))sel={addr,idx:g.waste.length-1,n:1};
+    else if(addr[0]==='f'&&g.found[+addr[1]].length)sel={addr,idx:g.found[+addr[1]].length-1,n:1};
+    else if(addr[0]==='t'&&i>=0){const p=g.tab[+addr[1]];if(p[i]&&p[i].up)sel={addr,idx:i,n:p.length-i}}
+  }
+  render();
+}
+
+// ---------- rendering ----------
+function cardHTML(c,style,extra='',idx){
+  return `<div class="card ${isRed(c)?'red':''} ${extra}" style="${style}" data-idx="${idx}"><span class="tl">${RANKS[rankOf(c)]}${SUITS[suitOf(c)]}</span><span class="mid">${SUITS[suitOf(c)]}</span></div>`;
+}
+const isSel=(addr,idx,n=1)=>sel&&sel.addr===addr&&idx>=sel.idx&&idx<sel.idx+sel.n;
+function render(){
+  let h='<div class="top">';
+  h+=`<div class="pile slot stockc" data-pile="s" data-label="${g.stock.length?'':'↻'}">${g.stock.length?`<div class="card down" style="top:0"></div>`:''}</div>`;
+  h+='<div class="pile waste" data-pile="w">';
+  const w=g.waste,start=Math.max(0,w.length-3);
+  for(let i=start;i<w.length;i++)h+=cardHTML(w[i],`top:0;left:calc(var(--cw)*${(i-start)*.28})`,isSel('w',i)?'sel':'',i);
+  h+='</div>';
+  for(let s=0;s<4;s++){
+    const f=g.found[s];
+    h+=`<div class="pile slot f${s}" data-pile="f${s}" data-label="${SUITS[s]}">`;
+    if(f.length)h+=cardHTML(f[f.length-1],'top:0',isSel('f'+s,f.length-1)?'sel':'',f.length-1);
+    h+='</div>';
+  }
+  h+='</div><div class="tab">';
+  g.tab.forEach((p,i)=>{
+    let y=0;const addr='t'+i;let inner='';
+    p.forEach((x,j)=>{
+      inner+=x.up?cardHTML(x.c,`top:calc(var(--cw)*${y})`,isSel(addr,j)?'sel':'',j)
+                 :`<div class="card down" style="top:calc(var(--cw)*${y})"></div>`;
+      y+=x.up?.34:.17;
+    });
+    h+=`<div class="pile ${p.length?'':'slot'}" data-pile="${addr}" data-label="${p.length?'':'K'}" style="height:calc(var(--ch) + var(--cw)*${Math.max(0,y-(p.length?(p[p.length-1].up?.34:.17):0))})">${inner}</div>`;
+  });
+  h+='</div>';
+  $('board').innerHTML=h;
+  $('date').textContent=S.d+(S.d!==pacificDate()?' (past)':'');
+  $('moves').textContent=g.log.length;$('score').textContent=g.score;
+  $('surrender').hidden=ended();
+  renderPanel();tick();
+}
+const fmtTime=ms=>{const s=Math.floor(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`};
+const elapsed=()=>S.e?S.e[0]:(S.s==null?0:Date.now()-S.s);
+function tick(){$('time').textContent=fmtTime(elapsed())}
+setInterval(()=>{if(!ended())tick()},1000);
+
+function renderPanel(){
+  const p=$('panel');
+  if(!ended()){
+    p.hidden=!(note||S.d!==pacificDate());
+    p.innerHTML=(note?`<div>${note}</div>`:'')+(S.d!==pacificDate()?`<div>Viewing the ${S.d} game. <a href="${location.pathname}">Play today’s game</a></div>`:'');
+    return;
+  }
+  const won=S.e[1]==='win';
+  p.hidden=false;
+  p.innerHTML=`<h2>${won?'You won! 🎉':'Game over — surrendered'}</h2>
+    <div>${summary()}</div>
+    <div class="row">
+      <button id="exJson">Export JSON</button>
+      <button id="exText">Copy text</button>
+      <button id="exUrl">Copy URL</button>
+    </div>`;
+  $('exJson').onclick=downloadJson;
+  $('exText').onclick=()=>copy(gameText(),'Game text copied');
+  $('exUrl').onclick=()=>copy(location.href,'URL copied');
+}
+const summary=()=>`${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · score ${g.score} · ${fmtTime(elapsed())}`;
+
+// ---------- export ----------
+const iso=ms=>new Date(ms).toISOString();
+function exportData(){
+  return {
+    game:'solitaire',variant:'klondike',draw:3,passes:'unlimited',
+    date:S.d,timezone:'America/Los_Angeles',seed:seedString(S.d),
+    result:S.e?(S.e[1]==='win'?'won':'surrendered'):'in-progress',
+    startedAt:S.s==null?null:iso(S.s),
+    endedAt:S.e&&S.s!=null?iso(S.s+S.e[0]):null,
+    durationMs:elapsed(),
+    score:g.score,moveCount:g.log.length,foundationCount:foundCount(g),
+    initialDeck:g.deck.map(cardName),
+    initialTableau:g.initialTableau,
+    initialStock:g.deck.slice(28).map(cardName),
+    scoring:{wasteToTableau:5,toFoundation:10,flipTableauCard:5,foundationToTableau:-15,recycleWaste:-100,floor:0},
+    moves:g.log,
+    finalState:{
+      stock:g.stock.map(cardName),waste:g.waste.map(cardName),
+      foundations:Object.fromEntries(SUITS.map((s,i)=>[s,g.found[i].map(cardName)])),
+      tableau:g.tab.map(p=>p.map(x=>({card:cardName(x.c),faceUp:x.up})))
+    },
+    url:location.href
+  };
+}
+function downloadJson(){
+  const blob=new Blob([JSON.stringify(exportData(),null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`solitaire-${S.d}.json`;
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+const place=a=>a==='w'?'waste':a==='s'?'stock':a[0]==='f'?`foundation ${SUITS[+a[1]]}`:`column ${+a[1]+1}`;
+function gameText(){
+  const lines=[`Klondike Solitaire (draw 3) — ${S.d}`,
+    `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),
+    'Foundations: '+SUITS.map((s,i)=>s+g.found[i].length).join(' '),'',
+    ...g.log.map(m=>{
+      const body=m.type==='draw'?`Draw → ${m.cards.join(' ')}`:m.type==='recycle'?'Recycle waste to stock'
+        :`${m.cards.join(' ')}: ${place(m.from)} → ${place(m.to)}${m.flipped?` (flipped ${m.flipped})`:''}`;
+      return `${m.n}. [${fmtTime(m.t)}] ${body} (${m.scoreDelta>=0?'+':''}${m.scoreDelta})`;
+    }),'',location.href];
+  return lines.join('\n');
+}
+async function copy(text,msg){
+  try{await navigator.clipboard.writeText(text)}
+  catch{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}
+  const el=$('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1500);
+}
+
+$('board').addEventListener('click',onClick);
+$('surrender').addEventListener('click',surrender);
+window.addEventListener('hashchange',()=>{({S,g,note}=loadState());sel=null;render()});
+if(!location.hash)save();
+render();
+</script>
+</body>
+</html>
