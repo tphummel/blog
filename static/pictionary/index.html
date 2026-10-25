@@ -55,8 +55,16 @@
     #clue.hidden { color: var(--muted); font-size: 1.1rem; font-weight: 400; }
     #meta { color: var(--muted); font-size: 0.85rem; text-align: center; margin-top: 0.5rem; min-height: 1.2em; }
     #timer { font-variant-numeric: tabular-nums; font-size: 1.5rem; text-align: center; margin: 1rem 0 0; }
-    #history { color: var(--muted); font-size: 0.9rem; margin-top: 1.5rem; }
-    #history ol { padding-left: 1.25rem; margin: 0.25rem 0; }
+    #history { font-size: 0.9rem; margin-top: 1.5rem; }
+    #history table { width: 100%; border-collapse: collapse; }
+    #history th, #history td { text-align: left; padding: 0.3rem 0.4rem; border-bottom: 1px solid var(--border); }
+    #history thead th { color: var(--muted); font-weight: 600; }
+    #history tbody th.date { background: #eee; font-size: 0.95rem; }
+    #history td.time { white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
+    #history td.in-play { color: var(--muted); font-style: italic; }
+    #history input[type="text"] { width: 100%; box-sizing: border-box; font: inherit; padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 4px; }
+    #history button { padding: 0.2rem 0.5rem; cursor: pointer; }
+    #history .success { text-align: center; }
   </style>
 </head>
 <body>
@@ -1639,7 +1647,11 @@
     let difficulty = 'easy'
     let current = null
     let hidden = false
+    const STORAGE_KEY = 'pictionary-history'
+    // newest first: { id, ts, text, category, difficulty, player, success }
     let history = []
+    try { history = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [] } catch (e) {}
+    let currentId = null
     // clues already shown, per "category|difficulty" pool, so repeats wait until the pool is used up
     const used = {}
     let timerId = null
@@ -1665,27 +1677,115 @@
       current = remaining[Math.floor(Math.random() * remaining.length)]
       used_.add(current.text)
       hidden = false
-      history.unshift(current.text)
-      history = history.slice(0, 10)
+      currentId = Date.now() + Math.random()
+      history.unshift({
+        id: currentId,
+        ts: Date.now(),
+        text: current.text,
+        category: current.category,
+        difficulty,
+        player: '',
+        success: false
+      })
+      save()
       render()
     }
 
+    function save () {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(history)) } catch (e) {}
+    }
+
     function render () {
+      renderClue()
+      renderHistory()
+    }
+
+    function renderClue () {
       if (!current) return
       clueEl.className = hidden ? 'hidden' : ''
       clueEl.textContent = hidden ? '(hidden)' : current.text
       metaEl.textContent = current.category + ' \u00b7 ' + difficulty
+    }
+
+    function dateKey (ts) {
+      const d = new Date(ts)
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+    }
+
+    function cell (tr, className) {
+      const td = document.createElement('td')
+      if (className) td.className = className
+      tr.appendChild(td)
+      return td
+    }
+
+    function renderHistory () {
       historyEl.innerHTML = ''
-      if (history.length > 1) {
-        historyEl.append('Recent clues:')
-        const ol = document.createElement('ol')
-        history.slice(1).forEach(t => {
-          const li = document.createElement('li')
-          li.textContent = t
-          ol.appendChild(li)
+      if (!history.length) return
+
+      const table = document.createElement('table')
+      const thead = table.createTHead().insertRow()
+      ;['Time', 'Clue', 'Player', 'Success', ''].forEach(label => {
+        const th = document.createElement('th')
+        th.textContent = label
+        thead.appendChild(th)
+      })
+
+      // newest first, bucketed by the local date each clue was generated
+      const sorted = history.slice().sort((a, b) => b.ts - a.ts)
+      let lastDate = null
+      let tbody = null
+      sorted.forEach(entry => {
+        const key = dateKey(entry.ts)
+        if (key !== lastDate) {
+          lastDate = key
+          tbody = table.createTBody()
+          const th = document.createElement('th')
+          th.className = 'date'
+          th.colSpan = 5
+          th.textContent = new Date(entry.ts).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+          tbody.insertRow().appendChild(th)
+        }
+        const tr = tbody.insertRow()
+
+        cell(tr, 'time').textContent = new Date(entry.ts).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+
+        const clueCell = cell(tr)
+        if (entry.id === currentId) {
+          clueCell.className = 'in-play'
+          clueCell.textContent = '(in play)'
+        } else {
+          clueCell.textContent = entry.text
+          clueCell.title = entry.category + ' \u00b7 ' + entry.difficulty
+        }
+
+        const name = document.createElement('input')
+        name.type = 'text'
+        name.placeholder = 'Player'
+        name.setAttribute('aria-label', 'Player name')
+        name.value = entry.player
+        name.addEventListener('input', () => { entry.player = name.value; save() })
+        cell(tr).appendChild(name)
+
+        const box = document.createElement('input')
+        box.type = 'checkbox'
+        box.setAttribute('aria-label', 'Success')
+        box.checked = entry.success
+        box.addEventListener('change', () => { entry.success = box.checked; save() })
+        cell(tr, 'success').appendChild(box)
+
+        const del = document.createElement('button')
+        del.type = 'button'
+        del.textContent = 'Delete'
+        del.setAttribute('aria-label', 'Delete ' + (entry.id === currentId ? 'current clue' : entry.text))
+        del.addEventListener('click', () => {
+          history = history.filter(h => h.id !== entry.id)
+          save()
+          renderHistory()
         })
-        historyEl.appendChild(ol)
-      }
+        cell(tr).appendChild(del)
+      })
+      historyEl.appendChild(table)
     }
 
     function toggleTimer () {
@@ -1719,6 +1819,7 @@
       })
     })
     categorySelect.addEventListener('change', () => { if (current) generate() })
+    renderHistory()
     document.getElementById('generate').addEventListener('click', generate)
     document.getElementById('reveal').addEventListener('click', () => {
       if (!current) return
