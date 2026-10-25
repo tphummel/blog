@@ -270,19 +270,19 @@ function exportJson() {
   }, null, 2);
 }
 
-async function copyText() {
-  const btn = document.querySelector('[data-act=copy]');
+async function copyToClipboard(act, label, text) {
+  const btn = document.querySelector(`[data-act=${act}]`);
   let ok = true;
-  try { await navigator.clipboard.writeText(exportText()); } catch (e) { ok = false; }
+  try { await navigator.clipboard.writeText(text); } catch (e) { ok = false; }
   if (btn) btn.textContent = ok ? 'Copied!' : 'Copy failed';
-  setTimeout(() => { const b = document.querySelector('[data-act=copy]'); if (b) b.textContent = 'Copy text'; }, 1500);
+  setTimeout(() => { const b = document.querySelector(`[data-act=${act}]`); if (b) b.textContent = label; }, 1500);
 }
 
 function downloadJson() {
   const url = URL.createObjectURL(new Blob([exportJson()], { type: 'application/json' }));
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'yahtzee-game.json';
+  a.download = `yahtzee-${new Date().toISOString().replace(/[:.]/g, '-')}.json`; // ms precision: unique per download
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -360,6 +360,7 @@ function renderControls() {
 function renderExport() {
   return `<div class="bar" style="margin-top:16px"><span class="muted">Export</span><span>` +
     `<button data-act="copy" ${tokens ? '' : 'disabled'}>Copy text</button> ` +
+    `<button data-act="url" ${tokens ? '' : 'disabled'}>Copy URL</button> ` +
     `<button data-act="json" ${tokens ? '' : 'disabled'}>Download JSON</button></span></div>`;
 }
 
@@ -410,7 +411,8 @@ document.getElementById('app').addEventListener('click', (e) => {
     render();
   } else if (el.dataset.act === 'roll') roll();
   else if (el.dataset.act === 'new') newGame();
-  else if (el.dataset.act === 'copy') copyText();
+  else if (el.dataset.act === 'copy') copyToClipboard('copy', 'Copy text', exportText());
+  else if (el.dataset.act === 'url') copyToClipboard('url', 'Copy URL', location.href);
   else if (el.dataset.act === 'json') downloadJson();
   else if (el.dataset.tab) setTab(el.dataset.tab);
   else if (el.dataset.score !== undefined) score(Number(el.dataset.score));
