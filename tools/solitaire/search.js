@@ -16,10 +16,10 @@ if (isMainThread) {
     });
   }
 } else {
-  const E = require('./engine'), { solve } = require('./solver');
+  const E = require('./engine');
   const r = [];
   for (let n = workerData.w; n < N; n += W) {
-    const x = solve(E.dealDeck(n), CAP);
+    const x = E.solveGame(E.gameFromDeck('2028-01-01', E.dealDeck(n)), CAP);
     r.push({ n, solved: x.solved, nodes: x.nodes, len: x.path ? x.path.length : 0 });
   }
   parentPort.postMessage(r);

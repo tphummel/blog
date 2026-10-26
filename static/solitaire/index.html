@@ -54,16 +54,17 @@ a{color:#fff}
     <span>Moves <b id="moves">0</b></span>
     <span>Time <b id="time">0:00</b></span>
   </div>
+  <button id="auto" hidden>Auto-solve</button>
   <button id="surrender" class="danger">Surrender</button>
 </header>
 <div id="panel" hidden></div>
 <div class="board" id="board"></div>
-<p class="hint" id="hint">Tap a card, then tap where it goes. Tap a selected card again to send it to a foundation. Game state lives in the URL — bookmark it to resume.</p>
+<p class="hint" id="hint">Tap a card, then tap where it goes. Tap a selected card again to send it to a foundation. Once every tableau card is face up, Auto-solve can finish the game. Game state lives in the URL — bookmark it to resume.</p>
 <div id="toast"></div>
 <script>
 'use strict';
 // ---------- cards ----------
-const DRAW=1;
+const DRAW=2;
 const SUITS=['♠','♥','♦','♣'], RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const suitOf=c=>c/13|0, rankOf=c=>c%13, isRed=c=>{const s=suitOf(c);return s===1||s===2};
 const cardName=c=>RANKS[rankOf(c)]+SUITS[suitOf(c)];
@@ -75,13 +76,13 @@ function mulberry32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15
 // One fixed, solver-verified deal per calendar day (month/day), the same every year.
 // Index = day of year in a leap-year calendar, so Feb 29 has its own deal. Values are deal numbers
 // (see tools/solitaire). Days 1-10 of a month are easy, 11-20 medium, 21+ hard.
-const DEALS=/*deals*/[1220,3660,733,212,1665,2364,2110,746,3186,2199,699,3173,1987,2597,2453,1699,3241,2610,2932,3631,0,1165,123,3872,3118,2830,1466,238,882,594,573,225,835,149,3343,3089,1814,2424,2890,3123,3301,3720,1746,2589,1725,1382,3678,3479,1361,3602,2793,1793,230,1196,154,620,3293,2018,2861,1497,1649,3246,175,3979,2848,3259,942,2662,3683,2586,819,3958,3903,1785,1120,900,3107,1811,2955,3565,3704,1764,3971,3073,1044,1887,3484,1400,1023,3230,3031,1777,3408,3819,481,1324,2921,2256,926,638,2968,2667,2146,3832,1947,439,850,1638,2659,342,2240,3442,3010,3311,1337,2557,1570,1193,1083,1782,3180,1460,418,1727,3591,1363,1973,3138,2617,2185,46,1253,1342,3528,3219,2787,292,758,3664,1690,271,3358,1240,1041,3858,1219,1829,3981,2473,999,2774,1787,1533,779,3164,2355,3952,2156,3842,3698,2567,1669,161,1381,2779,51,839,3512,2703,441,2216,852,3706,601,2287,2143,3596,635,1478,3863,3486,3808,483,3999,928,3135,1195,3402,3347,3957,3292,742,2572,2195,3648,2140,2229,2784,2030,2119,2441,2907,1080,182,1203,1436,3876,2224,3944,2669,2292,2936,3546,1962,1098,577,90,2310,1556,658,3653,2700,3577,1789,2399,2865,2200,836,1158,2090,2446,3755,883,2737,653,3360,1996,1242,3449,865,1475,2962,3373,412,938,2247,2514,1150,1239,2836,87,1163,3603,2239,3933,2946,3035,3912,341,430,2870,896,1506,3569,2043,3962,3674,336,3831,3166,2501,2967,2302,2912,820,1841,1265,3705,2951,689,2498,1134,1922,2011,1684,299,2307,3904,3150,2485,2430,3273,545,778,1637,3789,1527,1760,3357,1095,142,1307,2849,100,3239,2477,503,2100,825,1291,194,2401,694,3744,118,1189,3985,3676,1325,338,50,893,3943,2435,317,3040,291,3951,969,2511,2134,393,1003,2922,3532,351,3867,1461,974,3037,398,1618,2461,1796,1652,1770,3833,1948,152,97,3147,652,2139,1241,2495,1503,3278,2291,1249,3723,618,3435,851,3846,254,288]/*end*/;
+const DEALS=/*deals*/[2008,1110,1720,212,3406,534,2131,890,2487,2720,2296,322,877,500,68,2741,3097,2343,2665,2610,2673,1309,3550,3783,1432,2254,1966,3563,225,1911,3741,2466,204,2644,1890,848,560,3843,3267,3301,3767,1424,2877,1835,3055,1204,2801,2225,717,2403,2026,903,1547,2335,450,1992,3589,3822,2924,3246,1505,2115,1306,1539,1162,1251,963,3170,3780,3958,1649,3547,531,3060,3903,3094,2196,1154,2175,3395,3945,2992,1806,942,2772,1675,1565,201,1044,2641,468,887,167,2984,1421,3107,1311,557,1201,1057,1667,2031,756,3806,701,735,1790,2023,3942,2413,1515,2654,1413,3853,2811,1536,583,2303,3002,2015,308,392,2688,2400,2201,2756,2845,3311,3955,2447,3057,3345,3434,1460,109,719,2926,664,1740,1596,465,1905,198,2206,3371,512,135,368,224,313,2143,3363,1316,2913,3612,130,2947,1206,3646,3447,1219,2062,266,2274,2884,2342,1444,2287,1622,1512,3232,826,402,3452,347,203,436,703,881,1491,2190,72,2486,3884,258,491,2321,2067,182,3376,1635,1326,2368,2779,3944,2292,1051,1085,3237,3737,1763,255,2834,517,1737,1826,839,3889,496,1805,3203,564,2161,983,3745,407,1483,3724,1750,763,1695,43,3936,1708,3661,2009,1488,1323,2776,3653,3509,1014,637,1208,3648,2407,1886,3949,391,480,3530,2344,2666,2611,2428,789,1789,3475,1446,493,116,3776,2535,1637,1857,3344,2446,1925,3501,2747,430,2027,1883,231,1624,671,3056,95,2014,684,1006,629,1239,2404,1870,3556,2281,1294,2891,3124,1129,752,3425,3048,1684,2993,3459,3925,3027,11,2451,2019,2629,1820,519,3336,3891,2561,1430,2273,3205,422,1642,1121,2341,553,2760,3781,3404,2307,2718,223,689,1655,1511,2519,3485,901,1168,647,3464,1613,1092,283,893,1210,1333,2642,2121,2820,1079,3142,1257,3087,3553,37,2278,2956,2359,618,2393,419,2715,919,254,1359,2202,262,2935,1872,3092,2283,398,2694,3016,3210,1414,3655,2757,2414,2736,2914,1529,3592,3770,2728]/*end*/;
 const DAYS_BEFORE=[0,31,60,91,121,152,182,213,244,274,305,335];
 const validDate=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d);if(!m)return false;const t=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));return t.toISOString().slice(0,10)===d};
 const dealSlot=d=>DAYS_BEFORE[+d.slice(5,7)-1]+ +d.slice(8,10)-1;
 const dealNumber=d=>DEALS[dealSlot(d)];
 const tierOf=d=>{const n=+d.slice(8,10);return n<=10?'easy':n<=20?'medium':'hard'};
-const seedString=n=>`klondike-draw1-deal-${n}`;
+const seedString=n=>`klondike-draw2-deal-${n}`;
 const pacificDate=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 
 function dealDeck(n){
@@ -90,8 +91,8 @@ function dealDeck(n){
   for(let i=51;i>0;i--){const j=Math.floor(rng()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
   return deck;
 }
-function newGame(date){
-  const deck=dealDeck(dealNumber(date));
+function newGame(date){return gameFromDeck(date,dealDeck(dealNumber(date)))}
+function gameFromDeck(date,deck){
   let k=0;const tab=[];
   for(let i=0;i<7;i++){const p=[];for(let j=0;j<=i;j++)p.push({c:deck[k++],up:j===i});tab.push(p)}
   return {date,deck,initialTableau:tab.map(p=>p.map(x=>cardName(x.c))),
@@ -139,11 +140,124 @@ function apply(g,mv){
     else g.tab[ti].push(...cards.map(c=>({c,up:true})));
     rec={type:'move',from:mv.from,to:mv.to,cards:cards.map(cardName),flipped};
   }else return null;
-  g.log.push({n:g.log.length+1,t:mv.t,...rec,
+  g.log.push({n:g.log.length+1,t:mv.t,...rec,...(mv.auto?{auto:true}:{}),
     stockCount:g.stock.length,wasteCount:g.waste.length,foundationCount:g.found.reduce((a,f)=>a+f.length,0)});
   return rec;
 }
 const foundCount=g=>g.found.reduce((a,f)=>a+f.length,0);
+
+// ---------- solver (powers Auto-solve; also used offline to pick the daily deals) ----------
+// Thoughtful DFS over abstract moves; all cards visible. Talon is modelled as a cyclic list T with
+// p cards in the waste: a draw moves the pointer by DRAW, and a recycle returns it to 0.
+const OPP=[[1,2],[0,3],[0,3],[1,2]];
+function stateOf(g){
+  return {tab:g.tab.map(p=>p.map(x=>x.c)),
+    up:g.tab.map(p=>{let u=0;for(let i=p.length-1;i>=0&&p[i].up;i--)u++;return u}),
+    found:g.found.map(f=>f.length),T:g.waste.concat(g.stock.slice().reverse()),p:g.waste.length};
+}
+const cloneSt=s=>({tab:s.tab.map(p=>p.slice()),up:s.up.slice(),found:s.found.slice(),T:s.T,p:s.p});
+function stKey(s){
+  const sigs=s.tab.map((p,i)=>s.up[i]+':'+p.join(','));sigs.sort();
+  return sigs.join('|')+'#'+s.found.join(',')+'#'+s.T.join(',')+'#'+s.p;
+}
+const isSafe=(c,f)=>{const r=rankOf(c);return r<=1||(f[OPP[suitOf(c)][0]]>=r&&f[OPP[suitOf(c)][1]]>=r)};
+// waste sizes q (>=1) reachable from the current pointer by drawing and recycling; waste top is then T[q-1]
+function reachable(s){
+  const L=s.T.length,out=[];if(!L)return out;
+  let q=s.p;
+  for(;;){if(q>=1)out.push(q);if(q>=L)break;q=Math.min(L,q+DRAW)}
+  q=0;
+  for(;;){q=Math.min(L,q+DRAW);out.push(q);if(q>=L)break}
+  return [...new Set(out)];
+}
+function popPile(s,i){const c=s.tab[i].pop();s.up[i]--;if(s.up[i]===0&&s.tab[i].length)s.up[i]=1;return c}
+function takeTalon(s,q){const c=s.T[q-1];s.T=s.T.slice();s.T.splice(q-1,1);s.p=q-1;return c}
+function autoSafe(s,moves){
+  for(let again=true;again;){
+    again=false;
+    for(let i=0;i<7;i++){
+      const p=s.tab[i];if(!p.length)continue;
+      const c=p[p.length-1];
+      if(rankOf(c)===s.found[suitOf(c)]&&isSafe(c,s.found)){popPile(s,i);s.found[suitOf(c)]++;moves.push({f:i,t:'f',n:1,c});again=true}
+    }
+    for(const q of reachable(s)){
+      const c=s.T[q-1];
+      if(rankOf(c)===s.found[suitOf(c)]&&isSafe(c,s.found)){takeTalon(s,q);s.found[suitOf(c)]++;moves.push({f:'w',q,t:'f',n:1,c});again=true;break}
+    }
+  }
+}
+const fits=(s,c,j)=>{
+  const p=s.tab[j];if(!p.length)return rankOf(c)===12;
+  const top=p[p.length-1];return isRed(top)!==isRed(c)&&rankOf(c)===rankOf(top)-1;
+};
+function candidates(s){
+  const out=[];
+  for(let i=0;i<7;i++){
+    const p=s.tab[i];if(!p.length)continue;
+    const top=p[p.length-1];
+    if(rankOf(top)===s.found[suitOf(top)])out.push({pri:p.length>s.up[i]?0:1,mv:{f:i,t:'f',n:1,c:top}});
+    for(let k=1;k<=s.up[i];k++){
+      const b=p[p.length-k];
+      for(let j=0;j<7;j++){
+        if(j===i||!fits(s,b,j))continue;
+        if(!s.tab[j].length&&k===p.length)continue; // pointless king shuffle
+        out.push({pri:k===s.up[i]&&p.length>k?0:3,mv:{f:i,t:j,n:k,c:b}});
+      }
+    }
+  }
+  for(const q of reachable(s)){
+    const c=s.T[q-1];
+    if(rankOf(c)===s.found[suitOf(c)])out.push({pri:1,mv:{f:'w',q,t:'f',n:1,c}});
+    for(let j=0;j<7;j++)if(fits(s,c,j))out.push({pri:2,mv:{f:'w',q,t:j,n:1,c}});
+  }
+  out.sort((a,b)=>a.pri-b.pri);
+  return out.map(x=>x.mv);
+}
+function stepSt(s,mv){
+  const n=cloneSt(s);let cards;
+  if(mv.f==='w')cards=[takeTalon(n,mv.q)];
+  else{const p=n.tab[mv.f];cards=p.splice(p.length-mv.n,mv.n);n.up[mv.f]-=mv.n;if(n.up[mv.f]===0&&p.length)n.up[mv.f]=1}
+  if(mv.t==='f')n.found[suitOf(cards[0])]++;else{n.tab[mv.t].push(...cards);n.up[mv.t]+=cards.length}
+  return n;
+}
+// Returns {solved, nodes, path}; nodes (DFS nodes to the first solution) is the difficulty metric.
+function solveGame(g,cap){
+  let nodes=0,capped=false;const seen=new Set();
+  const root=stateOf(g),pre=[];autoSafe(root,pre);
+  const won=s=>s.found[0]+s.found[1]+s.found[2]+s.found[3]===52;
+  function dfs(s){
+    if(won(s))return [];
+    if(++nodes>cap){capped=true;return null}
+    const k=stKey(s);if(seen.has(k))return null;seen.add(k);
+    for(const mv of candidates(s)){
+      const n=stepSt(s,mv),extra=[];autoSafe(n,extra);
+      const r=dfs(n);if(capped)return null;
+      if(r)return [mv,...extra,...r];
+    }
+    return null;
+  }
+  const r=dfs(root);
+  return {solved:!!r,nodes,path:r?[...pre,...r]:null};
+}
+function cloneGame(g){
+  return {...g,stock:g.stock.slice(),waste:g.waste.slice(),found:g.found.map(f=>f.slice()),
+    tab:g.tab.map(p=>p.map(x=>({...x}))),log:[]};
+}
+// Turn a solver path into real game moves (draws/recycles included) by replaying on a copy.
+function planMoves(g,path){
+  const c=cloneGame(g),moves=[];
+  const go=mv=>{if(!apply(c,{t:0,...mv}))throw new Error('illegal plan move');moves.push(mv)};
+  for(const m of path){
+    if(m.f==='w'){
+      for(let guard=0;c.waste.length!==m.q;){
+        if(++guard>200)throw new Error('talon target unreachable');
+        go({k:c.stock.length?'d':'r'});
+      }
+    }
+    go({k:'m',from:m.f==='w'?'w':'t'+m.f,to:m.t==='f'?'f'+suitOf(m.c):'t'+m.t,n:m.n});
+  }
+  return moves;
+}
 
 // ---------- url state ----------
 // S = {v:1, d:'YYYY-MM-DD', s:startEpochMs|null, m:[[dtMs,'d'|'r'|'m',from,to,n]], e:null|[dtMs,'win'|'surrender']}
@@ -159,7 +273,7 @@ function loadState(){
       if(S.v!==1||!validDate(S.d)||!Array.isArray(S.m))throw 0;
       const g=newGame(S.d);
       for(const x of S.m){
-        const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4]});
+        const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4],auto:!!x[5]});
         if(!ok)throw 0;
         g.log[g.log.length-1].at=new Date(S.s+x[0]).toISOString();
       }
@@ -173,6 +287,7 @@ function loadState(){
 // ---------- game controller ----------
 let {S,g,note}=loadState();
 let sel=null; // {addr, idx, n}
+let busy=false; // true while Auto-solve is playing
 const $=id=>document.getElementById(id);
 const ended=()=>!!S.e;
 function save(){history.replaceState(null,'','#g='+encodeState(S))}
@@ -183,17 +298,18 @@ function act(mv){
   if(!apply(g,mv))return false;
   g.log[g.log.length-1].at=new Date(now).toISOString();
   S.m.push(mv.k==='m'?[mv.t,'m',mv.from,mv.to,mv.n]:[mv.t,mv.k]);
+  if(mv.auto){const e=S.m[S.m.length-1];while(e.length<5)e.push(0);e[5]=1} // 6th field marks Auto-solve moves
   if(foundCount(g)===52)S.e=[mv.t,'win'];
   save();return true;
 }
 function surrender(){
-  if(ended()||!confirm('Surrender and end this game?'))return;
+  if(ended()||busy||!confirm('Surrender and end this game?'))return;
   const now=Date.now();if(S.s==null)S.s=now;
   S.e=[now-S.s,'surrender'];sel=null;save();render();
 }
 
 function onClick(e){
-  if(ended())return;
+  if(ended()||busy)return;
   const cardEl=e.target.closest('[data-idx]'),pileEl=e.target.closest('[data-pile]');
   if(!pileEl)return;
   const addr=pileEl.dataset.pile,idx=cardEl?+cardEl.dataset.idx:-1;
@@ -252,7 +368,8 @@ function render(){
   $('board').innerHTML=h;
   $('date').textContent=`${S.d} · ${tierOf(S.d)}`+(S.d!==pacificDate()?' (past)':'');
   $('moves').textContent=g.log.length;
-  $('surrender').hidden=ended();
+  $('surrender').hidden=ended()||busy;
+  $('auto').hidden=ended()||busy||g.tab.some(p=>p.some(x=>!x.up));
   renderPanel();tick();
 }
 const fmtTime=ms=>{const s=Math.floor(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`};
@@ -318,18 +435,33 @@ function gameText(){
     ...g.log.map(m=>{
       const body=m.type==='draw'?`Draw → ${m.cards.join(' ')}`:m.type==='recycle'?'Recycle waste to stock'
         :`${m.cards.join(' ')}: ${place(m.from)} → ${place(m.to)}${m.flipped?` (flipped ${m.flipped})`:''}`;
-      return `${m.n}. [${fmtTime(m.t)}] ${body}`;
+      return `${m.n}. [${fmtTime(m.t)}] ${body}${m.auto?" (auto)":""}`;
     }),'',location.href];
   return lines.join('\n');
 }
 async function copy(text,msg){
   try{await navigator.clipboard.writeText(text)}
   catch{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}
-  const el=$('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1500);
+  toast(msg);
 }
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1800)}
 
 $('board').addEventListener('click',onClick);
 $('surrender').addEventListener('click',surrender);
+function autoSolve(){
+  if(ended()||busy)return;
+  const r=solveGame(g,300000);
+  if(!r.solved){toast('No finish found from here — keep playing');return}
+  const plan=planMoves(g,r.path);
+  busy=true;sel=null;render();
+  const next=()=>{
+    const mv=plan.shift();
+    if(!mv||ended()){busy=false;render();return}
+    act({...mv,auto:true});render();setTimeout(next,plan.length>60?40:90);
+  };
+  next();
+}
+$('auto').addEventListener('click',autoSolve);
 window.addEventListener('hashchange',()=>{({S,g,note}=loadState());sel=null;render()});
 if(!location.hash)save();
 render();
