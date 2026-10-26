@@ -72,13 +72,26 @@ const cardName=c=>RANKS[rankOf(c)]+SUITS[suitOf(c)];
 function xmur3(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
   return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
 function mulberry32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const seedString=date=>`klondike-draw1-${date}`;
+// One fixed, solver-verified deal per calendar day (month/day), the same every year.
+// Index = day of year in a leap-year calendar, so Feb 29 has its own deal. Values are deal numbers
+// (see tools/solitaire). Days 1-10 of a month are easy, 11-20 medium, 21+ hard.
+const DEALS=/*deals*/[1220,3660,733,212,1665,2364,2110,746,3186,2199,699,3173,1987,2597,2453,1699,3241,2610,2932,3631,0,1165,123,3872,3118,2830,1466,238,882,594,573,225,835,149,3343,3089,1814,2424,2890,3123,3301,3720,1746,2589,1725,1382,3678,3479,1361,3602,2793,1793,230,1196,154,620,3293,2018,2861,1497,1649,3246,175,3979,2848,3259,942,2662,3683,2586,819,3958,3903,1785,1120,900,3107,1811,2955,3565,3704,1764,3971,3073,1044,1887,3484,1400,1023,3230,3031,1777,3408,3819,481,1324,2921,2256,926,638,2968,2667,2146,3832,1947,439,850,1638,2659,342,2240,3442,3010,3311,1337,2557,1570,1193,1083,1782,3180,1460,418,1727,3591,1363,1973,3138,2617,2185,46,1253,1342,3528,3219,2787,292,758,3664,1690,271,3358,1240,1041,3858,1219,1829,3981,2473,999,2774,1787,1533,779,3164,2355,3952,2156,3842,3698,2567,1669,161,1381,2779,51,839,3512,2703,441,2216,852,3706,601,2287,2143,3596,635,1478,3863,3486,3808,483,3999,928,3135,1195,3402,3347,3957,3292,742,2572,2195,3648,2140,2229,2784,2030,2119,2441,2907,1080,182,1203,1436,3876,2224,3944,2669,2292,2936,3546,1962,1098,577,90,2310,1556,658,3653,2700,3577,1789,2399,2865,2200,836,1158,2090,2446,3755,883,2737,653,3360,1996,1242,3449,865,1475,2962,3373,412,938,2247,2514,1150,1239,2836,87,1163,3603,2239,3933,2946,3035,3912,341,430,2870,896,1506,3569,2043,3962,3674,336,3831,3166,2501,2967,2302,2912,820,1841,1265,3705,2951,689,2498,1134,1922,2011,1684,299,2307,3904,3150,2485,2430,3273,545,778,1637,3789,1527,1760,3357,1095,142,1307,2849,100,3239,2477,503,2100,825,1291,194,2401,694,3744,118,1189,3985,3676,1325,338,50,893,3943,2435,317,3040,291,3951,969,2511,2134,393,1003,2922,3532,351,3867,1461,974,3037,398,1618,2461,1796,1652,1770,3833,1948,152,97,3147,652,2139,1241,2495,1503,3278,2291,1249,3723,618,3435,851,3846,254,288]/*end*/;
+const DAYS_BEFORE=[0,31,60,91,121,152,182,213,244,274,305,335];
+const validDate=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d);if(!m)return false;const t=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));return t.toISOString().slice(0,10)===d};
+const dealSlot=d=>DAYS_BEFORE[+d.slice(5,7)-1]+ +d.slice(8,10)-1;
+const dealNumber=d=>DEALS[dealSlot(d)];
+const tierOf=d=>{const n=+d.slice(8,10);return n<=10?'easy':n<=20?'medium':'hard'};
+const seedString=n=>`klondike-draw1-deal-${n}`;
 const pacificDate=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 
-function newGame(date){
-  const rng=mulberry32(xmur3(seedString(date))());
+function dealDeck(n){
+  const rng=mulberry32(xmur3(seedString(n))());
   const deck=Array.from({length:52},(_,i)=>i);
   for(let i=51;i>0;i--){const j=Math.floor(rng()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
+  return deck;
+}
+function newGame(date){
+  const deck=dealDeck(dealNumber(date));
   let k=0;const tab=[];
   for(let i=0;i<7;i++){const p=[];for(let j=0;j<=i;j++)p.push({c:deck[k++],up:j===i});tab.push(p)}
   return {date,deck,initialTableau:tab.map(p=>p.map(x=>cardName(x.c))),
@@ -143,7 +156,7 @@ function loadState(){
   if(m){
     try{
       const S=unb64(m[1]);
-      if(S.v!==1||!/^\d{4}-\d\d-\d\d$/.test(S.d)||!Array.isArray(S.m))throw 0;
+      if(S.v!==1||!validDate(S.d)||!Array.isArray(S.m))throw 0;
       const g=newGame(S.d);
       for(const x of S.m){
         const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4]});
@@ -237,7 +250,7 @@ function render(){
   });
   h+='</div>';
   $('board').innerHTML=h;
-  $('date').textContent=S.d+(S.d!==pacificDate()?' (past)':'');
+  $('date').textContent=`${S.d} · ${tierOf(S.d)}`+(S.d!==pacificDate()?' (past)':'');
   $('moves').textContent=g.log.length;
   $('surrender').hidden=ended();
   renderPanel();tick();
@@ -267,14 +280,14 @@ function renderPanel(){
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
   $('exUrl').onclick=()=>copy(location.href,'URL copied');
 }
-const summary=()=>`${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
+const summary=()=>`${S.d} (${tierOf(S.d)}) · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
 // ---------- export ----------
 const iso=ms=>new Date(ms).toISOString();
 function exportData(){
   return {
     game:'solitaire',variant:'klondike',draw:DRAW,passes:'unlimited',
-    date:S.d,timezone:'America/Los_Angeles',seed:seedString(S.d),
+    date:S.d,difficulty:tierOf(S.d),dealNumber:dealNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
     result:S.e?(S.e[1]==='win'?'won':'surrendered'):'in-progress',
     startedAt:S.s==null?null:iso(S.s),
     endedAt:S.e&&S.s!=null?iso(S.s+S.e[0]):null,
@@ -299,7 +312,7 @@ function downloadJson(){
 }
 const place=a=>a==='w'?'waste':a==='s'?'stock':a[0]==='f'?`foundation ${SUITS[+a[1]]}`:`column ${+a[1]+1}`;
 function gameText(){
-  const lines=[`Klondike Solitaire (draw ${DRAW}) — ${S.d}`,
+  const lines=[`Klondike Solitaire (draw ${DRAW}, ${tierOf(S.d)}) — ${S.d}`,
     `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),
     'Foundations: '+SUITS.map((s,i)=>s+g.found[i].length).join(' '),'',
     ...g.log.map(m=>{

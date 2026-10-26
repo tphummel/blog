@@ -1,0 +1,2201 @@
+{
+ "note": "date = MM-DD; n = deal number (seed klondike-draw1-deal-<n>); nodes = DFS nodes to first solution (difficulty metric)",
+ "deals": [
+  {
+   "date": "01-01",
+   "tier": "easy",
+   "n": 1220,
+   "nodes": 32
+  },
+  {
+   "date": "01-02",
+   "tier": "easy",
+   "n": 3660,
+   "nodes": 39
+  },
+  {
+   "date": "01-03",
+   "tier": "easy",
+   "n": 733,
+   "nodes": 33
+  },
+  {
+   "date": "01-04",
+   "tier": "easy",
+   "n": 212,
+   "nodes": 36
+  },
+  {
+   "date": "01-05",
+   "tier": "easy",
+   "n": 1665,
+   "nodes": 39
+  },
+  {
+   "date": "01-06",
+   "tier": "easy",
+   "n": 2364,
+   "nodes": 11
+  },
+  {
+   "date": "01-07",
+   "tier": "easy",
+   "n": 2110,
+   "nodes": 36
+  },
+  {
+   "date": "01-08",
+   "tier": "easy",
+   "n": 746,
+   "nodes": 25
+  },
+  {
+   "date": "01-09",
+   "tier": "easy",
+   "n": 3186,
+   "nodes": 32
+  },
+  {
+   "date": "01-10",
+   "tier": "easy",
+   "n": 2199,
+   "nodes": 40
+  },
+  {
+   "date": "01-11",
+   "tier": "medium",
+   "n": 699,
+   "nodes": 49
+  },
+  {
+   "date": "01-12",
+   "tier": "medium",
+   "n": 3173,
+   "nodes": 45
+  },
+  {
+   "date": "01-13",
+   "tier": "medium",
+   "n": 1987,
+   "nodes": 55
+  },
+  {
+   "date": "01-14",
+   "tier": "medium",
+   "n": 2597,
+   "nodes": 73
+  },
+  {
+   "date": "01-15",
+   "tier": "medium",
+   "n": 2453,
+   "nodes": 51
+  },
+  {
+   "date": "01-16",
+   "tier": "medium",
+   "n": 1699,
+   "nodes": 81
+  },
+  {
+   "date": "01-17",
+   "tier": "medium",
+   "n": 3241,
+   "nodes": 48
+  },
+  {
+   "date": "01-18",
+   "tier": "medium",
+   "n": 2610,
+   "nodes": 45
+  },
+  {
+   "date": "01-19",
+   "tier": "medium",
+   "n": 2932,
+   "nodes": 59
+  },
+  {
+   "date": "01-20",
+   "tier": "medium",
+   "n": 3631,
+   "nodes": 58
+  },
+  {
+   "date": "01-21",
+   "tier": "hard",
+   "n": 0,
+   "nodes": 45174
+  },
+  {
+   "date": "01-22",
+   "tier": "hard",
+   "n": 1165,
+   "nodes": 13564
+  },
+  {
+   "date": "01-23",
+   "tier": "hard",
+   "n": 123,
+   "nodes": 6531
+  },
+  {
+   "date": "01-24",
+   "tier": "hard",
+   "n": 3872,
+   "nodes": 21731
+  },
+  {
+   "date": "01-25",
+   "tier": "hard",
+   "n": 3118,
+   "nodes": 626
+  },
+  {
+   "date": "01-26",
+   "tier": "hard",
+   "n": 2830,
+   "nodes": 77703
+  },
+  {
+   "date": "01-27",
+   "tier": "hard",
+   "n": 1466,
+   "nodes": 3907
+  },
+  {
+   "date": "01-28",
+   "tier": "hard",
+   "n": 238,
+   "nodes": 1948
+  },
+  {
+   "date": "01-29",
+   "tier": "hard",
+   "n": 882,
+   "nodes": 25561
+  },
+  {
+   "date": "01-30",
+   "tier": "hard",
+   "n": 594,
+   "nodes": 29154
+  },
+  {
+   "date": "01-31",
+   "tier": "hard",
+   "n": 573,
+   "nodes": 21183
+  },
+  {
+   "date": "02-01",
+   "tier": "easy",
+   "n": 225,
+   "nodes": 35
+  },
+  {
+   "date": "02-02",
+   "tier": "easy",
+   "n": 835,
+   "nodes": 40
+  },
+  {
+   "date": "02-03",
+   "tier": "easy",
+   "n": 149,
+   "nodes": 38
+  },
+  {
+   "date": "02-04",
+   "tier": "easy",
+   "n": 3343,
+   "nodes": 25
+  },
+  {
+   "date": "02-05",
+   "tier": "easy",
+   "n": 3089,
+   "nodes": 24
+  },
+  {
+   "date": "02-06",
+   "tier": "easy",
+   "n": 1814,
+   "nodes": 33
+  },
+  {
+   "date": "02-07",
+   "tier": "easy",
+   "n": 2424,
+   "nodes": 33
+  },
+  {
+   "date": "02-08",
+   "tier": "easy",
+   "n": 2890,
+   "nodes": 37
+  },
+  {
+   "date": "02-09",
+   "tier": "easy",
+   "n": 3123,
+   "nodes": 35
+  },
+  {
+   "date": "02-10",
+   "tier": "easy",
+   "n": 3301,
+   "nodes": 36
+  },
+  {
+   "date": "02-11",
+   "tier": "medium",
+   "n": 3720,
+   "nodes": 103
+  },
+  {
+   "date": "02-12",
+   "tier": "medium",
+   "n": 1746,
+   "nodes": 47
+  },
+  {
+   "date": "02-13",
+   "tier": "medium",
+   "n": 2589,
+   "nodes": 74
+  },
+  {
+   "date": "02-14",
+   "tier": "medium",
+   "n": 1725,
+   "nodes": 51
+  },
+  {
+   "date": "02-15",
+   "tier": "medium",
+   "n": 1382,
+   "nodes": 54
+  },
+  {
+   "date": "02-16",
+   "tier": "medium",
+   "n": 3678,
+   "nodes": 51
+  },
+  {
+   "date": "02-17",
+   "tier": "medium",
+   "n": 3479,
+   "nodes": 45
+  },
+  {
+   "date": "02-18",
+   "tier": "medium",
+   "n": 1361,
+   "nodes": 47
+  },
+  {
+   "date": "02-19",
+   "tier": "medium",
+   "n": 3602,
+   "nodes": 133
+  },
+  {
+   "date": "02-20",
+   "tier": "medium",
+   "n": 2793,
+   "nodes": 168
+  },
+  {
+   "date": "02-21",
+   "tier": "hard",
+   "n": 1793,
+   "nodes": 8248
+  },
+  {
+   "date": "02-22",
+   "tier": "hard",
+   "n": 230,
+   "nodes": 4772
+  },
+  {
+   "date": "02-23",
+   "tier": "hard",
+   "n": 1196,
+   "nodes": 83997
+  },
+  {
+   "date": "02-24",
+   "tier": "hard",
+   "n": 154,
+   "nodes": 12392
+  },
+  {
+   "date": "02-25",
+   "tier": "hard",
+   "n": 620,
+   "nodes": 6265
+  },
+  {
+   "date": "02-26",
+   "tier": "hard",
+   "n": 3293,
+   "nodes": 2531
+  },
+  {
+   "date": "02-27",
+   "tier": "hard",
+   "n": 2018,
+   "nodes": 2330
+  },
+  {
+   "date": "02-28",
+   "tier": "hard",
+   "n": 2861,
+   "nodes": 49589
+  },
+  {
+   "date": "02-29",
+   "tier": "hard",
+   "n": 1497,
+   "nodes": 4434
+  },
+  {
+   "date": "03-01",
+   "tier": "easy",
+   "n": 1649,
+   "nodes": 35
+  },
+  {
+   "date": "03-02",
+   "tier": "easy",
+   "n": 3246,
+   "nodes": 26
+  },
+  {
+   "date": "03-03",
+   "tier": "easy",
+   "n": 175,
+   "nodes": 40
+  },
+  {
+   "date": "03-04",
+   "tier": "easy",
+   "n": 3979,
+   "nodes": 17
+  },
+  {
+   "date": "03-05",
+   "tier": "easy",
+   "n": 2848,
+   "nodes": 33
+  },
+  {
+   "date": "03-06",
+   "tier": "easy",
+   "n": 3259,
+   "nodes": 39
+  },
+  {
+   "date": "03-07",
+   "tier": "easy",
+   "n": 942,
+   "nodes": 28
+  },
+  {
+   "date": "03-08",
+   "tier": "easy",
+   "n": 2662,
+   "nodes": 36
+  },
+  {
+   "date": "03-09",
+   "tier": "easy",
+   "n": 3683,
+   "nodes": 37
+  },
+  {
+   "date": "03-10",
+   "tier": "easy",
+   "n": 2586,
+   "nodes": 37
+  },
+  {
+   "date": "03-11",
+   "tier": "medium",
+   "n": 819,
+   "nodes": 46
+  },
+  {
+   "date": "03-12",
+   "tier": "medium",
+   "n": 3958,
+   "nodes": 47
+  },
+  {
+   "date": "03-13",
+   "tier": "medium",
+   "n": 3903,
+   "nodes": 63
+  },
+  {
+   "date": "03-14",
+   "tier": "medium",
+   "n": 1785,
+   "nodes": 44
+  },
+  {
+   "date": "03-15",
+   "tier": "medium",
+   "n": 1120,
+   "nodes": 97
+  },
+  {
+   "date": "03-16",
+   "tier": "medium",
+   "n": 900,
+   "nodes": 55
+  },
+  {
+   "date": "03-17",
+   "tier": "medium",
+   "n": 3107,
+   "nodes": 62
+  },
+  {
+   "date": "03-18",
+   "tier": "medium",
+   "n": 1811,
+   "nodes": 91
+  },
+  {
+   "date": "03-19",
+   "tier": "medium",
+   "n": 2955,
+   "nodes": 78
+  },
+  {
+   "date": "03-20",
+   "tier": "medium",
+   "n": 3565,
+   "nodes": 49
+  },
+  {
+   "date": "03-21",
+   "tier": "hard",
+   "n": 3704,
+   "nodes": 645
+  },
+  {
+   "date": "03-22",
+   "tier": "hard",
+   "n": 1764,
+   "nodes": 2201
+  },
+  {
+   "date": "03-23",
+   "tier": "hard",
+   "n": 3971,
+   "nodes": 1810
+  },
+  {
+   "date": "03-24",
+   "tier": "hard",
+   "n": 3073,
+   "nodes": 6040
+  },
+  {
+   "date": "03-25",
+   "tier": "hard",
+   "n": 1044,
+   "nodes": 44407
+  },
+  {
+   "date": "03-26",
+   "tier": "hard",
+   "n": 1887,
+   "nodes": 1418
+  },
+  {
+   "date": "03-27",
+   "tier": "hard",
+   "n": 3484,
+   "nodes": 62224
+  },
+  {
+   "date": "03-28",
+   "tier": "hard",
+   "n": 1400,
+   "nodes": 41047
+  },
+  {
+   "date": "03-29",
+   "tier": "hard",
+   "n": 1023,
+   "nodes": 33557
+  },
+  {
+   "date": "03-30",
+   "tier": "hard",
+   "n": 3230,
+   "nodes": 1675
+  },
+  {
+   "date": "03-31",
+   "tier": "hard",
+   "n": 3031,
+   "nodes": 59824
+  },
+  {
+   "date": "04-01",
+   "tier": "easy",
+   "n": 1777,
+   "nodes": 31
+  },
+  {
+   "date": "04-02",
+   "tier": "easy",
+   "n": 3408,
+   "nodes": 38
+  },
+  {
+   "date": "04-03",
+   "tier": "easy",
+   "n": 3819,
+   "nodes": 32
+  },
+  {
+   "date": "04-04",
+   "tier": "easy",
+   "n": 481,
+   "nodes": 38
+  },
+  {
+   "date": "04-05",
+   "tier": "easy",
+   "n": 1324,
+   "nodes": 40
+  },
+  {
+   "date": "04-06",
+   "tier": "easy",
+   "n": 2921,
+   "nodes": 40
+  },
+  {
+   "date": "04-07",
+   "tier": "easy",
+   "n": 2256,
+   "nodes": 32
+  },
+  {
+   "date": "04-08",
+   "tier": "easy",
+   "n": 926,
+   "nodes": 41
+  },
+  {
+   "date": "04-09",
+   "tier": "easy",
+   "n": 638,
+   "nodes": 36
+  },
+  {
+   "date": "04-10",
+   "tier": "easy",
+   "n": 2968,
+   "nodes": 36
+  },
+  {
+   "date": "04-11",
+   "tier": "medium",
+   "n": 2667,
+   "nodes": 123
+  },
+  {
+   "date": "04-12",
+   "tier": "medium",
+   "n": 2146,
+   "nodes": 46
+  },
+  {
+   "date": "04-13",
+   "tier": "medium",
+   "n": 3832,
+   "nodes": 57
+  },
+  {
+   "date": "04-14",
+   "tier": "medium",
+   "n": 1947,
+   "nodes": 52
+  },
+  {
+   "date": "04-15",
+   "tier": "medium",
+   "n": 439,
+   "nodes": 71
+  },
+  {
+   "date": "04-16",
+   "tier": "medium",
+   "n": 850,
+   "nodes": 50
+  },
+  {
+   "date": "04-17",
+   "tier": "medium",
+   "n": 1638,
+   "nodes": 50
+  },
+  {
+   "date": "04-18",
+   "tier": "medium",
+   "n": 2659,
+   "nodes": 56
+  },
+  {
+   "date": "04-19",
+   "tier": "medium",
+   "n": 342,
+   "nodes": 62
+  },
+  {
+   "date": "04-20",
+   "tier": "medium",
+   "n": 2240,
+   "nodes": 110
+  },
+  {
+   "date": "04-21",
+   "tier": "hard",
+   "n": 3442,
+   "nodes": 36229
+  },
+  {
+   "date": "04-22",
+   "tier": "hard",
+   "n": 3010,
+   "nodes": 1077
+  },
+  {
+   "date": "04-23",
+   "tier": "hard",
+   "n": 3311,
+   "nodes": 2408
+  },
+  {
+   "date": "04-24",
+   "tier": "hard",
+   "n": 1337,
+   "nodes": 1155
+  },
+  {
+   "date": "04-25",
+   "tier": "hard",
+   "n": 2557,
+   "nodes": 16214
+  },
+  {
+   "date": "04-26",
+   "tier": "hard",
+   "n": 1570,
+   "nodes": 57946
+  },
+  {
+   "date": "04-27",
+   "tier": "hard",
+   "n": 1193,
+   "nodes": 89958
+  },
+  {
+   "date": "04-28",
+   "tier": "hard",
+   "n": 1083,
+   "nodes": 71276
+  },
+  {
+   "date": "04-29",
+   "tier": "hard",
+   "n": 1782,
+   "nodes": 13151
+  },
+  {
+   "date": "04-30",
+   "tier": "hard",
+   "n": 3180,
+   "nodes": 18403
+  },
+  {
+   "date": "05-01",
+   "tier": "easy",
+   "n": 1460,
+   "nodes": 37
+  },
+  {
+   "date": "05-02",
+   "tier": "easy",
+   "n": 418,
+   "nodes": 40
+  },
+  {
+   "date": "05-03",
+   "tier": "easy",
+   "n": 1727,
+   "nodes": 38
+  },
+  {
+   "date": "05-04",
+   "tier": "easy",
+   "n": 3591,
+   "nodes": 35
+  },
+  {
+   "date": "05-05",
+   "tier": "easy",
+   "n": 1363,
+   "nodes": 35
+  },
+  {
+   "date": "05-06",
+   "tier": "easy",
+   "n": 1973,
+   "nodes": 27
+  },
+  {
+   "date": "05-07",
+   "tier": "easy",
+   "n": 3138,
+   "nodes": 34
+  },
+  {
+   "date": "05-08",
+   "tier": "easy",
+   "n": 2617,
+   "nodes": 32
+  },
+  {
+   "date": "05-09",
+   "tier": "easy",
+   "n": 2185,
+   "nodes": 25
+  },
+  {
+   "date": "05-10",
+   "tier": "easy",
+   "n": 46,
+   "nodes": 23
+  },
+  {
+   "date": "05-11",
+   "tier": "medium",
+   "n": 1253,
+   "nodes": 46
+  },
+  {
+   "date": "05-12",
+   "tier": "medium",
+   "n": 1342,
+   "nodes": 52
+  },
+  {
+   "date": "05-13",
+   "tier": "medium",
+   "n": 3528,
+   "nodes": 119
+  },
+  {
+   "date": "05-14",
+   "tier": "medium",
+   "n": 3219,
+   "nodes": 52
+  },
+  {
+   "date": "05-15",
+   "tier": "medium",
+   "n": 2787,
+   "nodes": 47
+  },
+  {
+   "date": "05-16",
+   "tier": "medium",
+   "n": 292,
+   "nodes": 44
+  },
+  {
+   "date": "05-17",
+   "tier": "medium",
+   "n": 758,
+   "nodes": 147
+  },
+  {
+   "date": "05-18",
+   "tier": "medium",
+   "n": 3664,
+   "nodes": 50
+  },
+  {
+   "date": "05-19",
+   "tier": "medium",
+   "n": 1690,
+   "nodes": 46
+  },
+  {
+   "date": "05-20",
+   "tier": "medium",
+   "n": 271,
+   "nodes": 70
+  },
+  {
+   "date": "05-21",
+   "tier": "hard",
+   "n": 3358,
+   "nodes": 794
+  },
+  {
+   "date": "05-22",
+   "tier": "hard",
+   "n": 1240,
+   "nodes": 662
+  },
+  {
+   "date": "05-23",
+   "tier": "hard",
+   "n": 1041,
+   "nodes": 7087
+  },
+  {
+   "date": "05-24",
+   "tier": "hard",
+   "n": 3858,
+   "nodes": 63566
+  },
+  {
+   "date": "05-25",
+   "tier": "hard",
+   "n": 1219,
+   "nodes": 4245
+  },
+  {
+   "date": "05-26",
+   "tier": "hard",
+   "n": 1829,
+   "nodes": 3127
+  },
+  {
+   "date": "05-27",
+   "tier": "hard",
+   "n": 3981,
+   "nodes": 1190
+  },
+  {
+   "date": "05-28",
+   "tier": "hard",
+   "n": 2473,
+   "nodes": 22138
+  },
+  {
+   "date": "05-29",
+   "tier": "hard",
+   "n": 999,
+   "nodes": 26923
+  },
+  {
+   "date": "05-30",
+   "tier": "hard",
+   "n": 2774,
+   "nodes": 1573
+  },
+  {
+   "date": "05-31",
+   "tier": "hard",
+   "n": 1787,
+   "nodes": 10866
+  },
+  {
+   "date": "06-01",
+   "tier": "easy",
+   "n": 1533,
+   "nodes": 33
+  },
+  {
+   "date": "06-02",
+   "tier": "easy",
+   "n": 779,
+   "nodes": 34
+  },
+  {
+   "date": "06-03",
+   "tier": "easy",
+   "n": 3164,
+   "nodes": 23
+  },
+  {
+   "date": "06-04",
+   "tier": "easy",
+   "n": 2355,
+   "nodes": 30
+  },
+  {
+   "date": "06-05",
+   "tier": "easy",
+   "n": 3952,
+   "nodes": 37
+  },
+  {
+   "date": "06-06",
+   "tier": "easy",
+   "n": 2156,
+   "nodes": 37
+  },
+  {
+   "date": "06-07",
+   "tier": "easy",
+   "n": 3842,
+   "nodes": 39
+  },
+  {
+   "date": "06-08",
+   "tier": "easy",
+   "n": 3698,
+   "nodes": 38
+  },
+  {
+   "date": "06-09",
+   "tier": "easy",
+   "n": 2567,
+   "nodes": 31
+  },
+  {
+   "date": "06-10",
+   "tier": "easy",
+   "n": 1669,
+   "nodes": 30
+  },
+  {
+   "date": "06-11",
+   "tier": "medium",
+   "n": 161,
+   "nodes": 84
+  },
+  {
+   "date": "06-12",
+   "tier": "medium",
+   "n": 1381,
+   "nodes": 45
+  },
+  {
+   "date": "06-13",
+   "tier": "medium",
+   "n": 2779,
+   "nodes": 64
+  },
+  {
+   "date": "06-14",
+   "tier": "medium",
+   "n": 51,
+   "nodes": 51
+  },
+  {
+   "date": "06-15",
+   "tier": "medium",
+   "n": 839,
+   "nodes": 51
+  },
+  {
+   "date": "06-16",
+   "tier": "medium",
+   "n": 3512,
+   "nodes": 43
+  },
+  {
+   "date": "06-17",
+   "tier": "medium",
+   "n": 2703,
+   "nodes": 158
+  },
+  {
+   "date": "06-18",
+   "tier": "medium",
+   "n": 441,
+   "nodes": 47
+  },
+  {
+   "date": "06-19",
+   "tier": "medium",
+   "n": 2216,
+   "nodes": 45
+  },
+  {
+   "date": "06-20",
+   "tier": "medium",
+   "n": 852,
+   "nodes": 48
+  },
+  {
+   "date": "06-21",
+   "tier": "hard",
+   "n": 3706,
+   "nodes": 27977
+  },
+  {
+   "date": "06-22",
+   "tier": "hard",
+   "n": 601,
+   "nodes": 3335
+  },
+  {
+   "date": "06-23",
+   "tier": "hard",
+   "n": 2287,
+   "nodes": 17127
+  },
+  {
+   "date": "06-24",
+   "tier": "hard",
+   "n": 2143,
+   "nodes": 2041
+  },
+  {
+   "date": "06-25",
+   "tier": "hard",
+   "n": 3596,
+   "nodes": 14313
+  },
+  {
+   "date": "06-26",
+   "tier": "hard",
+   "n": 635,
+   "nodes": 876
+  },
+  {
+   "date": "06-27",
+   "tier": "hard",
+   "n": 1478,
+   "nodes": 47247
+  },
+  {
+   "date": "06-28",
+   "tier": "hard",
+   "n": 3863,
+   "nodes": 1262
+  },
+  {
+   "date": "06-29",
+   "tier": "hard",
+   "n": 3486,
+   "nodes": 5618
+  },
+  {
+   "date": "06-30",
+   "tier": "hard",
+   "n": 3808,
+   "nodes": 5464
+  },
+  {
+   "date": "07-01",
+   "tier": "easy",
+   "n": 483,
+   "nodes": 39
+  },
+  {
+   "date": "07-02",
+   "tier": "easy",
+   "n": 3999,
+   "nodes": 40
+  },
+  {
+   "date": "07-03",
+   "tier": "easy",
+   "n": 928,
+   "nodes": 31
+  },
+  {
+   "date": "07-04",
+   "tier": "easy",
+   "n": 3135,
+   "nodes": 37
+  },
+  {
+   "date": "07-05",
+   "tier": "easy",
+   "n": 1195,
+   "nodes": 30
+  },
+  {
+   "date": "07-06",
+   "tier": "easy",
+   "n": 3402,
+   "nodes": 33
+  },
+  {
+   "date": "07-07",
+   "tier": "easy",
+   "n": 3347,
+   "nodes": 31
+  },
+  {
+   "date": "07-08",
+   "tier": "easy",
+   "n": 3957,
+   "nodes": 33
+  },
+  {
+   "date": "07-09",
+   "tier": "easy",
+   "n": 3292,
+   "nodes": 40
+  },
+  {
+   "date": "07-10",
+   "tier": "easy",
+   "n": 742,
+   "nodes": 37
+  },
+  {
+   "date": "07-11",
+   "tier": "medium",
+   "n": 2572,
+   "nodes": 48
+  },
+  {
+   "date": "07-12",
+   "tier": "medium",
+   "n": 2195,
+   "nodes": 49
+  },
+  {
+   "date": "07-13",
+   "tier": "medium",
+   "n": 3648,
+   "nodes": 54
+  },
+  {
+   "date": "07-14",
+   "tier": "medium",
+   "n": 2140,
+   "nodes": 44
+  },
+  {
+   "date": "07-15",
+   "tier": "medium",
+   "n": 2229,
+   "nodes": 108
+  },
+  {
+   "date": "07-16",
+   "tier": "medium",
+   "n": 2784,
+   "nodes": 50
+  },
+  {
+   "date": "07-17",
+   "tier": "medium",
+   "n": 2030,
+   "nodes": 57
+  },
+  {
+   "date": "07-18",
+   "tier": "medium",
+   "n": 2119,
+   "nodes": 105
+  },
+  {
+   "date": "07-19",
+   "tier": "medium",
+   "n": 2441,
+   "nodes": 54
+  },
+  {
+   "date": "07-20",
+   "tier": "medium",
+   "n": 2907,
+   "nodes": 95
+  },
+  {
+   "date": "07-21",
+   "tier": "hard",
+   "n": 1080,
+   "nodes": 10228
+  },
+  {
+   "date": "07-22",
+   "tier": "hard",
+   "n": 182,
+   "nodes": 19388
+  },
+  {
+   "date": "07-23",
+   "tier": "hard",
+   "n": 1203,
+   "nodes": 837
+  },
+  {
+   "date": "07-24",
+   "tier": "hard",
+   "n": 1436,
+   "nodes": 29974
+  },
+  {
+   "date": "07-25",
+   "tier": "hard",
+   "n": 3876,
+   "nodes": 31217
+  },
+  {
+   "date": "07-26",
+   "tier": "hard",
+   "n": 2224,
+   "nodes": 7989
+  },
+  {
+   "date": "07-27",
+   "tier": "hard",
+   "n": 3944,
+   "nodes": 4063
+  },
+  {
+   "date": "07-28",
+   "tier": "hard",
+   "n": 2669,
+   "nodes": 3459
+  },
+  {
+   "date": "07-29",
+   "tier": "hard",
+   "n": 2292,
+   "nodes": 23136
+  },
+  {
+   "date": "07-30",
+   "tier": "hard",
+   "n": 2936,
+   "nodes": 25314
+  },
+  {
+   "date": "07-31",
+   "tier": "hard",
+   "n": 3546,
+   "nodes": 1004
+  },
+  {
+   "date": "08-01",
+   "tier": "easy",
+   "n": 1962,
+   "nodes": 19
+  },
+  {
+   "date": "08-02",
+   "tier": "easy",
+   "n": 1098,
+   "nodes": 36
+  },
+  {
+   "date": "08-03",
+   "tier": "easy",
+   "n": 577,
+   "nodes": 37
+  },
+  {
+   "date": "08-04",
+   "tier": "easy",
+   "n": 90,
+   "nodes": 37
+  },
+  {
+   "date": "08-05",
+   "tier": "easy",
+   "n": 2310,
+   "nodes": 34
+  },
+  {
+   "date": "08-06",
+   "tier": "easy",
+   "n": 1556,
+   "nodes": 32
+  },
+  {
+   "date": "08-07",
+   "tier": "easy",
+   "n": 658,
+   "nodes": 27
+  },
+  {
+   "date": "08-08",
+   "tier": "easy",
+   "n": 3653,
+   "nodes": 28
+  },
+  {
+   "date": "08-09",
+   "tier": "easy",
+   "n": 2700,
+   "nodes": 39
+  },
+  {
+   "date": "08-10",
+   "tier": "easy",
+   "n": 3577,
+   "nodes": 40
+  },
+  {
+   "date": "08-11",
+   "tier": "medium",
+   "n": 1789,
+   "nodes": 67
+  },
+  {
+   "date": "08-12",
+   "tier": "medium",
+   "n": 2399,
+   "nodes": 114
+  },
+  {
+   "date": "08-13",
+   "tier": "medium",
+   "n": 2865,
+   "nodes": 46
+  },
+  {
+   "date": "08-14",
+   "tier": "medium",
+   "n": 2200,
+   "nodes": 72
+  },
+  {
+   "date": "08-15",
+   "tier": "medium",
+   "n": 836,
+   "nodes": 44
+  },
+  {
+   "date": "08-16",
+   "tier": "medium",
+   "n": 1158,
+   "nodes": 198
+  },
+  {
+   "date": "08-17",
+   "tier": "medium",
+   "n": 2090,
+   "nodes": 53
+  },
+  {
+   "date": "08-18",
+   "tier": "medium",
+   "n": 2446,
+   "nodes": 87
+  },
+  {
+   "date": "08-19",
+   "tier": "medium",
+   "n": 3755,
+   "nodes": 47
+  },
+  {
+   "date": "08-20",
+   "tier": "medium",
+   "n": 883,
+   "nodes": 45
+  },
+  {
+   "date": "08-21",
+   "tier": "hard",
+   "n": 2737,
+   "nodes": 55593
+  },
+  {
+   "date": "08-22",
+   "tier": "hard",
+   "n": 653,
+   "nodes": 23884
+  },
+  {
+   "date": "08-23",
+   "tier": "hard",
+   "n": 3360,
+   "nodes": 14827
+  },
+  {
+   "date": "08-24",
+   "tier": "hard",
+   "n": 1996,
+   "nodes": 4613
+  },
+  {
+   "date": "08-25",
+   "tier": "hard",
+   "n": 1242,
+   "nodes": 2769
+  },
+  {
+   "date": "08-26",
+   "tier": "hard",
+   "n": 3449,
+   "nodes": 48265
+  },
+  {
+   "date": "08-27",
+   "tier": "hard",
+   "n": 865,
+   "nodes": 32413
+  },
+  {
+   "date": "08-28",
+   "tier": "hard",
+   "n": 1475,
+   "nodes": 8845
+  },
+  {
+   "date": "08-29",
+   "tier": "hard",
+   "n": 2962,
+   "nodes": 3286
+  },
+  {
+   "date": "08-30",
+   "tier": "hard",
+   "n": 3373,
+   "nodes": 916
+  },
+  {
+   "date": "08-31",
+   "tier": "hard",
+   "n": 412,
+   "nodes": 5115
+  },
+  {
+   "date": "09-01",
+   "tier": "easy",
+   "n": 938,
+   "nodes": 30
+  },
+  {
+   "date": "09-02",
+   "tier": "easy",
+   "n": 2247,
+   "nodes": 38
+  },
+  {
+   "date": "09-03",
+   "tier": "easy",
+   "n": 2514,
+   "nodes": 40
+  },
+  {
+   "date": "09-04",
+   "tier": "easy",
+   "n": 1150,
+   "nodes": 34
+  },
+  {
+   "date": "09-05",
+   "tier": "easy",
+   "n": 1239,
+   "nodes": 37
+  },
+  {
+   "date": "09-06",
+   "tier": "easy",
+   "n": 2836,
+   "nodes": 35
+  },
+  {
+   "date": "09-07",
+   "tier": "easy",
+   "n": 87,
+   "nodes": 32
+  },
+  {
+   "date": "09-08",
+   "tier": "easy",
+   "n": 1163,
+   "nodes": 38
+  },
+  {
+   "date": "09-09",
+   "tier": "easy",
+   "n": 3603,
+   "nodes": 29
+  },
+  {
+   "date": "09-10",
+   "tier": "easy",
+   "n": 2239,
+   "nodes": 35
+  },
+  {
+   "date": "09-11",
+   "tier": "medium",
+   "n": 3933,
+   "nodes": 44
+  },
+  {
+   "date": "09-12",
+   "tier": "medium",
+   "n": 2946,
+   "nodes": 48
+  },
+  {
+   "date": "09-13",
+   "tier": "medium",
+   "n": 3035,
+   "nodes": 43
+  },
+  {
+   "date": "09-14",
+   "tier": "medium",
+   "n": 3912,
+   "nodes": 48
+  },
+  {
+   "date": "09-15",
+   "tier": "medium",
+   "n": 341,
+   "nodes": 45
+  },
+  {
+   "date": "09-16",
+   "tier": "medium",
+   "n": 430,
+   "nodes": 46
+  },
+  {
+   "date": "09-17",
+   "tier": "medium",
+   "n": 2870,
+   "nodes": 60
+  },
+  {
+   "date": "09-18",
+   "tier": "medium",
+   "n": 896,
+   "nodes": 154
+  },
+  {
+   "date": "09-19",
+   "tier": "medium",
+   "n": 1506,
+   "nodes": 49
+  },
+  {
+   "date": "09-20",
+   "tier": "medium",
+   "n": 3569,
+   "nodes": 46
+  },
+  {
+   "date": "09-21",
+   "tier": "hard",
+   "n": 2043,
+   "nodes": 2678
+  },
+  {
+   "date": "09-22",
+   "tier": "hard",
+   "n": 3962,
+   "nodes": 7533
+  },
+  {
+   "date": "09-23",
+   "tier": "hard",
+   "n": 3674,
+   "nodes": 79367
+  },
+  {
+   "date": "09-24",
+   "tier": "hard",
+   "n": 336,
+   "nodes": 65486
+  },
+  {
+   "date": "09-25",
+   "tier": "hard",
+   "n": 3831,
+   "nodes": 69382
+  },
+  {
+   "date": "09-26",
+   "tier": "hard",
+   "n": 3166,
+   "nodes": 6812
+  },
+  {
+   "date": "09-27",
+   "tier": "hard",
+   "n": 2501,
+   "nodes": 1322
+  },
+  {
+   "date": "09-28",
+   "tier": "hard",
+   "n": 2967,
+   "nodes": 20202
+  },
+  {
+   "date": "09-29",
+   "tier": "hard",
+   "n": 2302,
+   "nodes": 9707
+  },
+  {
+   "date": "09-30",
+   "tier": "hard",
+   "n": 2912,
+   "nodes": 8594
+  },
+  {
+   "date": "10-01",
+   "tier": "easy",
+   "n": 820,
+   "nodes": 39
+  },
+  {
+   "date": "10-02",
+   "tier": "easy",
+   "n": 1841,
+   "nodes": 35
+  },
+  {
+   "date": "10-03",
+   "tier": "easy",
+   "n": 1265,
+   "nodes": 39
+  },
+  {
+   "date": "10-04",
+   "tier": "easy",
+   "n": 3705,
+   "nodes": 34
+  },
+  {
+   "date": "10-05",
+   "tier": "easy",
+   "n": 2951,
+   "nodes": 38
+  },
+  {
+   "date": "10-06",
+   "tier": "easy",
+   "n": 689,
+   "nodes": 26
+  },
+  {
+   "date": "10-07",
+   "tier": "easy",
+   "n": 2498,
+   "nodes": 36
+  },
+  {
+   "date": "10-08",
+   "tier": "easy",
+   "n": 1134,
+   "nodes": 29
+  },
+  {
+   "date": "10-09",
+   "tier": "easy",
+   "n": 1922,
+   "nodes": 40
+  },
+  {
+   "date": "10-10",
+   "tier": "easy",
+   "n": 2011,
+   "nodes": 39
+  },
+  {
+   "date": "10-11",
+   "tier": "medium",
+   "n": 1684,
+   "nodes": 58
+  },
+  {
+   "date": "10-12",
+   "tier": "medium",
+   "n": 299,
+   "nodes": 57
+  },
+  {
+   "date": "10-13",
+   "tier": "medium",
+   "n": 2307,
+   "nodes": 76
+  },
+  {
+   "date": "10-14",
+   "tier": "medium",
+   "n": 3904,
+   "nodes": 55
+  },
+  {
+   "date": "10-15",
+   "tier": "medium",
+   "n": 3150,
+   "nodes": 44
+  },
+  {
+   "date": "10-16",
+   "tier": "medium",
+   "n": 2485,
+   "nodes": 79
+  },
+  {
+   "date": "10-17",
+   "tier": "medium",
+   "n": 2430,
+   "nodes": 75
+  },
+  {
+   "date": "10-18",
+   "tier": "medium",
+   "n": 3273,
+   "nodes": 55
+  },
+  {
+   "date": "10-19",
+   "tier": "medium",
+   "n": 545,
+   "nodes": 138
+  },
+  {
+   "date": "10-20",
+   "tier": "medium",
+   "n": 778,
+   "nodes": 69
+  },
+  {
+   "date": "10-21",
+   "tier": "hard",
+   "n": 1637,
+   "nodes": 9346
+  },
+  {
+   "date": "10-22",
+   "tier": "hard",
+   "n": 3789,
+   "nodes": 76581
+  },
+  {
+   "date": "10-23",
+   "tier": "hard",
+   "n": 1527,
+   "nodes": 984
+  },
+  {
+   "date": "10-24",
+   "tier": "hard",
+   "n": 1760,
+   "nodes": 2268
+  },
+  {
+   "date": "10-25",
+   "tier": "hard",
+   "n": 3357,
+   "nodes": 24613
+  },
+  {
+   "date": "10-26",
+   "tier": "hard",
+   "n": 1095,
+   "nodes": 34782
+  },
+  {
+   "date": "10-27",
+   "tier": "hard",
+   "n": 142,
+   "nodes": 1606
+  },
+  {
+   "date": "10-28",
+   "tier": "hard",
+   "n": 1307,
+   "nodes": 3764
+  },
+  {
+   "date": "10-29",
+   "tier": "hard",
+   "n": 2849,
+   "nodes": 960
+  },
+  {
+   "date": "10-30",
+   "tier": "hard",
+   "n": 100,
+   "nodes": 5892
+  },
+  {
+   "date": "10-31",
+   "tier": "hard",
+   "n": 3239,
+   "nodes": 17608
+  },
+  {
+   "date": "11-01",
+   "tier": "easy",
+   "n": 2477,
+   "nodes": 38
+  },
+  {
+   "date": "11-02",
+   "tier": "easy",
+   "n": 503,
+   "nodes": 35
+  },
+  {
+   "date": "11-03",
+   "tier": "easy",
+   "n": 2100,
+   "nodes": 29
+  },
+  {
+   "date": "11-04",
+   "tier": "easy",
+   "n": 825,
+   "nodes": 35
+  },
+  {
+   "date": "11-05",
+   "tier": "easy",
+   "n": 1291,
+   "nodes": 41
+  },
+  {
+   "date": "11-06",
+   "tier": "easy",
+   "n": 194,
+   "nodes": 33
+  },
+  {
+   "date": "11-07",
+   "tier": "easy",
+   "n": 2401,
+   "nodes": 28
+  },
+  {
+   "date": "11-08",
+   "tier": "easy",
+   "n": 694,
+   "nodes": 41
+  },
+  {
+   "date": "11-09",
+   "tier": "easy",
+   "n": 3744,
+   "nodes": 40
+  },
+  {
+   "date": "11-10",
+   "tier": "easy",
+   "n": 118,
+   "nodes": 29
+  },
+  {
+   "date": "11-11",
+   "tier": "medium",
+   "n": 1189,
+   "nodes": 61
+  },
+  {
+   "date": "11-12",
+   "tier": "medium",
+   "n": 3985,
+   "nodes": 88
+  },
+  {
+   "date": "11-13",
+   "tier": "medium",
+   "n": 3676,
+   "nodes": 44
+  },
+  {
+   "date": "11-14",
+   "tier": "medium",
+   "n": 1325,
+   "nodes": 53
+  },
+  {
+   "date": "11-15",
+   "tier": "medium",
+   "n": 338,
+   "nodes": 53
+  },
+  {
+   "date": "11-16",
+   "tier": "medium",
+   "n": 50,
+   "nodes": 101
+  },
+  {
+   "date": "11-17",
+   "tier": "medium",
+   "n": 893,
+   "nodes": 63
+  },
+  {
+   "date": "11-18",
+   "tier": "medium",
+   "n": 3943,
+   "nodes": 194
+  },
+  {
+   "date": "11-19",
+   "tier": "medium",
+   "n": 2435,
+   "nodes": 44
+  },
+  {
+   "date": "11-20",
+   "tier": "medium",
+   "n": 317,
+   "nodes": 184
+  },
+  {
+   "date": "11-21",
+   "tier": "hard",
+   "n": 3040,
+   "nodes": 1459
+  },
+  {
+   "date": "11-22",
+   "tier": "hard",
+   "n": 291,
+   "nodes": 2973
+  },
+  {
+   "date": "11-23",
+   "tier": "hard",
+   "n": 3951,
+   "nodes": 20583
+  },
+  {
+   "date": "11-24",
+   "tier": "hard",
+   "n": 969,
+   "nodes": 11140
+  },
+  {
+   "date": "11-25",
+   "tier": "hard",
+   "n": 2511,
+   "nodes": 46481
+  },
+  {
+   "date": "11-26",
+   "tier": "hard",
+   "n": 2134,
+   "nodes": 37244
+  },
+  {
+   "date": "11-27",
+   "tier": "hard",
+   "n": 393,
+   "nodes": 763
+  },
+  {
+   "date": "11-28",
+   "tier": "hard",
+   "n": 1003,
+   "nodes": 86242
+  },
+  {
+   "date": "11-29",
+   "tier": "hard",
+   "n": 2922,
+   "nodes": 24948
+  },
+  {
+   "date": "11-30",
+   "tier": "hard",
+   "n": 3532,
+   "nodes": 2627
+  },
+  {
+   "date": "12-01",
+   "tier": "easy",
+   "n": 351,
+   "nodes": 31
+  },
+  {
+   "date": "12-02",
+   "tier": "easy",
+   "n": 3867,
+   "nodes": 36
+  },
+  {
+   "date": "12-03",
+   "tier": "easy",
+   "n": 1461,
+   "nodes": 34
+  },
+  {
+   "date": "12-04",
+   "tier": "easy",
+   "n": 974,
+   "nodes": 38
+  },
+  {
+   "date": "12-05",
+   "tier": "easy",
+   "n": 3037,
+   "nodes": 40
+  },
+  {
+   "date": "12-06",
+   "tier": "easy",
+   "n": 398,
+   "nodes": 32
+  },
+  {
+   "date": "12-07",
+   "tier": "easy",
+   "n": 1618,
+   "nodes": 36
+  },
+  {
+   "date": "12-08",
+   "tier": "easy",
+   "n": 2461,
+   "nodes": 37
+  },
+  {
+   "date": "12-09",
+   "tier": "easy",
+   "n": 1796,
+   "nodes": 21
+  },
+  {
+   "date": "12-10",
+   "tier": "easy",
+   "n": 1652,
+   "nodes": 20
+  },
+  {
+   "date": "12-11",
+   "tier": "medium",
+   "n": 1770,
+   "nodes": 48
+  },
+  {
+   "date": "12-12",
+   "tier": "medium",
+   "n": 3833,
+   "nodes": 45
+  },
+  {
+   "date": "12-13",
+   "tier": "medium",
+   "n": 1948,
+   "nodes": 45
+  },
+  {
+   "date": "12-14",
+   "tier": "medium",
+   "n": 152,
+   "nodes": 66
+  },
+  {
+   "date": "12-15",
+   "tier": "medium",
+   "n": 97,
+   "nodes": 65
+  },
+  {
+   "date": "12-16",
+   "tier": "medium",
+   "n": 3147,
+   "nodes": 53
+  },
+  {
+   "date": "12-17",
+   "tier": "medium",
+   "n": 652,
+   "nodes": 52
+  },
+  {
+   "date": "12-18",
+   "tier": "medium",
+   "n": 2139,
+   "nodes": 47
+  },
+  {
+   "date": "12-19",
+   "tier": "medium",
+   "n": 1241,
+   "nodes": 44
+  },
+  {
+   "date": "12-20",
+   "tier": "medium",
+   "n": 2495,
+   "nodes": 85
+  },
+  {
+   "date": "12-21",
+   "tier": "hard",
+   "n": 1503,
+   "nodes": 15575
+  },
+  {
+   "date": "12-22",
+   "tier": "hard",
+   "n": 3278,
+   "nodes": 7735
+  },
+  {
+   "date": "12-23",
+   "tier": "hard",
+   "n": 2291,
+   "nodes": 597
+  },
+  {
+   "date": "12-24",
+   "tier": "hard",
+   "n": 1249,
+   "nodes": 11662
+  },
+  {
+   "date": "12-25",
+   "tier": "hard",
+   "n": 3723,
+   "nodes": 675
+  },
+  {
+   "date": "12-26",
+   "tier": "hard",
+   "n": 618,
+   "nodes": 3696
+  },
+  {
+   "date": "12-27",
+   "tier": "hard",
+   "n": 3435,
+   "nodes": 39003
+  },
+  {
+   "date": "12-28",
+   "tier": "hard",
+   "n": 851,
+   "nodes": 716
+  },
+  {
+   "date": "12-29",
+   "tier": "hard",
+   "n": 3846,
+   "nodes": 52031
+  },
+  {
+   "date": "12-30",
+   "tier": "hard",
+   "n": 254,
+   "nodes": 2100
+  },
+  {
+   "date": "12-31",
+   "tier": "hard",
+   "n": 288,
+   "nodes": 10412
+  }
+ ]
+}
