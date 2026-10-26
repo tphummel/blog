@@ -52,7 +52,6 @@ a{color:#fff}
   <div class="stats">
     <span id="date"></span>
     <span>Moves <b id="moves">0</b></span>
-    <span>Score <b id="score">0</b></span>
     <span>Time <b id="time">0:00</b></span>
   </div>
   <button id="surrender" class="danger">Surrender</button>
@@ -83,7 +82,7 @@ function newGame(date){
   let k=0;const tab=[];
   for(let i=0;i<7;i++){const p=[];for(let j=0;j<=i;j++)p.push({c:deck[k++],up:j===i});tab.push(p)}
   return {date,deck,initialTableau:tab.map(p=>p.map(x=>cardName(x.c))),
-    stock:deck.slice(k),waste:[],found:[[],[],[],[]],tab,score:0,log:[]};
+    stock:deck.slice(k),waste:[],found:[[],[],[],[]],tab,log:[]};
 }
 
 // ---------- rules ----------
@@ -107,28 +106,27 @@ function canDrop(g,cards,from,to){
 }
 // mv: {t, k:'d'|'r'|'m', from, to, n}; returns the full-fidelity record or null if illegal
 function apply(g,mv){
-  const before=g.score;let rec;
+  let rec;
   if(mv.k==='d'){
     if(!g.stock.length)return null;
     const cards=[];for(let i=0;i<DRAW&&g.stock.length;i++){const c=g.stock.pop();g.waste.push(c);cards.push(c)}
     rec={type:'draw',from:'s',to:'w',cards:cards.map(cardName)};
   }else if(mv.k==='r'){
     if(g.stock.length||!g.waste.length)return null;
-    g.stock=g.waste.reverse();g.waste=[];g.score=Math.max(0,g.score-100);
+    g.stock=g.waste.reverse();g.waste=[];
     rec={type:'recycle',from:'w',to:'s',cards:[]};
   }else if(mv.k==='m'){
     const cards=peek(g,mv.from,mv.n);
     if(!canDrop(g,cards,mv.from,mv.to))return null;
-    const fi=+mv.from.slice(1),ti=+mv.to.slice(1);let flipped=null,d=0;
+    const fi=+mv.from.slice(1),ti=+mv.to.slice(1);let flipped=null;
     if(mv.from==='w')g.waste.pop();
     else if(mv.from[0]==='f')g.found[fi].pop();
-    else{const p=g.tab[fi];p.splice(-mv.n);const top=p[p.length-1];if(top&&!top.up){top.up=true;flipped=cardName(top.c);d+=5}}
-    if(mv.to[0]==='f'){g.found[ti].push(cards[0]);d+=10}
-    else{g.tab[ti].push(...cards.map(c=>({c,up:true})));if(mv.from==='w')d+=5;else if(mv.from[0]==='f')d-=15}
-    g.score=Math.max(0,g.score+d);
+    else{const p=g.tab[fi];p.splice(-mv.n);const top=p[p.length-1];if(top&&!top.up){top.up=true;flipped=cardName(top.c)}}
+    if(mv.to[0]==='f')g.found[ti].push(cards[0]);
+    else g.tab[ti].push(...cards.map(c=>({c,up:true})));
     rec={type:'move',from:mv.from,to:mv.to,cards:cards.map(cardName),flipped};
   }else return null;
-  g.log.push({n:g.log.length+1,t:mv.t,...rec,scoreDelta:g.score-before,score:g.score,
+  g.log.push({n:g.log.length+1,t:mv.t,...rec,
     stockCount:g.stock.length,wasteCount:g.waste.length,foundationCount:g.found.reduce((a,f)=>a+f.length,0)});
   return rec;
 }
@@ -240,7 +238,7 @@ function render(){
   h+='</div>';
   $('board').innerHTML=h;
   $('date').textContent=S.d+(S.d!==pacificDate()?' (past)':'');
-  $('moves').textContent=g.log.length;$('score').textContent=g.score;
+  $('moves').textContent=g.log.length;
   $('surrender').hidden=ended();
   renderPanel();tick();
 }
@@ -269,7 +267,7 @@ function renderPanel(){
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
   $('exUrl').onclick=()=>copy(location.href,'URL copied');
 }
-const summary=()=>`${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · score ${g.score} · ${fmtTime(elapsed())}`;
+const summary=()=>`${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
 // ---------- export ----------
 const iso=ms=>new Date(ms).toISOString();
@@ -281,11 +279,10 @@ function exportData(){
     startedAt:S.s==null?null:iso(S.s),
     endedAt:S.e&&S.s!=null?iso(S.s+S.e[0]):null,
     durationMs:elapsed(),
-    score:g.score,moveCount:g.log.length,foundationCount:foundCount(g),
+    moveCount:g.log.length,foundationCount:foundCount(g),
     initialDeck:g.deck.map(cardName),
     initialTableau:g.initialTableau,
     initialStock:g.deck.slice(28).map(cardName),
-    scoring:{wasteToTableau:5,toFoundation:10,flipTableauCard:5,foundationToTableau:-15,recycleWaste:-100,floor:0},
     moves:g.log,
     finalState:{
       stock:g.stock.map(cardName),waste:g.waste.map(cardName),
@@ -308,7 +305,7 @@ function gameText(){
     ...g.log.map(m=>{
       const body=m.type==='draw'?`Draw → ${m.cards.join(' ')}`:m.type==='recycle'?'Recycle waste to stock'
         :`${m.cards.join(' ')}: ${place(m.from)} → ${place(m.to)}${m.flipped?` (flipped ${m.flipped})`:''}`;
-      return `${m.n}. [${fmtTime(m.t)}] ${body} (${m.scoreDelta>=0?'+':''}${m.scoreDelta})`;
+      return `${m.n}. [${fmtTime(m.t)}] ${body}`;
     }),'',location.href];
   return lines.join('\n');
 }
