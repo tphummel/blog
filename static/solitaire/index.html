@@ -59,7 +59,7 @@ a{color:#fff}
 </head>
 <body>
 <header>
-  <h1>Daily Klondike · Draw 1</h1>
+  <h1 id="title">Daily Klondike</h1>
   <div class="stats">
     <span id="date"></span>
     <span>Moves <b id="moves">0</b></span>
@@ -390,6 +390,7 @@ function render(){
   });
   h+='</div>';
   $('board').innerHTML=h;
+  $('title').textContent=`Daily Klondike · Draw ${DRAW}`;
   $('date').textContent=`${S.d} · ${tierOf(S.d)}`+(S.d!==pacificDate()?' (past)':'');
   $('moves').textContent=g.log.length;
   $('surrender').hidden=ended()||busy;
