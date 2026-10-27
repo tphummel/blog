@@ -2,15 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b6b3a">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="A daily Klondike solitaire. Everyone gets the same deal each day.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Solitaire">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/solitaire/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/solitaire/icon-192.png">
+<link rel="apple-touch-icon" href="/solitaire/apple-touch-icon.png">
 <title>Tom Hummel :: Solitaire</title>
 <style>
 :root{
   --cw:min(12.5vw,88px);--ch:calc(var(--cw)*1.4);--gap:calc(var(--cw)*.12);
   --felt:#0b6b3a;--felt-dark:#084d2a;--red:#c62828;--ink:#1b1b1b;--sel:#ffd54f;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--felt);color:#fff;font:16px/1.4 system-ui,sans-serif;min-height:100vh;
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{margin:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);touch-action:manipulation;background:var(--felt);color:#fff;font:16px/1.4 system-ui,sans-serif;min-height:100vh;
   background-image:radial-gradient(circle at 50% 30%,#12844a,var(--felt-dark));}
 header{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:center;padding:10px 16px}
 header h1{font-size:18px;margin:0}
@@ -29,7 +40,7 @@ a{color:#fff}
 .slot{border:2px dashed rgba(255,255,255,.25);}
 .slot::after{content:attr(data-label);position:absolute;inset:0;display:grid;place-items:center;
   font-size:calc(var(--cw)*.5);color:rgba(255,255,255,.25)}
-.card{position:absolute;left:0;width:var(--cw);height:var(--ch);border-radius:calc(var(--cw)*.08);
+.card{touch-action:manipulation;-webkit-touch-callout:none;position:absolute;left:0;width:var(--cw);height:var(--ch);border-radius:calc(var(--cw)*.08);
   background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.45);user-select:none;cursor:pointer;
   font-size:calc(var(--cw)*.27);font-weight:600;line-height:1;overflow:hidden}
 .card.red{color:var(--red)}
@@ -41,7 +52,7 @@ a{color:#fff}
 #panel{max-width:560px;margin:0 auto 16px;padding:14px 16px;background:rgba(0,0,0,.45);border-radius:10px}
 #panel h2{margin:0 0 6px;font-size:18px}
 #panel .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
 .hint{font-size:13px;opacity:.75;text-align:center;padding:0 16px}
 </style>
@@ -264,21 +275,29 @@ function planMoves(g,path){
 const b64=o=>btoa(JSON.stringify(o)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const unb64=s=>JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
 const encodeState=S=>b64(S);
+const SAVE_KEY='solitaire-last';
+function replay(raw){
+  const S=unb64(raw);
+  if(S.v!==1||!validDate(S.d)||!Array.isArray(S.m))throw 0;
+  const g=newGame(S.d);
+  for(const x of S.m){
+    const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4],auto:!!x[5]});
+    if(!ok)throw 0;
+    g.log[g.log.length-1].at=new Date(S.s+x[0]).toISOString();
+  }
+  return {S,g};
+}
 function loadState(){
   let note=null;
   const m=/^#g=([\w-]+)$/.exec(location.hash);
   if(m){
+    try{return {...replay(m[1]),note}}
+    catch(e){note='Could not read the game in the URL — starting today’s game.'}
+  }else{
     try{
-      const S=unb64(m[1]);
-      if(S.v!==1||!validDate(S.d)||!Array.isArray(S.m))throw 0;
-      const g=newGame(S.d);
-      for(const x of S.m){
-        const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4],auto:!!x[5]});
-        if(!ok)throw 0;
-        g.log[g.log.length-1].at=new Date(S.s+x[0]).toISOString();
-      }
-      return {S,g,note};
-    }catch(e){note='Could not read the game in the URL — starting today’s game.'}
+      const saved=localStorage.getItem(SAVE_KEY);
+      if(saved){const r=replay(saved);if(r.S.d===pacificDate())return {...r,note}}
+    }catch(e){}
   }
   const d=pacificDate();
   return {S:{v:1,d,s:null,m:[],e:null},g:newGame(d),note};
@@ -290,7 +309,12 @@ let sel=null; // {addr, idx, n}
 let busy=false; // true while Auto-solve is playing
 const $=id=>document.getElementById(id);
 const ended=()=>!!S.e;
-function save(){history.replaceState(null,'','#g='+encodeState(S))}
+// The URL is the source of truth; a copy is kept in localStorage only so an installed app (which has no
+// address bar) can resume today's game when launched from its icon.
+function save(){
+  const h=encodeState(S);history.replaceState(null,'','#g='+h);
+  try{localStorage.setItem(SAVE_KEY,h)}catch(e){}
+}
 function act(mv){
   if(ended())return false;
   const now=Date.now();if(S.s==null)S.s=now;
@@ -465,6 +489,16 @@ $('auto').addEventListener('click',autoSolve);
 window.addEventListener('hashchange',()=>{({S,g,note}=loadState());sel=null;render()});
 if(!location.hash)save();
 render();
+// A game left open overnight: if it hasn't been started, swap in the new day's deal when the app returns.
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&!S.m.length&&!ended()&&S.d!==pacificDate()){
+    history.replaceState(null,'',location.pathname);({S,g,note}=loadState());save();render();
+  }
+});
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/solitaire/sw.js',{scope:'/solitaire/'})
+    .catch(err=>console.warn('SW registration failed:',err));
+}
 </script>
 </body>
 </html>

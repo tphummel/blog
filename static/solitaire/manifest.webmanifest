@@ -1,0 +1,18 @@
+{
+  "id": "/solitaire/",
+  "name": "Daily Solitaire",
+  "short_name": "Solitaire",
+  "description": "A daily Klondike solitaire. Everyone gets the same deal each day. Your game is saved in the URL.",
+  "lang": "en-US",
+  "start_url": "/solitaire/",
+  "scope": "/solitaire/",
+  "display": "standalone",
+  "categories": ["games"],
+  "background_color": "#084d2a",
+  "theme_color": "#0b6b3a",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
