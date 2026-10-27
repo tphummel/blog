@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tom Hummel :: Yahtzee</title>
+  <title>Yahtzee</title>
+  <meta name="theme-color" content="#1f6b45">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Yahtzee">
+  <link rel="manifest" href="/yahtzee/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="/yahtzee/icon-192.png">
+  <link rel="apple-touch-icon" href="/yahtzee/apple-touch-icon.png">
   <style>
     :root { --bg:#fafafa; --fg:#222; --muted:#777; --line:#ccc; --accent:#2a6; --card:#fff; }
     @media (prefers-color-scheme: dark) {
@@ -423,6 +429,11 @@ window.addEventListener('hashchange', () => { load(); render(); });
 
 load();
 render();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/yahtzee/sw.js', { scope: '/yahtzee/' })
+    .catch((err) => console.warn('SW registration failed:', err));
+}
 </script>
 </body>
 </html>
