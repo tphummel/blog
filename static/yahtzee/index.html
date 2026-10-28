@@ -179,16 +179,79 @@ const b64 = {
   dec: (str) => atob(str.replace(/-/g, '+').replace(/_/g, '/')),
 };
 
+// --- daily puzzle ---
+// Puzzles 1-365 follow a non-leap calendar (Mar 1 is always 60); Feb 29 is 366.
+// The seed is the puzzle number alone, so the same date has the same dice every year.
+const MONTH_START = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+
+function puzzleFor(date) {
+  const m = date.getMonth();
+  const d = date.getDate();
+  return m === 1 && d === 29 ? 366 : MONTH_START[m] + d;
+}
+
+const todayPuzzle = () => puzzleFor(new Date());
+
+function dateKey(date) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function hashString(str) {
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  return (h ^ (h >>> 16)) >>> 0;
+}
+
+function mulberry32(a) {
+  a = (a + 0x6D2B79F5) | 0;
+  let t = Math.imul(a ^ (a >>> 15), 1 | a);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
+// each die value depends only on (puzzle, turn, roll number, position), never on earlier choices
+function tapeDie(puzzle, turn, rollNo, die) {
+  return Math.floor(mulberry32(hashString(`yahtzee:${puzzle}:${turn}:${rollNo}:${die}`)) * 6) + 1;
+}
+
+// finished/in-progress daily games live in this browser only, keyed by local date
+const storeKey = () => `yahtzee:daily:${dateKey(new Date())}`;
+
+function loadDaily() {
+  try {
+    const t = localStorage.getItem(storeKey());
+    return t && VALID_RE.test(t) ? t : '';
+  } catch (e) { return ''; }
+}
+
+function saveDaily() {
+  if (mode !== 'daily' || puzzle !== todayPuzzle()) return;
+  try { localStorage.setItem(storeKey(), tokens); } catch (e) { /* storage unavailable */ }
+}
+
 function readHash() {
   const p = new URLSearchParams(location.hash.slice(1));
   let tokens = '';
   try { tokens = b64.dec(p.get('g') || ''); } catch (e) { tokens = ''; }
   if (!VALID_RE.test(tokens)) tokens = '';
-  return { tokens, tab: p.get('t') === 'log' ? 'log' : 'score' };
+  const d = Number(p.get('d'));
+  return {
+    tokens,
+    puzzle: Number.isInteger(d) && d >= 1 && d <= 366 ? d : null,
+    free: p.has('f'),
+    tab: p.get('t') === 'log' ? 'log' : 'score',
+  };
 }
 
 function hashFor(tokens, tab) {
   const p = new URLSearchParams();
+  if (mode === 'daily') p.set('d', puzzle); else p.set('f', '1');
   if (tokens) p.set('g', b64.enc(tokens));
   p.set('t', tab);
   return '#' + p.toString();
@@ -207,17 +270,34 @@ function replay(tokens) {
 
 // --- app state ---
 let tokens = '';
+let mode = 'daily';
+let puzzle = todayPuzzle();
 let tab = 'score';
 let game = newState();
 let held = [false, false, false, false, false];
 
+// a hash with a puzzle number is a daily game, one with moves or f=1 is free play,
+// and an empty hash opens today's daily (resumed from browser storage)
 function load() {
   const h = readHash();
-  const r = replay(h.tokens);
+  let t = h.tokens;
+  if (h.puzzle) {
+    mode = 'daily';
+    puzzle = h.puzzle;
+  } else if (h.tokens || h.free) {
+    mode = 'free';
+  } else {
+    mode = 'daily';
+    puzzle = todayPuzzle();
+  }
+  if (mode === 'daily' && !t && puzzle === todayPuzzle()) t = loadDaily();
+  const r = replay(t);
   tokens = r.tokens;
   game = r.s;
   tab = h.tab;
   held = heldFrom(tokens);
+  const canon = hashFor(tokens, tab);
+  if (canon !== location.hash) history.replaceState(null, '', canon);
 }
 
 // dice kept for the last re-roll stay frozen until the player changes them
@@ -233,6 +313,7 @@ function commit(tok) {
   if (r.tokens !== next) return;
   tokens = next;
   game = r.s;
+  saveDaily();
   history.pushState(null, '', hashFor(tokens, tab));
   held = heldFrom(tokens);
   render();
@@ -241,7 +322,7 @@ function commit(tok) {
 // --- export ---
 function exportText() {
   const t = totals(game);
-  const lines = ['Yahtzee', ''];
+  const lines = [mode === 'daily' ? `Yahtzee Daily #${puzzle}` : 'Yahtzee', ''];
   game.turns.forEach((turn) => {
     lines.push(`Turn ${turn.turn}`);
     turn.rolls.forEach((r, i) => {
@@ -261,6 +342,8 @@ function exportJson() {
   const t = totals(game);
   return JSON.stringify({
     game: 'yahtzee',
+    mode,
+    puzzle: mode === 'daily' ? puzzle : null,
     complete: game.over,
     url: location.href,
     encoded: tokens,
@@ -300,17 +383,21 @@ function randDie() {
   return (buf[0] % 6) + 1;
 }
 
+function nextDie(rollNo, i) {
+  return mode === 'daily' ? tapeDie(puzzle, game.turn, rollNo, i) : randDie();
+}
+
 function roll() {
   if (game.over) return;
   if (game.rolls === 0) {
-    commit('r' + Array.from({ length: 5 }, randDie).join(''));
+    commit('r' + [0, 1, 2, 3, 4].map((i) => nextDie(1, i)).join(''));
     return;
   }
   if (game.rolls >= 3) return;
   let mask = 0;
   const dice = game.dice.map((d, i) => {
     if (held[i]) { mask |= 1 << i; return d; }
-    return randDie();
+    return nextDie(game.rolls + 1, i);
   });
   if (mask === 31) return;
   commit('x' + mask.toString(32) + dice.join(''));
@@ -319,10 +406,17 @@ function roll() {
 function score(cat) { commit('s' + CAT_CHARS[cat]); }
 
 function newGame() {
+  mode = 'free';
   tokens = '';
   game = newState();
   held = [false, false, false, false, false];
   history.pushState(null, '', hashFor('', tab));
+  render();
+}
+
+function goDaily() {
+  history.pushState(null, '', '#t=' + tab);
+  load();
   render();
 }
 
@@ -348,7 +442,8 @@ function renderControls() {
   let label, disabled = false, status;
   if (game.over) {
     label = 'Roll'; disabled = true;
-    status = `Game over · ${totals(game).total} points`;
+    status = mode === 'daily' ? `Daily #${puzzle} complete · ${totals(game).total} points`
+      : `Game over · ${totals(game).total} points`;
   } else if (game.rolls === 0) {
     label = 'Roll dice'; status = `Turn ${game.turn} of 13`;
   } else if (game.rolls >= 3) {
@@ -358,9 +453,16 @@ function renderControls() {
     label = `Re-roll (${3 - game.rolls} left)`;
     status = `Turn ${game.turn} of 13 · tap dice to keep`;
   }
-  return `<div class="bar"><span class="muted">${status}</span>` +
-    `<span>${game.over ? '<button class="primary" data-act="new">New game</button>'
-      : `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`}</span></div>`;
+  let action = `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`;
+  if (game.over) action = mode === 'free' ? '<button class="primary" data-act="new">New game</button>' : '';
+  return `<div class="bar"><span class="muted">${status}</span><span>${action}</span></div>`;
+}
+
+function renderMode() {
+  const title = mode === 'daily' ? `Daily puzzle #${puzzle}` : 'Free play';
+  const other = mode === 'daily' ? '<button data-act="new">Free play</button>'
+    : '<button data-act="daily">Daily</button>';
+  return `<div class="bar" style="margin-bottom:8px"><b>${title}</b>${other}</div>`;
 }
 
 function renderExport() {
@@ -403,7 +505,7 @@ function render() {
   const tabBtn = (id, text) =>
     `<button role="tab" aria-selected="${tab === id}" data-tab="${id}">${text}</button>`;
   document.getElementById('app').innerHTML =
-    renderDice() + renderControls() +
+    renderMode() + renderDice() + renderControls() +
     `<div role="tablist">${tabBtn('log', 'Transcript')}${tabBtn('score', 'Scorecard')}</div>` +
     `<div role="tabpanel">${tab === 'score' ? renderScorecard() : renderLog()}${renderExport()}</div>`;
 }
@@ -417,6 +519,7 @@ document.getElementById('app').addEventListener('click', (e) => {
     render();
   } else if (el.dataset.act === 'roll') roll();
   else if (el.dataset.act === 'new') newGame();
+  else if (el.dataset.act === 'daily') goDaily();
   else if (el.dataset.act === 'copy') copyToClipboard('copy', 'Copy text', exportText());
   else if (el.dataset.act === 'url') copyToClipboard('url', 'Copy URL', location.href);
   else if (el.dataset.act === 'json') downloadJson();
