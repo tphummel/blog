@@ -38,7 +38,7 @@ a{color:#fff}
 .f0{grid-column:4}.f1{grid-column:5}.f2{grid-column:6}.f3{grid-column:7}
 .pile{position:relative;border-radius:calc(var(--cw)*.08);min-height:var(--ch)}
 .slot{border:2px dashed rgba(255,255,255,.25);}
-.slot::after{content:attr(data-label);position:absolute;inset:0;display:grid;place-items:center;
+.slot::after{content:attr(data-label);position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;
   font-size:calc(var(--cw)*.5);color:rgba(255,255,255,.25)}
 .card{touch-action:none;-webkit-touch-callout:none;position:absolute;left:0;width:var(--cw);height:var(--ch);border-radius:calc(var(--cw)*.08);
   background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.45);user-select:none;cursor:pointer;
@@ -369,7 +369,7 @@ function render(){
   h+='</div>';
   for(let s=0;s<4;s++){
     const f=g.found[s];
-    h+=`<div class="pile slot f${s}" data-pile="f${s}" data-label="${SUITS[s]}">`;
+    h+=`<div class="pile slot f${s}" data-pile="f${s}" data-label="${f.length?'':SUITS[s]}">`;
     if(f.length)h+=cardHTML(f[f.length-1],'top:0',isSel('f'+s,f.length-1)?'sel':'',f.length-1);
     h+='</div>';
   }
