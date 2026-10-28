@@ -231,7 +231,7 @@ function loadDaily() {
 }
 
 function saveDaily() {
-  if (mode !== 'daily' || puzzle !== todayPuzzle()) return;
+  if (puzzle !== todayPuzzle()) return; // page was left open past midnight
   try { localStorage.setItem(storeKey(), tokens); } catch (e) { /* storage unavailable */ }
 }
 
@@ -244,14 +244,13 @@ function readHash() {
   return {
     tokens,
     puzzle: Number.isInteger(d) && d >= 1 && d <= 366 ? d : null,
-    free: p.has('f'),
     tab: p.get('t') === 'log' ? 'log' : 'score',
   };
 }
 
 function hashFor(tokens, tab) {
   const p = new URLSearchParams();
-  if (mode === 'daily') p.set('d', puzzle); else p.set('f', '1');
+  p.set('d', puzzle);
   if (tokens) p.set('g', b64.enc(tokens));
   p.set('t', tab);
   return '#' + p.toString();
@@ -270,27 +269,17 @@ function replay(tokens) {
 
 // --- app state ---
 let tokens = '';
-let mode = 'daily';
 let puzzle = todayPuzzle();
 let tab = 'score';
 let game = newState();
 let held = [false, false, false, false, false];
 
-// a hash with a puzzle number is a daily game, one with moves or f=1 is free play,
-// and an empty hash opens today's daily (resumed from browser storage)
+// only today's puzzle is playable: a hash for today's puzzle with moves is used as is,
+// anything else (empty, another day's puzzle) resumes today's game from browser storage
 function load() {
   const h = readHash();
-  let t = h.tokens;
-  if (h.puzzle) {
-    mode = 'daily';
-    puzzle = h.puzzle;
-  } else if (h.tokens || h.free) {
-    mode = 'free';
-  } else {
-    mode = 'daily';
-    puzzle = todayPuzzle();
-  }
-  if (mode === 'daily' && !t && puzzle === todayPuzzle()) t = loadDaily();
+  puzzle = todayPuzzle();
+  const t = h.puzzle === puzzle && h.tokens ? h.tokens : loadDaily();
   const r = replay(t);
   tokens = r.tokens;
   game = r.s;
@@ -322,7 +311,7 @@ function commit(tok) {
 // --- export ---
 function exportText() {
   const t = totals(game);
-  const lines = [mode === 'daily' ? `Yahtzee Daily #${puzzle}` : 'Yahtzee', ''];
+  const lines = [`Yahtzee Daily #${puzzle}`, ''];
   game.turns.forEach((turn) => {
     lines.push(`Turn ${turn.turn}`);
     turn.rolls.forEach((r, i) => {
@@ -342,8 +331,7 @@ function exportJson() {
   const t = totals(game);
   return JSON.stringify({
     game: 'yahtzee',
-    mode,
-    puzzle: mode === 'daily' ? puzzle : null,
+    puzzle,
     complete: game.over,
     url: location.href,
     encoded: tokens,
@@ -376,49 +364,23 @@ function downloadJson() {
   URL.revokeObjectURL(url);
 }
 
-function randDie() {
-  // rejection sampling to avoid modulo bias
-  const buf = new Uint8Array(1);
-  do { crypto.getRandomValues(buf); } while (buf[0] >= 252);
-  return (buf[0] % 6) + 1;
-}
-
-function nextDie(rollNo, i) {
-  return mode === 'daily' ? tapeDie(puzzle, game.turn, rollNo, i) : randDie();
-}
-
 function roll() {
   if (game.over) return;
   if (game.rolls === 0) {
-    commit('r' + [0, 1, 2, 3, 4].map((i) => nextDie(1, i)).join(''));
+    commit('r' + [0, 1, 2, 3, 4].map((i) => tapeDie(puzzle, game.turn, 1, i)).join(''));
     return;
   }
   if (game.rolls >= 3) return;
   let mask = 0;
   const dice = game.dice.map((d, i) => {
     if (held[i]) { mask |= 1 << i; return d; }
-    return nextDie(game.rolls + 1, i);
+    return tapeDie(puzzle, game.turn, game.rolls + 1, i);
   });
   if (mask === 31) return;
   commit('x' + mask.toString(32) + dice.join(''));
 }
 
 function score(cat) { commit('s' + CAT_CHARS[cat]); }
-
-function newGame() {
-  mode = 'free';
-  tokens = '';
-  game = newState();
-  held = [false, false, false, false, false];
-  history.pushState(null, '', hashFor('', tab));
-  render();
-}
-
-function goDaily() {
-  history.pushState(null, '', '#t=' + tab);
-  load();
-  render();
-}
 
 function setTab(t) {
   tab = t;
@@ -442,8 +404,7 @@ function renderControls() {
   let label, disabled = false, status;
   if (game.over) {
     label = 'Roll'; disabled = true;
-    status = mode === 'daily' ? `Daily #${puzzle} complete · ${totals(game).total} points`
-      : `Game over · ${totals(game).total} points`;
+    status = `Daily #${puzzle} complete · ${totals(game).total} points`;
   } else if (game.rolls === 0) {
     label = 'Roll dice'; status = `Turn ${game.turn} of 13`;
   } else if (game.rolls >= 3) {
@@ -453,16 +414,14 @@ function renderControls() {
     label = `Re-roll (${3 - game.rolls} left)`;
     status = `Turn ${game.turn} of 13 · tap dice to keep`;
   }
-  let action = `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`;
-  if (game.over) action = mode === 'free' ? '<button class="primary" data-act="new">New game</button>' : '';
+  const action = game.over ? '' :
+    `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`;
   return `<div class="bar"><span class="muted">${status}</span><span>${action}</span></div>`;
 }
 
 function renderMode() {
-  const title = mode === 'daily' ? `Daily puzzle #${puzzle}` : 'Free play';
-  const other = mode === 'daily' ? '<button data-act="new">Free play</button>'
-    : '<button data-act="daily">Daily</button>';
-  return `<div class="bar" style="margin-bottom:8px"><b>${title}</b>${other}</div>`;
+  const date = new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
+  return `<div class="bar" style="margin-bottom:8px"><b>Daily puzzle #${puzzle}</b><span class="muted">${date}</span></div>`;
 }
 
 function renderExport() {
@@ -518,8 +477,6 @@ document.getElementById('app').addEventListener('click', (e) => {
     held[i] = !held[i];
     render();
   } else if (el.dataset.act === 'roll') roll();
-  else if (el.dataset.act === 'new') newGame();
-  else if (el.dataset.act === 'daily') goDaily();
   else if (el.dataset.act === 'copy') copyToClipboard('copy', 'Copy text', exportText());
   else if (el.dataset.act === 'url') copyToClipboard('url', 'Copy URL', location.href);
   else if (el.dataset.act === 'json') downloadJson();
@@ -529,6 +486,10 @@ document.getElementById('app').addEventListener('click', (e) => {
 
 window.addEventListener('popstate', () => { load(); render(); });
 window.addEventListener('hashchange', () => { load(); render(); });
+// a tab left open overnight picks up the new day's puzzle when it is shown again
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && puzzle !== todayPuzzle()) { load(); render(); }
+});
 
 load();
 render();
