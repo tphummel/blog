@@ -455,7 +455,7 @@ function downloadJson(){
 const place=a=>a==='w'?'waste':a==='s'?'stock':a[0]==='f'?`foundation ${SUITS[+a[1]]}`:`column ${+a[1]+1}`;
 function gameText(){
   const lines=[`Klondike Solitaire (draw ${DRAW}) — puzzle ${puzzleNumber(S.d)}, ${S.d}`,
-    `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),
+    `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),`Seed: ${seedString(dealNumber(S.d))}`,
     'Foundations: '+SUITS.map((s,i)=>s+g.found[i].length).join(' '),'',
     ...g.log.map(m=>{
       const body=m.type==='draw'?`Draw → ${m.cards.join(' ')}`:m.type==='recycle'?'Recycle waste to stock'
