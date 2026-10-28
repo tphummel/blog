@@ -92,6 +92,7 @@ const DAYS_BEFORE=[0,31,60,91,121,152,182,213,244,274,305,335];
 const validDate=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d);if(!m)return false;const t=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));return t.toISOString().slice(0,10)===d};
 const dealSlot=d=>DAYS_BEFORE[+d.slice(5,7)-1]+ +d.slice(8,10)-1;
 const dealNumber=d=>DEALS[dealSlot(d)];
+const puzzleNumber=d=>dealSlot(d)+1; // 1-366: day of year in a leap-year calendar (Feb 29 = 60, Mar 1 = 61)
 const seedString=n=>`klondike-draw2-deal-${n}`;
 const pacificDate=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 
@@ -421,14 +422,14 @@ function renderPanel(){
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
   $('exUrl').onclick=()=>copy(location.href,'URL copied');
 }
-const summary=()=>`Puzzle ${dealNumber(S.d)} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
+const summary=()=>`Puzzle ${puzzleNumber(S.d)} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
 // ---------- export ----------
 const iso=ms=>new Date(ms).toISOString();
 function exportData(){
   return {
     game:'solitaire',variant:'klondike',draw:DRAW,passes:'unlimited',
-    date:S.d,puzzle:dealNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
+    date:S.d,puzzle:puzzleNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
     result:S.e?(S.e[1]==='win'?'won':'surrendered'):'in-progress',
     startedAt:S.s==null?null:iso(S.s),
     endedAt:S.e&&S.s!=null?iso(S.s+S.e[0]):null,
@@ -448,12 +449,12 @@ function exportData(){
 }
 function downloadJson(){
   const blob=new Blob([JSON.stringify(exportData(),null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`solitaire-${dealNumber(S.d)}-${S.d}.json`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`solitaire-${puzzleNumber(S.d)}-${S.d}.json`;
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 const place=a=>a==='w'?'waste':a==='s'?'stock':a[0]==='f'?`foundation ${SUITS[+a[1]]}`:`column ${+a[1]+1}`;
 function gameText(){
-  const lines=[`Klondike Solitaire (draw ${DRAW}) — puzzle ${dealNumber(S.d)}, ${S.d}`,
+  const lines=[`Klondike Solitaire (draw ${DRAW}) — puzzle ${puzzleNumber(S.d)}, ${S.d}`,
     `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),
     'Foundations: '+SUITS.map((s,i)=>s+g.found[i].length).join(' '),'',
     ...g.log.map(m=>{
