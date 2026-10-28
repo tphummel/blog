@@ -84,15 +84,14 @@ const cardName=c=>RANKS[rankOf(c)]+SUITS[suitOf(c)];
 function xmur3(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
   return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
 function mulberry32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-// One fixed, solver-verified deal per calendar day (month/day), the same every year.
+// One fixed deal per calendar day (month/day), the same every year.
 // Index = day of year in a leap-year calendar, so Feb 29 has its own deal. Values are deal numbers
-// (see tools/solitaire). Days 1-10 of a month are easy, 11-20 medium, 21+ hard.
-const DEALS=/*deals*/[2008,1110,1720,212,3406,534,2131,890,2487,2720,2296,322,877,500,68,2741,3097,2343,2665,2610,2673,1309,3550,3783,1432,2254,1966,3563,225,1911,3741,2466,204,2644,1890,848,560,3843,3267,3301,3767,1424,2877,1835,3055,1204,2801,2225,717,2403,2026,903,1547,2335,450,1992,3589,3822,2924,3246,1505,2115,1306,1539,1162,1251,963,3170,3780,3958,1649,3547,531,3060,3903,3094,2196,1154,2175,3395,3945,2992,1806,942,2772,1675,1565,201,1044,2641,468,887,167,2984,1421,3107,1311,557,1201,1057,1667,2031,756,3806,701,735,1790,2023,3942,2413,1515,2654,1413,3853,2811,1536,583,2303,3002,2015,308,392,2688,2400,2201,2756,2845,3311,3955,2447,3057,3345,3434,1460,109,719,2926,664,1740,1596,465,1905,198,2206,3371,512,135,368,224,313,2143,3363,1316,2913,3612,130,2947,1206,3646,3447,1219,2062,266,2274,2884,2342,1444,2287,1622,1512,3232,826,402,3452,347,203,436,703,881,1491,2190,72,2486,3884,258,491,2321,2067,182,3376,1635,1326,2368,2779,3944,2292,1051,1085,3237,3737,1763,255,2834,517,1737,1826,839,3889,496,1805,3203,564,2161,983,3745,407,1483,3724,1750,763,1695,43,3936,1708,3661,2009,1488,1323,2776,3653,3509,1014,637,1208,3648,2407,1886,3949,391,480,3530,2344,2666,2611,2428,789,1789,3475,1446,493,116,3776,2535,1637,1857,3344,2446,1925,3501,2747,430,2027,1883,231,1624,671,3056,95,2014,684,1006,629,1239,2404,1870,3556,2281,1294,2891,3124,1129,752,3425,3048,1684,2993,3459,3925,3027,11,2451,2019,2629,1820,519,3336,3891,2561,1430,2273,3205,422,1642,1121,2341,553,2760,3781,3404,2307,2718,223,689,1655,1511,2519,3485,901,1168,647,3464,1613,1092,283,893,1210,1333,2642,2121,2820,1079,3142,1257,3087,3553,37,2278,2956,2359,618,2393,419,2715,919,254,1359,2202,262,2935,1872,3092,2283,398,2694,3016,3210,1414,3655,2757,2414,2736,2914,1529,3592,3770,2728]/*end*/;
+// (see tools/solitaire). Every deal is one a simulated player (tools/solitaire/player.js) wins on every try.
+const DEALS=/*deals*/[233,2296,2906,322,178,1775,3372,411,68,1288,2131,1144,1754,2364,3207,2864,2343,3563,2809,3275,314,1390,2000,3597,1623,1246,2843,3686,3919,3165,1280,3487,2500,615,3809,3432,2445,3288,1636,3843,2102,2801,217,1670,3267,2280,306,1903,3500,1992,3068,3678,3534,2547,1183,662,2259,1272,751,3945,3657,2670,552,31,3314,3547,963,3170,586,2416,675,3115,2738,3958,10,1607,476,99,2306,2539,188,1031,1120,1353,366,599,455,3971,2984,1510,2120,756,2,2675,701,1311,557,3751,1633,2243,1256,3463,1345,1201,1434,159,248,2688,2167,1036,1125,3332,371,1591,3798,3421,460,3743,172,3832,2324,1337,3777,1803,1426,3633,3112,2968,1083,706,3900,1405,418,2015,1638,2248,2858,1583,1816,3502,2515,1528,1151,2371,1007,2604,20,1617,3824,2460,2693,431,1973,2583,1596,465,1685,643,266,3083,2185,2219,855,1554,2397,3007,3240,2253,1499,1732,2198,834,80,1300,1766,3363,779,2177,2787,2033,2643,2876,3719,237,792,2389,648,1868,3698,127,3931,2423,538,2135,1470,3910,572,3766,428,2025,373,3190,839,1627,208,3635,1894,2504,1140,3580,619,2826,1695,941,2771,1784,2017,1729,2949,2517,3127,1763,2229,2085,1941,577,1420,3860,522,3051,2996,3839,357,1056,3873,2742,1988,2598,2221,1234,3441,3297,2310,2488,1446,692,1912,2522,2234,2467,3077,2090,3255,993,1226,3666,95,3378,1870,3467,883,3323,1959,3556,3412,828,2425,2658,74,3357,1849,485,1417,3624,1883,985,1828,2061,3281,930,2150,875,498,2705,3781,3404,1519,3205,3815,1320,655,2485,2718,134,977,223,1443,689,1155,401,867,723,1943,579,2354,2964,2587,1833,469,1922,3519,1168,37,3231,2854,270,2943,969,3176,914,3121,770,2977,393,1092,1702,948,1558,50,283,139,2202,2812,1071,1537,783,2613,3456,495,118,2558,1194,3024,2270,3723,385,330,1550,2160,2626,741,1207,3037,3647,2283,3736,3592,3215,1474,3681,1330,1652,3715,2728,1741,3338]/*end*/;
 const DAYS_BEFORE=[0,31,60,91,121,152,182,213,244,274,305,335];
 const validDate=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d);if(!m)return false;const t=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));return t.toISOString().slice(0,10)===d};
 const dealSlot=d=>DAYS_BEFORE[+d.slice(5,7)-1]+ +d.slice(8,10)-1;
 const dealNumber=d=>DEALS[dealSlot(d)];
-const tierOf=d=>{const n=+d.slice(8,10);return n<=10?'easy':n<=20?'medium':'hard'};
 const seedString=n=>`klondike-draw2-deal-${n}`;
 const pacificDate=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 
@@ -391,7 +390,7 @@ function render(){
   h+='</div>';
   $('board').innerHTML=h;
   $('title').textContent=`Daily Klondike · Draw ${DRAW}`;
-  $('date').textContent=`${S.d} · ${tierOf(S.d)}`+(S.d!==pacificDate()?' (past)':'');
+  $('date').textContent=S.d+(S.d!==pacificDate()?' (past)':'');
   $('moves').textContent=g.log.length;
   $('surrender').hidden=ended()||busy;
   $('auto').hidden=ended()||busy||g.tab.some(p=>p.some(x=>!x.up));
@@ -422,14 +421,14 @@ function renderPanel(){
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
   $('exUrl').onclick=()=>copy(location.href,'URL copied');
 }
-const summary=()=>`${S.d} (${tierOf(S.d)}) · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
+const summary=()=>`${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
 // ---------- export ----------
 const iso=ms=>new Date(ms).toISOString();
 function exportData(){
   return {
     game:'solitaire',variant:'klondike',draw:DRAW,passes:'unlimited',
-    date:S.d,difficulty:tierOf(S.d),dealNumber:dealNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
+    date:S.d,dealNumber:dealNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
     result:S.e?(S.e[1]==='win'?'won':'surrendered'):'in-progress',
     startedAt:S.s==null?null:iso(S.s),
     endedAt:S.e&&S.s!=null?iso(S.s+S.e[0]):null,
@@ -454,7 +453,7 @@ function downloadJson(){
 }
 const place=a=>a==='w'?'waste':a==='s'?'stock':a[0]==='f'?`foundation ${SUITS[+a[1]]}`:`column ${+a[1]+1}`;
 function gameText(){
-  const lines=[`Klondike Solitaire (draw ${DRAW}, ${tierOf(S.d)}) — ${S.d}`,
+  const lines=[`Klondike Solitaire (draw ${DRAW}) — ${S.d}`,
     `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),
     'Foundations: '+SUITS.map((s,i)=>s+g.found[i].length).join(' '),'',
     ...g.log.map(m=>{
