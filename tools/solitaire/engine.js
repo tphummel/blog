@@ -6,5 +6,5 @@ const src = /<script>([\s\S]*)<\/script>/.exec(html)[1];
 const code = src.slice(src.indexOf('// ---------- cards'), src.indexOf('// ---------- url state'));
 const ctx = { Intl, Date, Math };
 vm.createContext(ctx);
-vm.runInContext(code + ';this.E={newGame,gameFromDeck,solveGame,planMoves,apply,cardName,foundCount,dealDeck,DRAW,DAYS_BEFORE,tierOf,DEALS};', ctx);
+vm.runInContext(code + ';this.E={peek,canDrop,suitOf,rankOf,isRed,newGame,gameFromDeck,solveGame,planMoves,apply,cardName,foundCount,dealDeck,DRAW,DAYS_BEFORE,DEALS};', ctx);
 module.exports = ctx.E;
