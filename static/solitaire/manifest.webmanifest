@@ -2,7 +2,7 @@
   "id": "/solitaire/",
   "name": "Daily Solitaire",
   "short_name": "Solitaire",
-  "description": "A daily Klondike solitaire. Everyone gets the same deal each day. Your game is saved in the URL.",
+  "description": "A daily Klondike solitaire. Everyone gets the same deal each day. Your progress is saved in the browser.",
   "lang": "en-US",
   "start_url": "/solitaire/",
   "scope": "/solitaire/",
