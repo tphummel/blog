@@ -421,14 +421,14 @@ function renderPanel(){
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
   $('exUrl').onclick=()=>copy(location.href,'URL copied');
 }
-const summary=()=>`${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
+const summary=()=>`Puzzle ${dealNumber(S.d)} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
 // ---------- export ----------
 const iso=ms=>new Date(ms).toISOString();
 function exportData(){
   return {
     game:'solitaire',variant:'klondike',draw:DRAW,passes:'unlimited',
-    date:S.d,dealNumber:dealNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
+    date:S.d,puzzle:dealNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
     result:S.e?(S.e[1]==='win'?'won':'surrendered'):'in-progress',
     startedAt:S.s==null?null:iso(S.s),
     endedAt:S.e&&S.s!=null?iso(S.s+S.e[0]):null,
@@ -448,12 +448,12 @@ function exportData(){
 }
 function downloadJson(){
   const blob=new Blob([JSON.stringify(exportData(),null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`solitaire-${S.d}.json`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`solitaire-${dealNumber(S.d)}-${S.d}.json`;
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 const place=a=>a==='w'?'waste':a==='s'?'stock':a[0]==='f'?`foundation ${SUITS[+a[1]]}`:`column ${+a[1]+1}`;
 function gameText(){
-  const lines=[`Klondike Solitaire (draw ${DRAW}) — ${S.d}`,
+  const lines=[`Klondike Solitaire (draw ${DRAW}) — puzzle ${dealNumber(S.d)}, ${S.d}`,
     `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),
     'Foundations: '+SUITS.map((s,i)=>s+g.found[i].length).join(' '),'',
     ...g.log.map(m=>{
