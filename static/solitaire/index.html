@@ -38,9 +38,9 @@ a{color:#fff}
 .f0{grid-column:4}.f1{grid-column:5}.f2{grid-column:6}.f3{grid-column:7}
 .pile{position:relative;border-radius:calc(var(--cw)*.08);min-height:var(--ch)}
 .slot{border:2px dashed rgba(255,255,255,.25);}
-.slot::after{content:attr(data-label);position:absolute;inset:0;display:grid;place-items:center;
+.slot::after{content:attr(data-label);position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;
   font-size:calc(var(--cw)*.5);color:rgba(255,255,255,.25)}
-.card{touch-action:manipulation;-webkit-touch-callout:none;position:absolute;left:0;width:var(--cw);height:var(--ch);border-radius:calc(var(--cw)*.08);
+.card{touch-action:none;-webkit-touch-callout:none;position:absolute;left:0;width:var(--cw);height:var(--ch);border-radius:calc(var(--cw)*.08);
   background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.45);user-select:none;cursor:pointer;
   font-size:calc(var(--cw)*.27);font-weight:600;line-height:1;overflow:hidden}
 .card.red{color:var(--red)}
@@ -48,6 +48,10 @@ a{color:#fff}
 .card .mid{position:absolute;right:calc(var(--cw)*.08);bottom:calc(var(--cw)*.04);font-size:calc(var(--cw)*.5)}
 .card.down{background:repeating-linear-gradient(45deg,#1e4fa3 0 6px,#2a63c4 6px 12px);border:2px solid #fff;cursor:default}
 .card.sel{outline:3px solid var(--sel);outline-offset:-1px;z-index:50}
+.card.lifted{visibility:hidden}
+.dragbox{position:fixed;left:0;top:0;width:var(--cw);z-index:1000;pointer-events:none;will-change:transform}
+.dragbox .card{box-shadow:0 6px 14px rgba(0,0,0,.5)}
+.pile.drop-ok{outline:3px solid #7cfc9a;outline-offset:2px}
 .stockc{cursor:pointer}
 #panel{max-width:560px;margin:0 auto 16px;padding:14px 16px;background:rgba(0,0,0,.45);border-radius:10px}
 #panel h2{margin:0 0 6px;font-size:18px}
@@ -70,7 +74,7 @@ a{color:#fff}
 </header>
 <div id="panel" hidden></div>
 <div class="board" id="board"></div>
-<p class="hint" id="hint">Tap a card, then tap where it goes. Tap a selected card again to send it to a foundation. Once every tableau card is face up, Auto-solve can finish the game. Your progress is saved in this browser.</p>
+<p class="hint" id="hint">Drag a card to where it goes, or tap it and then tap the destination. Tap a selected card again to send it to a foundation. Once every tableau card is face up, Auto-solve can finish the game. Your progress is saved in this browser.</p>
 <div id="toast"></div>
 <script>
 'use strict';
@@ -324,7 +328,7 @@ function surrender(){
 }
 
 function onClick(e){
-  if(ended()||busy)return;
+  if(ended()||busy||performance.now()-dragEndedAt<40)return; // a drop also fires a click
   const cardEl=e.target.closest('[data-idx]'),pileEl=e.target.closest('[data-pile]');
   if(!pileEl)return;
   const addr=pileEl.dataset.pile,idx=cardEl?+cardEl.dataset.idx:-1;
@@ -365,7 +369,7 @@ function render(){
   h+='</div>';
   for(let s=0;s<4;s++){
     const f=g.found[s];
-    h+=`<div class="pile slot f${s}" data-pile="f${s}" data-label="${SUITS[s]}">`;
+    h+=`<div class="pile slot f${s}" data-pile="f${s}" data-label="${f.length?'':SUITS[s]}">`;
     if(f.length)h+=cardHTML(f[f.length-1],'top:0',isSel('f'+s,f.length-1)?'sel':'',f.length-1);
     h+='</div>';
   }
@@ -462,6 +466,84 @@ async function copy(text,msg){
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1800)}
 
 $('board').addEventListener('click',onClick);
+
+// ---------- drag and drop (Pointer Events: mouse, touch and pen) ----------
+// A press that moves more than a few px becomes a drag of the card (and the run on top of it); releasing over
+// a legal pile plays the same move a tap would. Anything else snaps back. Taps still use onClick.
+let drag=null,dragEndedAt=0;
+const DRAG_PX=6;
+function sourceAt(el){
+  const pileEl=el.closest('[data-pile]'),cardEl=el.closest('[data-idx]');
+  if(!pileEl||!cardEl)return null;
+  const addr=pileEl.dataset.pile,idx=+cardEl.dataset.idx;
+  if(addr==='w')return idx===g.waste.length-1?{addr,idx,n:1}:null;
+  if(addr[0]==='f')return {addr,idx,n:1};
+  if(addr[0]==='t'){const p=g.tab[+addr[1]];return p[idx]&&p[idx].up?{addr,idx,n:p.length-idx}:null}
+  return null;
+}
+// the pile a drop at (x,y) would play to, or null if that move is not legal
+function dropTarget(d,x,y){
+  const cards=peek(g,d.src.addr,d.src.n);if(!cards)return null;
+  const probes=[[x-d.dx+d.w/2,y-d.dy+d.h/2],[x,y]]; // centre of the dragged card first, then the pointer
+  for(const [px,py] of probes){
+    const pile=document.elementFromPoint(px,py)?.closest('#board [data-pile]');
+    if(!pile)continue;
+    const a=pile.dataset.pile;if(a==='s'||a==='w')continue;
+    const to=a[0]==='f'?'f'+suitOf(cards[0]):a;
+    if(canDrop(g,cards,d.src.addr,to))return to;
+  }
+  return null;
+}
+const clearDrop=()=>document.querySelectorAll('#board .drop-ok').forEach(el=>el.classList.remove('drop-ok'));
+function startDrag(){
+  const pile=$('board').querySelector(`[data-pile="${drag.src.addr}"]`);
+  const cards=[...pile.querySelectorAll('[data-idx]')].filter(el=>+el.dataset.idx>=drag.src.idx);
+  const first=cards[0].getBoundingClientRect();
+  const box=document.createElement('div');box.className='dragbox';
+  for(const c of cards){
+    const k=c.cloneNode(true);k.classList.remove('sel');
+    k.style.top=(c.getBoundingClientRect().top-first.top)+'px';k.style.left='0';box.appendChild(k);
+  }
+  document.body.appendChild(box);
+  cards.forEach(c=>c.classList.add('lifted'));
+  $('board').querySelectorAll('.sel').forEach(c=>c.classList.remove('sel'));
+  Object.assign(drag,{active:true,cards,box,w:first.width,h:first.height});
+  sel=null;
+  try{$('board').setPointerCapture(drag.id)}catch(e){}
+}
+function moveDrag(x,y){
+  drag.box.style.transform=`translate(${x-drag.dx}px,${y-drag.dy}px)`;
+  clearDrop();
+  const to=dropTarget(drag,x,y);
+  if(to)$('board').querySelector(`[data-pile="${to}"]`).classList.add('drop-ok');
+}
+function endDrag(x,y,cancelled){
+  const d=drag;drag=null;
+  if(!d||!d.active)return;
+  dragEndedAt=performance.now();
+  try{$('board').releasePointerCapture(d.id)}catch(e){}
+  clearDrop();
+  const to=cancelled?null:dropTarget(d,x,y);
+  if(to&&act({k:'m',from:d.src.addr,to,n:d.src.n})){d.box.remove();render();return}
+  const r=d.cards[0].getBoundingClientRect(); // illegal drop: slide back to where it came from
+  d.box.style.transition='transform .15s';
+  d.box.style.transform=`translate(${r.left}px,${r.top}px)`;
+  setTimeout(()=>{d.box.remove();d.cards.forEach(c=>c.classList.remove('lifted'))},160);
+}
+$('board').addEventListener('pointerdown',e=>{
+  if(ended()||busy||drag||(e.pointerType==='mouse'&&e.button!==0))return;
+  const src=sourceAt(e.target);if(!src)return;
+  const r=e.target.closest('[data-idx]').getBoundingClientRect();
+  drag={id:e.pointerId,x:e.clientX,y:e.clientY,src,dx:e.clientX-r.left,dy:e.clientY-r.top,active:false};
+});
+document.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  if(!drag.active){if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<DRAG_PX)return;startDrag()}
+  moveDrag(e.clientX,e.clientY);
+});
+document.addEventListener('pointerup',e=>{if(drag&&e.pointerId===drag.id)endDrag(e.clientX,e.clientY,false)});
+document.addEventListener('pointercancel',e=>{if(drag&&e.pointerId===drag.id)endDrag(e.clientX,e.clientY,true)});
+$('board').addEventListener('contextmenu',e=>e.preventDefault()); // no long-press menu on a card
 $('surrender').addEventListener('click',surrender);
 function autoSolve(){
   if(ended()||busy)return;
