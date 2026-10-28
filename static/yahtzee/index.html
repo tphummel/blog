@@ -173,12 +173,6 @@ function totals(s) {
   return { upper, upperBonus, lower, yb, total: upper + upperBonus + lower + yb };
 }
 
-// --- URL encoding: base64url of the compact token string, in the hash ---
-const b64 = {
-  enc: (str) => btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''),
-  dec: (str) => atob(str.replace(/-/g, '+').replace(/_/g, '/')),
-};
-
 // --- daily puzzle ---
 // Puzzles 1-365 follow a non-leap calendar (Mar 1 is always 60); Feb 29 is 366.
 // The seed is the puzzle number alone, so the same date has the same dice every year.
@@ -235,27 +229,6 @@ function saveDaily() {
   try { localStorage.setItem(storeKey(), tokens); } catch (e) { /* storage unavailable */ }
 }
 
-function readHash() {
-  const p = new URLSearchParams(location.hash.slice(1));
-  let tokens = '';
-  try { tokens = b64.dec(p.get('g') || ''); } catch (e) { tokens = ''; }
-  if (!VALID_RE.test(tokens)) tokens = '';
-  const d = Number(p.get('d'));
-  return {
-    tokens,
-    puzzle: Number.isInteger(d) && d >= 1 && d <= 366 ? d : null,
-    tab: p.get('t') === 'log' ? 'log' : 'score',
-  };
-}
-
-function hashFor(tokens, tab) {
-  const p = new URLSearchParams();
-  p.set('d', puzzle);
-  if (tokens) p.set('g', b64.enc(tokens));
-  p.set('t', tab);
-  return '#' + p.toString();
-}
-
 function replay(tokens) {
   const s = newState();
   const toks = tokens.match(TOKEN_RE) || [];
@@ -274,19 +247,13 @@ let tab = 'score';
 let game = newState();
 let held = [false, false, false, false, false];
 
-// only today's puzzle is playable: a hash for today's puzzle with moves is used as is,
-// anything else (empty, another day's puzzle) resumes today's game from browser storage
+// only today's puzzle is playable; its moves are kept in browser storage, not the URL
 function load() {
-  const h = readHash();
   puzzle = todayPuzzle();
-  const t = h.puzzle === puzzle && h.tokens ? h.tokens : loadDaily();
-  const r = replay(t);
+  const r = replay(loadDaily());
   tokens = r.tokens;
   game = r.s;
-  tab = h.tab;
   held = heldFrom(tokens);
-  const canon = hashFor(tokens, tab);
-  if (canon !== location.hash) history.replaceState(null, '', canon);
 }
 
 // dice kept for the last re-roll stay frozen until the player changes them
@@ -303,7 +270,6 @@ function commit(tok) {
   tokens = next;
   game = r.s;
   saveDaily();
-  history.pushState(null, '', hashFor(tokens, tab));
   held = heldFrom(tokens);
   render();
 }
@@ -323,7 +289,7 @@ function exportText() {
   lines.push('Scorecard');
   CATS.forEach((c, i) => lines.push(`  ${c}: ${game.scores[i] === null ? '-' : game.scores[i]}`));
   lines.push(`  Upper bonus: ${t.upperBonus}`, `  Yahtzee bonuses: ${t.yb}`,
-    `Total: ${t.total}${game.over ? '' : ' (in progress)'}`, '', location.href);
+    `Total: ${t.total}${game.over ? '' : ' (in progress)'}`);
   return lines.join('\n');
 }
 
@@ -333,7 +299,6 @@ function exportJson() {
     game: 'yahtzee',
     puzzle,
     complete: game.over,
-    url: location.href,
     encoded: tokens,
     turns: game.turns.map((turn) => ({
       turn: turn.turn,
@@ -384,7 +349,6 @@ function score(cat) { commit('s' + CAT_CHARS[cat]); }
 
 function setTab(t) {
   tab = t;
-  history.replaceState(null, '', hashFor(tokens, tab));
   render();
 }
 
@@ -427,7 +391,6 @@ function renderMode() {
 function renderExport() {
   return `<div class="bar" style="margin-top:16px"><span class="muted">Export</span><span>` +
     `<button data-act="copy" ${tokens ? '' : 'disabled'}>Copy text</button> ` +
-    `<button data-act="url" ${tokens ? '' : 'disabled'}>Copy URL</button> ` +
     `<button data-act="json" ${tokens ? '' : 'disabled'}>Download JSON</button></span></div>`;
 }
 
@@ -478,14 +441,12 @@ document.getElementById('app').addEventListener('click', (e) => {
     render();
   } else if (el.dataset.act === 'roll') roll();
   else if (el.dataset.act === 'copy') copyToClipboard('copy', 'Copy text', exportText());
-  else if (el.dataset.act === 'url') copyToClipboard('url', 'Copy URL', location.href);
   else if (el.dataset.act === 'json') downloadJson();
   else if (el.dataset.tab) setTab(el.dataset.tab);
   else if (el.dataset.score !== undefined) score(Number(el.dataset.score));
 });
 
-window.addEventListener('popstate', () => { load(); render(); });
-window.addEventListener('hashchange', () => { load(); render(); });
+if (location.hash) history.replaceState(null, '', location.pathname + location.search); // drop old shared-state links
 // a tab left open overnight picks up the new day's puzzle when it is shown again
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden && puzzle !== todayPuzzle()) { load(); render(); }
