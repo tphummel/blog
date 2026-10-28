@@ -70,7 +70,7 @@ a{color:#fff}
 </header>
 <div id="panel" hidden></div>
 <div class="board" id="board"></div>
-<p class="hint" id="hint">Tap a card, then tap where it goes. Tap a selected card again to send it to a foundation. Once every tableau card is face up, Auto-solve can finish the game. Game state lives in the URL — bookmark it to resume.</p>
+<p class="hint" id="hint">Tap a card, then tap where it goes. Tap a selected card again to send it to a foundation. Once every tableau card is face up, Auto-solve can finish the game. Your progress is saved in this browser.</p>
 <div id="toast"></div>
 <script>
 'use strict';
@@ -270,15 +270,12 @@ function planMoves(g,path){
   return moves;
 }
 
-// ---------- url state ----------
-// S = {v:1, d:'YYYY-MM-DD', s:startEpochMs|null, m:[[dtMs,'d'|'r'|'m',from,to,n]], e:null|[dtMs,'win'|'surrender']}
-const b64=o=>btoa(JSON.stringify(o)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-const unb64=s=>JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
-const encodeState=S=>b64(S);
-const SAVE_KEY='solitaire-last';
-function replay(raw){
-  const S=unb64(raw);
-  if(S.v!==1||!validDate(S.d)||!Array.isArray(S.m))throw 0;
+// ---------- saved game (browser storage) ----------
+// S = {v:1, d:'YYYY-MM-DD', s:startEpochMs|null, m:[[dtMs,'d'|'r'|'m',from,to,n,auto]], e:null|[dtMs,'win'|'surrender']}
+// Only this move list is stored; the board and every per-move detail are rebuilt by replaying it on the deal.
+const SAVE_KEY='solitaire-save';
+function replay(S){
+  if(!S||S.v!==1||!validDate(S.d)||!Array.isArray(S.m))throw 0;
   const g=newGame(S.d);
   for(const x of S.m){
     const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4],auto:!!x[5]});
@@ -289,16 +286,13 @@ function replay(raw){
 }
 function loadState(){
   let note=null;
-  const m=/^#g=([\w-]+)$/.exec(location.hash);
-  if(m){
-    try{return {...replay(m[1]),note}}
-    catch(e){note='Could not read the game in the URL — starting today’s game.'}
-  }else{
-    try{
-      const saved=localStorage.getItem(SAVE_KEY);
-      if(saved){const r=replay(saved);if(r.S.d===pacificDate())return {...r,note}}
-    }catch(e){}
-  }
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(raw){
+      try{const r=replay(JSON.parse(raw));if(r.S.d===pacificDate())return {...r,note}}
+      catch(e){note='Could not read the saved game — starting today’s puzzle.'}
+    }
+  }catch(e){note='This browser is not saving progress, so a reload will start over.'}
   const d=pacificDate();
   return {S:{v:1,d,s:null,m:[],e:null},g:newGame(d),note};
 }
@@ -309,11 +303,8 @@ let sel=null; // {addr, idx, n}
 let busy=false; // true while Auto-solve is playing
 const $=id=>document.getElementById(id);
 const ended=()=>!!S.e;
-// The URL is the source of truth; a copy is kept in localStorage only so an installed app (which has no
-// address bar) can resume today's game when launched from its icon.
 function save(){
-  const h=encodeState(S);history.replaceState(null,'','#g='+h);
-  try{localStorage.setItem(SAVE_KEY,h)}catch(e){}
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){}
 }
 function act(mv){
   if(ended())return false;
@@ -405,8 +396,10 @@ setInterval(()=>{if(!ended())tick()},1000);
 function renderPanel(){
   const p=$('panel');
   if(!ended()){
-    p.hidden=!(note||S.d!==pacificDate());
-    p.innerHTML=(note?`<div>${note}</div>`:'')+(S.d!==pacificDate()?`<div>Viewing the ${S.d} game. <a href="${location.pathname}">Play today’s game</a></div>`:'');
+    const stale=S.d!==pacificDate();
+    p.hidden=!(note||stale);
+    p.innerHTML=(note?`<div>${note}</div>`:'')+(stale?`<div>This game is from ${S.d}. <button id="newDay">Start today’s puzzle</button></div>`:'');
+    if(stale)$('newDay').onclick=()=>newDay();
     return;
   }
   const won=S.e[1]==='win';
@@ -416,11 +409,9 @@ function renderPanel(){
     <div class="row">
       <button id="exJson">Export JSON</button>
       <button id="exText">Copy text</button>
-      <button id="exUrl">Copy URL</button>
     </div>`;
   $('exJson').onclick=downloadJson;
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
-  $('exUrl').onclick=()=>copy(location.href,'URL copied');
 }
 const summary=()=>`Puzzle ${puzzleNumber(S.d)} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
@@ -444,7 +435,6 @@ function exportData(){
       foundations:Object.fromEntries(SUITS.map((s,i)=>[s,g.found[i].map(cardName)])),
       tableau:g.tab.map(p=>p.map(x=>({card:cardName(x.c),faceUp:x.up})))
     },
-    url:location.href
   };
 }
 function downloadJson(){
@@ -461,7 +451,7 @@ function gameText(){
       const body=m.type==='draw'?`Draw → ${m.cards.join(' ')}`:m.type==='recycle'?'Recycle waste to stock'
         :`${m.cards.join(' ')}: ${place(m.from)} → ${place(m.to)}${m.flipped?` (flipped ${m.flipped})`:''}`;
       return `${m.n}. [${fmtTime(m.t)}] ${body}${m.auto?" (auto)":""}`;
-    }),'',location.href];
+    }),''];
   return lines.join('\n');
 }
 async function copy(text,msg){
@@ -487,14 +477,17 @@ function autoSolve(){
   next();
 }
 $('auto').addEventListener('click',autoSolve);
-window.addEventListener('hashchange',()=>{({S,g,note}=loadState());sel=null;render()});
-if(!location.hash)save();
+function newDay(){
+  const d=pacificDate();
+  S={v:1,d,s:null,m:[],e:null};g=newGame(d);note=null;sel=null;save();render();
+}
+save();
 render();
-// A game left open overnight: if it hasn't been started, swap in the new day's deal when the app returns.
+// App left open past midnight: swap in the new day's puzzle on return unless a game is mid-play
+// (then the panel offers the swap).
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible'&&!S.m.length&&!ended()&&S.d!==pacificDate()){
-    history.replaceState(null,'',location.pathname);({S,g,note}=loadState());save();render();
-  }
+  if(document.visibilityState!=='visible'||busy||S.d===pacificDate())return;
+  if(!S.m.length||ended())newDay();else render();
 });
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/solitaire/sw.js',{scope:'/solitaire/'})
