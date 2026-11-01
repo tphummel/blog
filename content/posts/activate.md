@@ -13,4 +13,4 @@ Family usernames on [Activate](https://playactivate.com):
 - [kingwarcraft](https://playactivate.com/scores/kingwarcraft/49/scores)
 - [kingbroforce](https://playactivate.com/scores/kingbroforce/49/scores)
 - [tohu](https://playactivate.com/scores/tohu/49/scores)
-- [Patrick Maloney](https://playactivate.com/scores/Patrick%20Maloney/49/scores)
+- [Patrick Maloney](https://playactivate.com/scores/Patrick%20maloney/49/scores)
