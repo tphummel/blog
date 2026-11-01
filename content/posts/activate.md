@@ -7,7 +7,7 @@ images:
 tags: [video-games]
 ---
 
-Family usernames on [Activate](https://playactivate.com):
+Family usernames on [Activate](https://playactivate.com), with scores at the Culver City location:
 
 - [Neelahu](https://playactivate.com/scores/Neelahu/49/scores)
 - [kingwarcraft](https://playactivate.com/scores/kingwarcraft/49/scores)
