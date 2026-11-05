@@ -46,6 +46,7 @@ a{color:#fff}
 .card.red{color:var(--red)}
 .card .tl{position:absolute;top:calc(var(--cw)*.05);left:calc(var(--cw)*.07)}
 .card .mid{position:absolute;right:calc(var(--cw)*.08);bottom:calc(var(--cw)*.04);font-size:calc(var(--cw)*.5)}
+.card .count{position:absolute;inset:0;display:grid;place-items:center;font-size:calc(var(--cw)*.34);font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);font-variant-numeric:tabular-nums}
 .card.down{background:repeating-linear-gradient(45deg,#1e4fa3 0 6px,#2a63c4 6px 12px);border:2px solid #fff;cursor:default}
 .card.sel{outline:3px solid var(--sel);outline-offset:-1px;z-index:50}
 .card.lifted{visibility:hidden}
@@ -362,7 +363,7 @@ function cardHTML(c,style,extra='',idx){
 const isSel=(addr,idx,n=1)=>sel&&sel.addr===addr&&idx>=sel.idx&&idx<sel.idx+sel.n;
 function render(){
   let h='<div class="top">';
-  h+=`<div class="pile slot stockc" data-pile="s" data-label="${g.stock.length?'':'↻'}">${g.stock.length?`<div class="card down" style="top:0"></div>`:''}</div>`;
+  h+=`<div class="pile slot stockc" data-pile="s" data-label="${g.stock.length?'':'↻'}" aria-label="Stock, ${g.stock.length} cards">${g.stock.length?`<div class="card down" style="top:0"><span class="count">${g.stock.length}</span></div>`:''}</div>`;
   h+='<div class="pile waste" data-pile="w">';
   const w=g.waste,start=Math.max(0,w.length-DRAW);
   for(let i=start;i<w.length;i++)h+=cardHTML(w[i],`top:0;left:calc(var(--cw)*${(i-start)*.28})`,isSel('w',i)?'sel':'',i);
