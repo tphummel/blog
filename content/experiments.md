@@ -20,3 +20,4 @@ date: 2020-09-01T08:00:00
 - [Yahtzee](/yahtzee)
 - [Daily Solitaire](/solitaire)
 - [Pictionary Clue Generator](/pictionary)
+- [5 Minute Journal Prompt Generator](/five-minute-journal-prompt-generator)
