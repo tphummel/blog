@@ -20,3 +20,4 @@ date: 2020-09-01T08:00:00
 - [Yahtzee](/yahtzee)
 - [Daily Solitaire](/solitaire)
 - [Pictionary Clue Generator](/pictionary)
+- [Charades](/charades)

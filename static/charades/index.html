@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tomhummel.com - charades</title>
+  <style>
+    :root {
+      --bg: #fafafa; --fg: #222; --muted: #777; --accent: #2b6cb0; --border: #ccc;
+      --card: #fff; --win: #2f855a; --loss: #c53030; --soft: #eee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b1c1d; --fg: #e6e6e6; --muted: #999; --accent: #63a4e0; --border: #444;
+        --card: #252627; --win: #68d391; --loss: #fc8181; --soft: #2f3031;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); max-width: 40rem; margin: 0 auto; padding: 1rem; }
+    h1 { font-size: 1.3rem; margin: 0; }
+    h2 { font-size: 1.05rem; margin: 0 0 0.5rem; }
+    a { color: var(--accent); }
+    button, select, input { font: inherit; color: var(--fg); padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+    button { cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    button.danger { background: var(--loss); border-color: var(--loss); color: #fff; }
+    label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; font-size: 0.9rem; }
+    select, input[type="text"], input[type="number"], input[type="datetime-local"] { width: 100%; }
+    header { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+    header .name { flex: 1 1 10rem; font-weight: 600; }
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1rem; }
+    .tabs button { flex: 1; border: 0; border-radius: 6px 6px 0 0; background: none; font-weight: 600; color: var(--muted); }
+    .tabs button[aria-selected="true"] { color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; margin-bottom: 1rem; }
+    .row { display: flex; gap: 0.5rem; align-items: center; }
+    .row > input { flex: 1; }
+    .seg { display: flex; gap: 0.5rem; }
+    .seg button { flex: 1; }
+    .seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+    .chip { display: inline-flex; align-items: center; gap: 0.3rem; background: var(--soft); border-radius: 999px; padding: 0.15rem 0.3rem 0.15rem 0.7rem; }
+    .chip button { padding: 0 0.45rem; border: 0; background: none; color: var(--muted); }
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .stage { text-align: center; padding: 1.5rem 1rem; }
+    .clue { font-size: 2.2rem; font-weight: 700; word-break: break-word; margin: 1rem 0; }
+    .timer { font-size: 4.5rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 0.5rem 0; }
+    .timer.low { color: var(--loss); }
+    .stage .big { width: 100%; padding: 1rem; font-size: 1.3rem; margin-top: 0.5rem; }
+    .won { color: var(--win); } .lost { color: var(--loss); }
+    .result { font-size: 1.6rem; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 0.4rem; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-size: 0.85rem; }
+    td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+    .round { border-bottom: 1px solid var(--border); padding: 0.6rem 0; }
+    .round:last-child { border-bottom: 0; }
+    .round .top { display: flex; justify-content: space-between; gap: 0.5rem; font-weight: 600; }
+    .round .btns { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+    .round .btns button { padding: 0.2rem 0.6rem; font-size: 0.85rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.6rem; }
+    .form-grid .full { grid-column: 1 / -1; }
+    dialog { max-width: 36rem; width: calc(100% - 2rem); background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 10px; }
+    dialog::backdrop { background: rgba(0,0,0,0.5); }
+    .game { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+    .game .info { flex: 1 1 10rem; }
+    .game button { padding: 0.25rem 0.6rem; font-size: 0.85rem; }
+    .game.current .info strong::after { content: " (open)"; color: var(--accent); font-weight: 400; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Charades</h1>
+    <input id="game-name" class="name" type="text" aria-label="Game name">
+    <button type="button" id="new-game" class="primary">New game</button>
+    <button type="button" id="games-btn">Games</button>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="play" aria-selected="true">Play</button>
+    <button type="button" role="tab" data-tab="score" aria-selected="false">Scoreboard</button>
+    <button type="button" role="tab" data-tab="history" aria-selected="false">History</button>
+  </div>
+
+  <section id="pane-play"></section>
+  <section id="pane-score" hidden></section>
+  <section id="pane-history" hidden></section>
+
+  <dialog id="games-dialog">
+    <div class="row" style="justify-content: space-between; margin-bottom: 0.5rem">
+      <h2 style="margin:0">All games</h2>
+      <button type="button" id="games-close">Close</button>
+    </div>
+    <div id="games-list"></div>
+    <div class="row" style="margin-top: 0.75rem">
+      <button type="button" id="export-all">Export all games</button>
+    </div>
+  </dialog>
+
+  <p class="muted" style="margin-top:2rem">Everything is stored in this browser only (localStorage). Export a game to keep a copy. <a href="/experiments/">&larr; experiments</a></p>
+
+  <script>
+    const CLUES = {"Animals":{"easy":["cat","dog","fish","bird","cow","pig","horse","sheep","duck","chicken","frog","snake","rabbit","mouse","bear","lion","tiger","elephant","giraffe","monkey","zebra","turtle","butterfly","bee","spider","ant","snail","worm","owl","penguin","dolphin","whale","shark","octopus","crab","seal","squirrel","deer","fox","wolf","goat","donkey","camel","kangaroo","panda","hippo","rhino","crocodile","parrot","swan","goose","turkey","rooster","ladybug","caterpillar","dinosaur","bat","hedgehog","skunk","raccoon","moose","cheetah","gorilla","koala","flamingo","peacock","starfish","jellyfish","seahorse","lobster","eagle","puppy","kitten","lamb","bull","polar bear","bunny","mosquito","fly","dragonfly","grasshopper","pony","chick","piglet","calf","tadpole","dragon","unicorn","mole","beaver","otter","sloth","lizard","hamster","goldfish","woodpecker","pelican","walrus","crow","ladybird"],"medium":["porcupine","armadillo","chameleon","platypus","llama","alpaca","ostrich","toucan","hummingbird","vulture","seagull","stingray","narwhal","orca","clownfish","pufferfish","swordfish","eel","scorpion","praying mantis","centipede","firefly","bumblebee","wasp","tarantula","cobra","rattlesnake","iguana","gecko","komodo dragon","tortoise","hermit crab","sea urchin","oyster","squid","anteater","meerkat","lemur","orangutan","chimpanzee","baboon","bison","antelope","gazelle","yak","reindeer","warthog","hyena","lynx","cougar","panther","badger","weasel","ferret","chipmunk","groundhog","opossum","wombat","emu","kiwi bird","roadrunner","pigeon","cardinal","blue jay","stork","heron","puffin","albatross","hawk","falcon","sea lion","manatee","bald eagle","black widow","sand dollar","cricket","termite","pangolin","capybara","red panda","mule","buffalo","vampire bat","hammerhead shark","great white shark","manta ray","electric eel","king cobra","boa constrictor","bearded dragon","scarab beetle","stag beetle","flying squirrel","sea otter","grizzly bear","mountain goat","gazelle herd","barn owl","sea turtle","hawksbill"],"hard":["axolotl","aye-aye","okapi","tapir","wolverine","blobfish","anglerfish","mantis shrimp","tardigrade","sea cucumber","barnacle","nautilus","cuttlefish","leech","dung beetle","cicada","silkworm","water strider","giant squid","basilisk lizard","horned lizard","frilled lizard","thorny devil","echidna","quokka","numbat","cassowary","secretary bird","shoebill","kookaburra","bird of paradise","lyrebird","sugar glider","dormouse","naked mole rat","beluga","humpback whale","sperm whale","whale shark","sawfish","lionfish","elephant seal","wildebeest","springbok","ibex","musk ox","mongoose","civet","binturong","fossa","serval","ocelot","caracal","snow leopard","liger","fruit bat","hornbill","spoonbill","cormorant","sandpiper","mockingbird","nightingale","bowerbird","lanternfish","gulper eel","sunfish","remora","barracuda","marlin","dugong","yeti crab","pistol shrimp","horseshoe crab","coconut crab","army ant","leafcutter ant","orb weaver","trapdoor spider","velvet worm","sloth bear","spectacled bear","bongo","kudu","gnu","pika","vole","lemming","shrew","hare","jackrabbit","tamarin","marmoset","capuchin","mandrill","gibbon","siamang","bonobo","hoverfly","glass frog","poison dart frog"]},"Food & Drink":{"easy":["pizza","apple","banana","cake","cookie","ice cream","hamburger","hot dog","French fries","sandwich","egg","bread","cheese","milk","orange","grapes","strawberry","watermelon","carrot","corn","popcorn","pancake","waffle","donut","cupcake","candy","lollipop","chocolate","pretzel","taco","spaghetti","soup","salad","cereal","juice","water","pear","peach","cherry","lemon","pineapple","tomato","potato","broccoli","pea","pumpkin","mushroom","onion","bacon","sausage","steak","pie","jelly","popsicle","marshmallow","toast","butter","honey","peanut","coconut","avocado","lettuce","cucumber","garlic","rice","noodles","sushi","burrito","nachos","hot chocolate","lemonade","milkshake","coffee","tea","soda","candy cane","gingerbread man","cotton candy","bagel","muffin","croissant","cheeseburger","grilled cheese","chicken nugget","ketchup","fortune cookie","banana split","birthday cake","apple pie","cinnamon roll","sundae","fried egg","peanut butter","ice cube","lime","grilled cheese sandwich","pretzel stick","soft serve","banana bread","ice cream cone"],"medium":["lasagna","meatball","quesadilla","enchilada","guacamole","salsa","hummus","falafel","kebab","dumpling","egg roll","fried rice","ramen","pad thai","curry","pot pie","meatloaf","mashed potatoes","baked potato","corn on the cob","coleslaw","potato chips","onion rings","mozzarella sticks","hot wings","barbecue ribs","pulled pork","turkey dinner","roast chicken","fish and chips","clam chowder","lobster roll","shrimp cocktail","oyster","caviar","sushi roll","sashimi","miso soup","tofu","bubble tea","smoothie","espresso","cappuccino","iced coffee","root beer","champagne","wine glass","beer mug","cocktail","margarita","pina colada","eggnog","apple cider","orange juice","grapefruit","kiwi","mango","papaya","pomegranate","fig","date","blueberry","raspberry","blackberry","cranberry","artichoke","asparagus","eggplant","zucchini","cauliflower","celery","radish","beet","turnip","cabbage","brussels sprouts","sweet potato","jalapeno","bell pepper","scrambled eggs","french toast","eggs benedict","oatmeal","granola","yogurt","cottage cheese","brownie","cheesecake","pudding","churro","crepe","cannoli","macaron","fudge","caramel apple","candy corn","jelly bean","gummy bear","beef stew","chicken soup"],"hard":["charcuterie board","fondue","souffle","tiramisu","baklava","paella","risotto","gnocchi","ravioli","bruschetta","carpaccio","ceviche","gazpacho","borscht","goulash","schnitzel","bratwurst","sauerkraut","pierogi","haggis","escargot","foie gras","truffle","prosciutto","salami","pepperoni","anchovy","sardine","crab cake","lobster bisque","beef wellington","chicken parmesan","eggplant parmesan","shepherd's pie","toad in the hole","yorkshire pudding","scone","crumpet","clotted cream","marmalade","jam sandwich","bubble and squeak","kimchi","bibimbap","tempura","teriyaki","wasabi","seaweed","edamame","mochi","matcha","sake","tequila shot","whiskey","martini","bloody mary","mimosa","sangria","mojito","irish coffee","hot toddy","wedding cake","layer cake","upside-down cake","red velvet cake","carrot cake","pound cake","angel food cake","fruitcake","gingerbread house","candied apple","rock candy","saltwater taffy","baked alaska","flan","creme brulee","panna cotta","eclair","profiterole","strudel","cobbler","turnover","pop tart","toaster strudel","corn dog","funnel cake","deep fried twinkie","spam","jerky","trail mix","sloppy joe","philly cheesesteak","chili dog","loaded potato skins","deviled eggs","stuffed olive","pickle","hot sauce","soy sauce","whipped cream"]},"Objects":{"easy":["ball","book","chair","table","bed","door","window","clock","cup","spoon","fork","knife","plate","bowl","hat","shoe","sock","shirt","pants","coat","glasses","umbrella","key","lock","lamp","candle","phone","television","computer","camera","bicycle","car","bus","train","airplane","boat","balloon","kite","drum","guitar","piano","trumpet","pencil","scissors","broom","bucket","toothbrush","soap","towel","mirror","ladder","hammer","flag","crown","ring","necklace","backpack","suitcase","wallet","envelope","present","star","heart","moon","sun","cloud","rainbow","tree","flower","house","rocket","robot","snowman","teddy bear","doll","blocks","puzzle","skateboard","swing","slide","tent","fire truck","school bus","helicopter","bell","flashlight","battery","light bulb","magnet","trophy","medal","crayon","paintbrush","notebook","calculator","sled","wagon","shovel","bathtub duck","pillow"],"medium":["stapler","tape dispenser","paper clip","hole punch","vacuum cleaner","toaster","blender","microwave","refrigerator","washing machine","ironing board","hair dryer","razor","comb","lipstick","perfume","binoculars","telescope","microscope","compass","globe","hourglass","typewriter","record player","cassette tape","headphones","microphone","remote control","joystick","trampoline","hammock","sleeping bag","canoe","surfboard","snorkel","parachute","fire extinguisher","traffic light","stop sign","mailbox","fire hydrant","wheelbarrow","lawn mower","garden hose","sprinkler","scarecrow","birdhouse","pinata","snow globe","music box","jack-in-the-box","kaleidoscope","yo-yo","rubik's cube","chess board","dominoes","dice","deck of cards","bowling pin","dartboard","pogo stick","roller skates","ice skates","hockey stick","tennis racket","golf club","basketball hoop","skis","snowboard","sunglasses","wristwatch","alarm clock","calendar","treasure chest","pirate ship","bunk bed","rocking chair","bathtub","toilet","sink","shower head","doorbell","cuckoo clock","lava lamp","disco ball","flip flops","cowboy boots","top hat","cape","tuxedo","wedding ring","diamond","piggy bank","magic wand","crystal ball","bow and arrow","sword","shield","anchor","rubber duck"],"hard":["stethoscope","metronome","sextant","abacus","astrolabe","chandelier","gramophone","periscope","defibrillator","thermostat","seismograph","barometer","gyroscope","catapult","guillotine","loom","spinning wheel","anvil","bellows","monocle","pocket watch","quill pen","inkwell","sundial","pendulum","prism","lens","test tube","bunsen burner","petri dish","lab coat","hard hat","jackhammer","crowbar","plumb line","level","tape measure","chisel","wrench","pliers","screwdriver","power drill","chainsaw","welding mask","fire alarm","smoke detector","security camera","metal detector","x-ray","wheelchair","crutches","band-aid","thermometer","syringe","hearing aid","pacemaker","drone","satellite","space shuttle","lunar module","spacesuit","rover","time machine","flux capacitor","hologram","virtual reality headset","smartwatch","e-reader","fidget spinner","hula hoop","slinky","etch a sketch","lite-brite","view-master","magic 8 ball","ouija board","tarot cards","dreamcatcher","voodoo doll","totem pole","gargoyle","sarcophagus","obelisk","chalice","scepter","throne","suit of armor","drawbridge","portcullis","trebuchet","cannon","musket","telegraph","switchboard","rotary phone","pager","walkie-talkie","boombox","jukebox","phonograph"]},"Actions":{"easy":["run","jump","swim","sleep","eat","drink","cry","laugh","sing","dance","clap","wave","sit","stand","walk","climb","throw","catch","kick","push","pull","read","write","draw","paint","cook","wash hands","brush teeth","comb hair","hug","kiss","smile","yawn","sneeze","cough","hiccup","crawl","hop","skip","spin","fall down","fly","drive","ride a bike","swing","slide","dig","plant a seed","water flowers","bake","blow bubbles","blow a kiss","knock on a door","open a door","point","shout","whisper","listen","look","think","wink","shake hands","tickle","scratch","shiver","tiptoe","stretch","bend over","bow","salute","march","race","play catch","build a snowman","make a snow angel","fly a kite","jump rope","play drums","play guitar","take a photo","answer the phone","tie shoes","put on a coat","eat spaghetti","drink from a straw","peel a banana","blow out candles","open a present","pet a dog","feed a bird","climb stairs","roll down a hill","play hide and seek","wave goodbye","say cheese","flex muscles","shrug","hold hands","brush hair","tie a bow"],"medium":["juggle","do a cartwheel","do push-ups","do yoga","meditate","snore","sleepwalk","fish","row a boat","paddle a canoe","surf","ski","snowboard","ice skate","roller skate","rock climb","bungee jump","skydive","scuba dive","ride a horse","go bowling","swing a golf club","sew","knit","iron clothes","vacuum","mop the floor","take out the trash","mow the lawn","rake leaves","shovel snow","hang laundry","fold laundry","wash dishes","set the table","make a bed","paint a wall","hammer a nail","saw wood","change a tire","pump gas","pitch a tent","roast marshmallows","build a sandcastle","skip a stone","spit watermelon seeds","throw a boomerang","shoot a bow","fence with swords","box","wrestle","do karate","play tennis","play ping pong","shoot a basketball","hit a home run","throw a touchdown","kick a field goal","swim laps","dive off a board","walk a tightrope","ride a unicycle","conduct an orchestra","play violin","play piano","play trumpet","beat a drum","take a selfie","text on a phone","type on a keyboard","play video games","flip a coin","roll the dice","deal cards","shuffle cards","count money","pay a bill","sign a contract","vote","bake a cake","stir a pot","flip a pancake","carve a pumpkin","decorate a tree","wrap a present","send a letter","sneak a cookie","brush a horse","walk the dog","wash a car","paint a portrait","pour a drink","thread a needle","shave","blow dry hair","put on makeup","zip a jacket","tie a tie","button a shirt","lock a door"],"hard":["procrastinate","eavesdrop","daydream","negotiate","hesitate","apologize","gossip","brainstorm","multitask","hitchhike","babysit","moonlight","pick a lock","pickpocket","hotwire a car","hypnotize","levitate","teleport","time travel","hibernate","evolve","migrate","rehearse","improvise","stage a coup","filibuster","deliberate","break the ice","spill the beans","cry wolf","bite the bullet","let sleeping dogs lie","throw in the towel","pass the buck","jump the gun","steal the show","pull strings","cut corners","hit the road","face the music","beat around the bush","read between the lines","go out on a limb","walk on eggshells","toe the line","rock the boat","bury the hatchet","cross your fingers","count sheep","burn the midnight oil","play it by ear","sit on the fence","call it a day","hold your breath","twiddle your thumbs","turn a blind eye","drag your feet","roll out the red carpet","pat yourself on the back","look before you leap","keep an eye out","lend a hand","play dead","stand your ground","take a bow","take a rain check","take a nap","lose track of time","lose your balance","lose your keys","lose your temper","find your way","get stuck in traffic","get a haircut","get a tattoo","get a vaccine","get lost","get dressed","get carried away","get cold feet","get a second wind","get the hiccups","wait in line","cut in line","wait for the bus","overthink","second-guess","reminisce","sulk","brag","snoop","haggle","bluff","stall","vent","squirm","fidget","flinch","cower","swagger"]},"Places":{"easy":["beach","park","school","zoo","farm","house","castle","circus","hospital","library","store","restaurant","airport","playground","forest","mountain","desert","island","river","lake","ocean","cave","volcano","waterfall","jungle","pond","garden","barn","church","bridge","tower","fire station","police station","bakery","swimming pool","bedroom","kitchen","bathroom","backyard","campground","igloo","pyramid","windmill","lighthouse","treehouse","moon","outer space","candy store","toy store","pet store","ice cream shop","movie theater","gas station","parking lot","train station","bus stop","fort","dungeon","pirate ship","haunted house","cabin","tent","snow hill","sandbox","roller coaster","carousel","ferris wheel","petting zoo","aquarium","museum","bank","post office","barber shop","grocery store","pharmacy","classroom","cafeteria","gym","stadium","skyscraper","city","small town","village","road","tunnel","swamp","meadow","cliff","iceberg","desert island","north pole","fairy tale castle","Santa's workshop","mailbox","doghouse","nest","bakery shop","tree house","school yard","sandcastle"],"medium":["Eiffel Tower","Statue of Liberty","Big Ben","Great Wall of China","Leaning Tower of Pisa","Golden Gate Bridge","Mount Rushmore","Niagara Falls","Grand Canyon","Taj Mahal","Colosseum","Sydney Opera House","Stonehenge","White House","Empire State Building","Space Needle","Times Square","Hollywood sign","Disneyland","Las Vegas","Antarctica","Sahara Desert","Amazon rainforest","Hawaii","Egypt","Mount Everest","Great Barrier Reef","Panama Canal","Brooklyn Bridge","Arc de Triomphe","Buckingham Palace","Tower Bridge","London Eye","Great Pyramid","Sphinx","Parthenon","Pompeii","Alcatraz","Hoover Dam","Gateway Arch","Mount Fuji","Venice","Paris","London","New York City","Tokyo","Rome","Moscow","Australia","Canada","Mexico","Brazil","Africa","Greenland","Iceland","Ireland","Texas","Florida","California","Alaska","Grand Central Station","Central Park","Wall Street","Hollywood","Broadway","Fort Knox","Death Valley","Yellowstone","Old Faithful","Loch Ness","Bermuda Triangle","Atlantis","Area 51","Wild West saloon","Pirate cove","Ski resort","Drive-in theater","Truck stop","Laundromat","Casino","Courthouse","Capitol Building","Pentagon","Airport security","Cruise ship","Submarine","Space station","Mars","Jupiter","Saturn rings","Milky Way","Black hole","Oasis","Fjord","Glacier","Tundra","Savanna","Rainforest canopy","Bayou","Everglades"],"hard":["Machu Picchu","Angkor Wat","Petra","Easter Island","Chernobyl","Versailles","Acropolis","Neuschwanstein Castle","Burj Khalifa","Christ the Redeemer","Sagrada Familia","Victoria Falls","Dead Sea","Galapagos Islands","Uluru","Mont Saint-Michel","Forbidden City","Hagia Sophia","Red Square","Mount Kilimanjaro","Silicon Valley","Ellis Island","Suez Canal","Strait of Gibraltar","Mariana Trench","Bering Strait","Cape of Good Hope","Table Mountain","Tower of London","Westminster Abbey","Edinburgh Castle","Blue Lagoon","Giant's Causeway","Cliffs of Moher","Matterhorn","Dolomites","Black Forest","Transylvania","Siberia","Gobi Desert","Himalayas","Mount Olympus","Mount Vesuvius","Pamukkale","Cappadocia","Santorini","Amalfi Coast","Cinque Terre","Venice canals","Rialto Bridge","Trevi Fountain","Spanish Steps","Sistine Chapel","St. Peter's Basilica","Notre-Dame","Louvre","Montmartre","Moulin Rouge","Champs-Elysees","Brandenburg Gate","Berlin Wall","Checkpoint Charlie","Anne Frank House","Windmills of Kinderdijk","Little Mermaid statue","Tivoli Gardens","Stockholm archipelago","Northern Lights","Lapland","Hobbiton","Mount Doom","Hogwarts","Narnia","Neverland","Emerald City","Wonderland","Gotham City","Metropolis","Bikini Bottom","Springfield","Sesame Street","Willy Wonka's factory","Jurassic Park","Bedrock","Mordor","Rivendell","Camelot","Sherwood Forest","Nottingham","Shangri-La","El Dorado","Lost City of Atlantis","Fountain of Youth","Pandora's box","Garden of Eden","Noah's Ark","Tower of Babel","Hanging Gardens of Babylon","Colossus of Rhodes","Lighthouse of Alexandria"]}}
+    const ALL = 'All categories'
+    const DIFFS = ['easy', 'medium', 'hard']
+    const STORAGE_KEY = 'charades-v1'
+
+    // ---- state -----------------------------------------------------------
+    // game: { id, name, createdAt, teams: [{id, name}],
+    //         rounds: [{id, ts, teamId, actor, clue, category, difficulty, limit, elapsed, won}] }
+    let state = { currentId: null, games: [], prefs: { difficulty: 'easy', category: ALL, minutes: 2 } }
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
+      if (saved && Array.isArray(saved.games)) state = Object.assign(state, saved, { prefs: Object.assign(state.prefs, saved.prefs) })
+    } catch (e) {}
+
+    function save () {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)) } catch (e) {}
+    }
+    function uid () { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7) }
+    function pad (n) { return String(n).padStart(2, '0') }
+    function fmtTime (sec) {
+      sec = Math.max(0, Math.round(sec))
+      return Math.floor(sec / 60) + ':' + pad(sec % 60)
+    }
+    function fmtDate (ts) {
+      return new Date(ts).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+    }
+    function toLocalInput (ts) {
+      return new Date(ts - new Date(ts).getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+    }
+
+    function makeGame () {
+      return {
+        id: uid(),
+        name: 'Game ' + new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }),
+        createdAt: Date.now(),
+        teams: [],
+        rounds: []
+      }
+    }
+    if (!state.games.length) { state.games.push(makeGame()); }
+    if (!state.games.some(g => g.id === state.currentId)) state.currentId = state.games[0].id
+    save()
+
+    function game () { return state.games.find(g => g.id === state.currentId) }
+    function teamName (g, id) { const t = g.teams.find(t => t.id === id); return t ? t.name : '(removed team)' }
+
+    // ---- dom helpers -----------------------------------------------------
+    function h (tag, attrs, ...kids) {
+      const el = document.createElement(tag)
+      for (const [k, v] of Object.entries(attrs || {})) {
+        if (k === 'class') el.className = v
+        else if (k.startsWith('on')) el[k] = v
+        else if (v === true) el.setAttribute(k, '')
+        else if (v !== false && v != null) el.setAttribute(k, v)
+      }
+      kids.flat().forEach(k => { if (k != null && k !== false) el.append(k) })
+      return el
+    }
+    function field (label, input, cls) {
+      return h('div', { class: cls || '' }, h('label', {}, label), input)
+    }
+    // delete-style button: first click arms it, second click within 3s runs fn
+    function twoClick (label, fn, armedLabel) {
+      let timer = null
+      const b = h('button', { type: 'button' }, label)
+      b.onclick = () => {
+        if (timer) { clearTimeout(timer); timer = null; fn(); return }
+        b.textContent = armedLabel || 'Sure?'
+        b.classList.add('danger')
+        timer = setTimeout(() => { timer = null; b.textContent = label; b.classList.remove('danger') }, 3000)
+      }
+      return b
+    }
+    function options (values, selected) {
+      return values.map(v => {
+        const [val, text] = Array.isArray(v) ? v : [v, v]
+        return h('option', { value: val, selected: val === selected }, text)
+      })
+    }
+    function categories () { return Object.keys(CLUES) }
+
+    // ---- play flow -------------------------------------------------------
+    // phase: setup -> clue -> running -> done
+    let play = { phase: 'setup', teamId: null, actor: '', clue: null, limit: 120, startedAt: 0, endAt: 0, result: null }
+    let tickId = null
+    let timerEl = null
+
+    function resetPlay () {
+      clearInterval(tickId)
+      tickId = null
+      play = { phase: 'setup', teamId: null, actor: '', clue: null, limit: 120, startedAt: 0, endAt: 0, result: null }
+    }
+
+    function nextTeamId (g) {
+      if (!g.teams.length) return null
+      if (!g.rounds.length) return g.teams[0].id
+      const last = g.rounds.reduce((a, b) => (b.ts > a.ts ? b : a))
+      const i = g.teams.findIndex(t => t.id === last.teamId)
+      return g.teams[(i + 1) % g.teams.length].id
+    }
+
+    function pickClue (g, avoid) {
+      const { difficulty, category } = state.prefs
+      const cats = category === ALL || !CLUES[category] ? categories() : [category]
+      const all = cats.flatMap(c => CLUES[c][difficulty].map(text => ({ clue: text, category: c, difficulty })))
+      const usedTexts = new Set(g.rounds.map(r => r.clue))
+      let pool = all.filter(c => !usedTexts.has(c.clue) && c.clue !== avoid)
+      if (!pool.length) pool = all.filter(c => c.clue !== avoid)
+      return pool[Math.floor(Math.random() * pool.length)]
+    }
+
+    function getClue () {
+      const g = game()
+      if (!play.teamId || !g.teams.some(t => t.id === play.teamId)) play.teamId = nextTeamId(g)
+      play.limit = Math.round(state.prefs.minutes * 60)
+      play.clue = pickClue(g)
+      play.phase = 'clue'
+      renderPlay()
+    }
+
+    function startRound () {
+      play.phase = 'running'
+      play.startedAt = Date.now()
+      play.endAt = play.startedAt + play.limit * 1000
+      clearInterval(tickId)
+      tickId = setInterval(tick, 200)
+      renderPlay()
+    }
+
+    function tick () {
+      const left = play.endAt - Date.now()
+      if (left <= 0) return finish(false)
+      if (timerEl) {
+        timerEl.textContent = fmtTime(Math.ceil(left / 1000))
+        timerEl.classList.toggle('low', left <= 10000)
+      }
+    }
+
+    function finish (won) {
+      clearInterval(tickId)
+      tickId = null
+      const g = game()
+      const elapsed = won ? Math.min(play.limit, Math.round((Date.now() - play.startedAt) / 100) / 10) : play.limit
+      const round = {
+        id: uid(), ts: play.startedAt, teamId: play.teamId, actor: play.actor.trim(),
+        clue: play.clue.clue, category: play.clue.category, difficulty: play.clue.difficulty,
+        limit: play.limit, elapsed, won
+      }
+      g.rounds.push(round)
+      save()
+      play.phase = 'done'
+      play.result = round
+      play.actor = ''
+      play.teamId = null // re-derive the next team in rotation
+      renderAll()
+    }
+
+    function addTeam (name) {
+      name = name.trim()
+      if (!name) return
+      const g = game()
+      if (g.teams.some(t => t.name.toLowerCase() === name.toLowerCase())) return
+      g.teams.push({ id: uid(), name })
+      save()
+      renderAll()
+    }
+
+    function removeTeam (id) {
+      const g = game()
+      g.teams = g.teams.filter(t => t.id !== id)
+      if (play.teamId === id) play.teamId = null
+      save()
+      renderAll()
+    }
+
+    function renderPlay () {
+      const pane = document.getElementById('pane-play')
+      const g = game()
+      timerEl = null
+      pane.replaceChildren()
+
+      if (play.phase === 'setup' || play.phase === 'done') {
+        if (play.phase === 'done') pane.append(renderResult(g))
+        pane.append(renderTeams(g), renderSetup(g))
+        return
+      }
+
+      const who = h('p', { class: 'muted' }, teamName(g, play.teamId) + (play.actor.trim() ? ' — ' + play.actor.trim() : ''))
+      const meta = h('p', { class: 'muted' }, play.clue.difficulty + ' · ' + play.clue.category + ' · ' + fmtTime(play.limit))
+
+      if (play.phase === 'clue') {
+        pane.append(h('div', { class: 'card stage' },
+          who,
+          h('p', { class: 'muted' }, 'Actor: look at the clue, then press Start. It will be hidden.'),
+          h('div', { class: 'clue' }, play.clue.clue),
+          meta,
+          h('button', { type: 'button', class: 'primary big', onclick: startRound }, 'Start'),
+          h('div', { class: 'row', style: 'margin-top:0.5rem' },
+            h('button', { type: 'button', style: 'flex:1', onclick: () => { play.clue = pickClue(g, play.clue.clue); renderPlay() } }, 'Different clue'),
+            h('button', { type: 'button', style: 'flex:1', onclick: () => { play.phase = 'setup'; renderPlay() } }, 'Back'))))
+        return
+      }
+
+      // running
+      timerEl = h('div', { class: 'timer' }, fmtTime(Math.ceil((play.endAt - Date.now()) / 1000)))
+      pane.append(h('div', { class: 'card stage' },
+        who,
+        timerEl,
+        h('p', { class: 'muted' }, 'Clue hidden'),
+        h('button', { type: 'button', class: 'primary big', onclick: () => finish(true) }, 'Solved!'),
+        h('div', { style: 'margin-top:1rem' },
+          twoClick('Cancel round', () => { resetPlay(); renderPlay() }, 'Discard round?'))))
+    }
+
+    function renderResult (g) {
+      const r = play.result
+      return h('div', { class: 'card stage' },
+        h('div', { class: 'result ' + (r.won ? 'won' : 'lost') }, r.won ? 'Solved in ' + fmtTime(r.elapsed) + '!' : "Time's up!"),
+        h('div', { class: 'clue' }, r.clue),
+        h('p', { class: 'muted' }, teamName(g, r.teamId) + (r.actor ? ' — ' + r.actor : '')))
+    }
+
+    function renderTeams (g) {
+      const input = h('input', { type: 'text', placeholder: 'Team name', 'aria-label': 'New team name' })
+      const add = () => { addTeam(input.value); }
+      input.onkeydown = e => { if (e.key === 'Enter') add() }
+      return h('div', { class: 'card' },
+        h('h2', {}, 'Teams'),
+        h('div', { class: 'row' }, input, h('button', { type: 'button', onclick: add }, 'Add team')),
+        h('div', { class: 'chips' },
+          g.teams.map(t => {
+            const used = g.rounds.some(r => r.teamId === t.id)
+            const x = used
+              ? h('button', { type: 'button', disabled: true, title: 'Delete this team’s rounds first', 'aria-label': 'Remove ' + t.name }, '×')
+              : h('button', { type: 'button', 'aria-label': 'Remove ' + t.name, onclick: () => removeTeam(t.id) }, '×')
+            return h('span', { class: 'chip' }, t.name, x)
+          })),
+        !g.teams.length && h('p', { class: 'muted' }, 'Create at least one team to start playing.'))
+    }
+
+    function renderSetup (g) {
+      const p = state.prefs
+      if (!play.teamId || !g.teams.some(t => t.id === play.teamId)) play.teamId = nextTeamId(g)
+
+      const teamSel = h('select', { id: 'team-sel', onchange: e => { play.teamId = e.target.value } },
+        options(g.teams.map(t => [t.id, t.name]), play.teamId))
+      const actor = h('input', { type: 'text', placeholder: 'Who is acting?', value: play.actor, 'aria-label': 'Current actor',
+        oninput: e => { play.actor = e.target.value } })
+      const diffs = h('div', { class: 'seg', role: 'group' }, DIFFS.map(d =>
+        h('button', { type: 'button', 'aria-pressed': String(p.difficulty === d), onclick: () => { p.difficulty = d; save(); renderPlay() } }, d[0].toUpperCase() + d.slice(1))))
+      const cat = h('select', { onchange: e => { p.category = e.target.value; save() } }, options([ALL, ...categories()], p.category))
+      const mins = h('input', { type: 'number', min: '0.25', max: '30', step: '0.25', value: p.minutes,
+        onchange: e => { const v = parseFloat(e.target.value); p.minutes = v > 0 ? v : 2; e.target.value = p.minutes; save() } })
+
+      return h('div', { class: 'card' },
+        h('h2', {}, 'Next round'),
+        field('Team', teamSel),
+        field('Actor', actor),
+        field('Difficulty', diffs),
+        field('Category', cat),
+        field('Time limit (minutes)', mins),
+        h('button', { type: 'button', class: 'primary big', style: 'width:100%;margin-top:1rem;padding:0.8rem', disabled: !g.teams.length, onclick: getClue }, 'Get clue'))
+    }
+
+    // ---- scoreboard ------------------------------------------------------
+    function renderScore () {
+      const pane = document.getElementById('pane-score')
+      const g = game()
+      pane.replaceChildren()
+      if (!g.teams.length) { pane.append(h('p', { class: 'muted' }, 'No teams yet. Add some on the Play tab.')); return }
+      const rows = g.teams.map(t => {
+        const rs = g.rounds.filter(r => r.teamId === t.id)
+        const wins = rs.filter(r => r.won)
+        return {
+          name: t.name, played: rs.length, won: wins.length, lost: rs.length - wins.length,
+          pct: rs.length ? Math.round(100 * wins.length / rs.length) : null,
+          avg: wins.length ? wins.reduce((s, r) => s + r.elapsed, 0) / wins.length : null
+        }
+      }).sort((a, b) => b.won - a.won || (b.pct || 0) - (a.pct || 0) || a.name.localeCompare(b.name))
+      const top = rows[0].won
+      const table = h('table', {},
+        h('thead', {}, h('tr', {}, h('th', {}, 'Team'), h('th', { class: 'n' }, 'Played'), h('th', { class: 'n' }, 'Won'), h('th', { class: 'n' }, 'Lost'), h('th', { class: 'n' }, 'Win %'), h('th', { class: 'n' }, 'Avg solve'))),
+        h('tbody', {}, rows.map(r => h('tr', {},
+          h('td', {}, (top > 0 && r.won === top ? '🏆 ' : '') + r.name),
+          h('td', { class: 'n' }, r.played), h('td', { class: 'n' }, r.won), h('td', { class: 'n' }, r.lost),
+          h('td', { class: 'n' }, r.pct == null ? '–' : r.pct + '%'),
+          h('td', { class: 'n' }, r.avg == null ? '–' : fmtTime(r.avg))))))
+      pane.append(h('div', { class: 'card' }, table))
+    }
+
+    // ---- history ---------------------------------------------------------
+    let editingId = null // round id being edited, or 'new'
+
+    function renderHistory () {
+      const pane = document.getElementById('pane-history')
+      const g = game()
+      pane.replaceChildren()
+      pane.append(h('div', { class: 'row', style: 'margin-bottom:0.75rem; justify-content: space-between' },
+        h('span', { class: 'muted' }, g.rounds.length + ' round' + (g.rounds.length === 1 ? '' : 's')),
+        h('button', { type: 'button', disabled: !g.teams.length || editingId === 'new', title: g.teams.length ? '' : 'Add a team first', onclick: () => { editingId = 'new'; renderHistory() } }, '+ Add round')))
+      if (editingId === 'new') {
+        pane.append(h('div', { class: 'card' }, roundForm(g, null)))
+      }
+      const list = h('div', { class: 'card' })
+      const sorted = g.rounds.slice().sort((a, b) => b.ts - a.ts)
+      if (!sorted.length) list.append(h('p', { class: 'muted' }, 'No rounds yet.'))
+      sorted.forEach(r => {
+        if (r.id === editingId) { list.append(h('div', { class: 'round' }, roundForm(g, r))); return }
+        list.append(h('div', { class: 'round' },
+          h('div', { class: 'top' },
+            h('span', {}, r.clue),
+            h('span', { class: r.won ? 'won' : 'lost' }, r.won ? 'Won ' + fmtTime(r.elapsed) : 'Lost')),
+          h('div', { class: 'muted' },
+            [fmtDate(r.ts), teamName(g, r.teamId), r.actor, r.difficulty + ' · ' + r.category, 'limit ' + fmtTime(r.limit)].filter(Boolean).join(' · ')),
+          h('div', { class: 'btns' },
+            h('button', { type: 'button', onclick: () => { editingId = r.id; renderHistory() } }, 'Edit'),
+            twoClick('Delete', () => { g.rounds = g.rounds.filter(x => x.id !== r.id); save(); renderAll() }))))
+      })
+      pane.append(list)
+    }
+
+    function roundForm (g, r) {
+      const isNew = !r
+      const d = r || { ts: Date.now(), teamId: nextTeamId(g), actor: '', clue: '', category: categories()[0], difficulty: 'easy', limit: 120, elapsed: 120, won: false }
+      const cats = categories().includes(d.category) ? categories() : [...categories(), d.category]
+      const team = h('select', {}, options(g.teams.map(t => [t.id, t.name]), d.teamId))
+      const actor = h('input', { type: 'text', value: d.actor })
+      const clue = h('input', { type: 'text', value: d.clue })
+      const cat = h('select', {}, options(cats, d.category))
+      const diff = h('select', {}, options(DIFFS, d.difficulty))
+      const limit = h('input', { type: 'number', min: '1', step: '1', value: d.limit })
+      const elapsed = h('input', { type: 'number', min: '0', step: '0.1', value: d.elapsed })
+      const result = h('select', {}, options([['won', 'Won'], ['lost', 'Lost']], d.won ? 'won' : 'lost'))
+      const when = h('input', { type: 'datetime-local', value: toLocalInput(d.ts) })
+      const err = h('p', { class: 'lost' })
+      const submit = () => {
+        const text = clue.value.trim()
+        const lim = parseFloat(limit.value)
+        const el = parseFloat(elapsed.value)
+        const ts = new Date(when.value).getTime()
+        if (!text) { err.textContent = 'Clue is required.'; return }
+        if (!(lim > 0) || !(el >= 0)) { err.textContent = 'Enter a valid time limit and time used.'; return }
+        if (isNaN(ts)) { err.textContent = 'Enter a valid date.'; return }
+        const next = { id: d.id || uid(), ts, teamId: team.value, actor: actor.value.trim(), clue: text,
+          category: cat.value, difficulty: diff.value, limit: lim, elapsed: el, won: result.value === 'won' }
+        if (isNew) g.rounds.push(next)
+        else g.rounds[g.rounds.findIndex(x => x.id === d.id)] = next
+        editingId = null
+        save()
+        renderAll()
+      }
+      return h('div', {},
+        h('div', { class: 'form-grid' },
+          field('Clue', clue, 'full'),
+          field('Team', team), field('Actor', actor),
+          field('Category', cat), field('Difficulty', diff),
+          field('Time limit (sec)', limit), field('Time used (sec)', elapsed),
+          field('Result', result), field('When', when)),
+        err,
+        h('div', { class: 'row', style: 'margin-top:0.75rem' },
+          h('button', { type: 'button', class: 'primary', onclick: submit }, isNew ? 'Add round' : 'Save'),
+          h('button', { type: 'button', onclick: () => { editingId = null; renderHistory() } }, 'Cancel')))
+    }
+
+    // ---- games dialog, export -------------------------------------------
+    function download (filename, data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = h('a', { href: url, download: filename })
+      document.body.append(a)
+      a.click()
+      a.remove()
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }
+    function slug (s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'game' }
+    function exportGames (games, filename) {
+      download(filename, { app: 'charades', version: 1, exportedAt: new Date().toISOString(), games })
+    }
+
+    const dialog = document.getElementById('games-dialog')
+    function renderGames () {
+      const list = document.getElementById('games-list')
+      list.replaceChildren()
+      state.games.slice().sort((a, b) => b.createdAt - a.createdAt).forEach(g => {
+        const wins = g.rounds.filter(r => r.won).length
+        list.append(h('div', { class: 'game' + (g.id === state.currentId ? ' current' : '') },
+          h('div', { class: 'info' }, h('strong', {}, g.name),
+            h('div', { class: 'muted' }, new Date(g.createdAt).toLocaleDateString() + ' · ' + g.teams.length + ' teams · ' + g.rounds.length + ' rounds (' + wins + ' won)')),
+          h('button', { type: 'button', class: 'primary', disabled: g.id === state.currentId, onclick: () => openGame(g.id) }, 'Open'),
+          h('button', { type: 'button', onclick: () => exportGames([g], 'charades-' + slug(g.name) + '.json') }, 'Export'),
+          twoClick('Delete', () => deleteGame(g.id))))
+      })
+    }
+
+    function confirmLeaveRound () {
+      return play.phase !== 'running' || confirm('A round is in progress. Discard it?')
+    }
+    function openGame (id) {
+      if (id !== state.currentId && !confirmLeaveRound()) return
+      state.currentId = id
+      editingId = null
+      resetPlay()
+      save()
+      dialog.close()
+      renderAll()
+    }
+    function deleteGame (id) {
+      const wasCurrent = id === state.currentId
+      state.games = state.games.filter(g => g.id !== id)
+      if (!state.games.length) state.games.push(makeGame())
+      if (wasCurrent) { state.currentId = state.games[0].id; editingId = null; resetPlay() }
+      save()
+      renderAll()
+      renderGames()
+    }
+
+    document.getElementById('new-game').onclick = () => {
+      if (!confirmLeaveRound()) return
+      const g = makeGame()
+      state.games.push(g)
+      state.currentId = g.id
+      editingId = null
+      resetPlay()
+      save()
+      showTab('play')
+      renderAll()
+    }
+    document.getElementById('games-btn').onclick = () => { renderGames(); dialog.showModal() }
+    document.getElementById('games-close').onclick = () => dialog.close()
+    document.getElementById('export-all').onclick = () =>
+      exportGames(state.games, 'charades-all-' + new Date().toISOString().slice(0, 10) + '.json')
+
+    const nameInput = document.getElementById('game-name')
+    nameInput.onchange = () => {
+      game().name = nameInput.value.trim() || game().name
+      nameInput.value = game().name
+      save()
+    }
+
+    // ---- tabs ------------------------------------------------------------
+    function showTab (name) {
+      document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)))
+      ;['play', 'score', 'history'].forEach(t => { document.getElementById('pane-' + t).hidden = t !== name })
+    }
+    document.querySelectorAll('.tabs button').forEach(b => { b.onclick = () => showTab(b.dataset.tab) })
+
+    function renderAll () {
+      nameInput.value = game().name
+      renderPlay()
+      renderScore()
+      renderHistory()
+    }
+    renderAll()
+  </script>
+</body>
+</html>
