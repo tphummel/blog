@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b6b3a">
 <meta name="color-scheme" content="dark">
-<meta name="description" content="A daily Klondike solitaire. Everyone gets the same deal each day.">
+<meta name="description" content="A daily Klondike solitaire. Everyone gets the same deal each day, plus random practice puzzles once you have played today's.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Solitaire">
@@ -54,11 +54,16 @@ a{color:#fff}
 .dragbox .card{box-shadow:0 6px 14px rgba(0,0,0,.5)}
 .pile.drop-ok{outline:3px solid #7cfc9a;outline-offset:2px}
 .stockc{cursor:pointer}
-#panel{max-width:560px;margin:0 auto 16px;padding:14px 16px;background:rgba(0,0,0,.45);border-radius:10px}
-#panel h2{margin:0 0 6px;font-size:18px}
-#panel .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+#panel,#statsPanel{max-width:560px;margin:0 auto 16px;padding:14px 16px;background:rgba(0,0,0,.45);border-radius:10px}
+#panel h2,#statsPanel h2{margin:0 0 6px;font-size:18px}
+#panel .row,#statsPanel .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 #toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin:10px 0}
+.sgrid div{background:rgba(255,255,255,.1);border-radius:8px;padding:6px 8px;text-align:center;font-size:12px;opacity:.95}
+.sgrid b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+#statsPanel table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;margin-top:8px}
+#statsPanel td,#statsPanel th{text-align:left;padding:2px 6px 2px 0}
 .hint{font-size:13px;opacity:.75;text-align:center;padding:0 16px}
 </style>
 </head>
@@ -72,10 +77,14 @@ a{color:#fff}
   </div>
   <button id="auto" hidden>Auto-solve</button>
   <button id="surrender" class="danger">Surrender</button>
+  <button id="random" hidden>Random puzzle</button>
+  <button id="daily" hidden>Today’s puzzle</button>
+  <button id="statsBtn">Stats</button>
 </header>
+<div id="statsPanel" hidden></div>
 <div id="panel" hidden></div>
 <div class="board" id="board"></div>
-<p class="hint" id="hint">Drag a card to where it goes, or tap it and then tap the destination. Tap a selected card again to send it to a foundation. Once every tableau card is face up, Auto-solve can finish the game. Your progress is saved in this browser.</p>
+<p class="hint" id="hint">Drag a card to where it goes, or tap it and then tap the destination. Tap a selected card again to send it to a foundation. Once every tableau card is face up, Auto-solve can finish the game. Once you have played the daily puzzle you can start random ones. Your progress and stats are saved in this browser only.</p>
 <div id="toast"></div>
 <script>
 'use strict';
@@ -107,7 +116,7 @@ function dealDeck(n){
   for(let i=51;i>0;i--){const j=Math.floor(rng()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
   return deck;
 }
-function newGame(date){return gameFromDeck(date,dealDeck(dealNumber(date)))}
+function newGame(date,r){return gameFromDeck(date,dealDeck(r!=null?r:dealNumber(date)))}
 function gameFromDeck(date,deck){
   let k=0;const tab=[];
   for(let i=0;i<7;i++){const p=[];for(let j=0;j<=i;j++)p.push({c:deck[k++],up:j===i});tab.push(p)}
@@ -276,12 +285,14 @@ function planMoves(g,path){
 }
 
 // ---------- saved game (browser storage) ----------
+// A random (solitaire-mode) game also has r:dealNumber; d is then the date it was started.
 // S = {v:1, d:'YYYY-MM-DD', s:startEpochMs|null, m:[[dtMs,'d'|'r'|'m',from,to,n,auto]], e:null|[dtMs,'win'|'surrender']}
 // Only this move list is stored; the board and every per-move detail are rebuilt by replaying it on the deal.
 const SAVE_KEY='solitaire-save';
 function replay(S){
   if(!S||S.v!==1||!validDate(S.d)||!Array.isArray(S.m))throw 0;
-  const g=newGame(S.d);
+  if(S.r!=null&&!DEALS.includes(S.r))throw 0;
+  const g=newGame(S.d,S.r);
   for(const x of S.m){
     const ok=apply(g,{t:x[0],k:x[1],from:x[2],to:x[3],n:x[4],auto:!!x[5]});
     if(!ok)throw 0;
@@ -294,7 +305,7 @@ function loadState(){
   try{
     const raw=localStorage.getItem(SAVE_KEY);
     if(raw){
-      try{const r=replay(JSON.parse(raw));if(r.S.d===pacificDate())return {...r,note}}
+      try{const r=replay(JSON.parse(raw));if(r.S.r!=null||r.S.d===pacificDate())return {...r,note}}
       catch(e){note='Could not read the saved game — starting today’s puzzle.'}
     }
   }catch(e){note='This browser is not saving progress, so a reload will start over.'}
@@ -308,6 +319,32 @@ let sel=null; // {addr, idx, n}
 let busy=false; // true while Auto-solve is playing
 const $=id=>document.getElementById(id);
 const ended=()=>!!S.e;
+const isRandom=()=>S.r!=null;
+const dealOf=()=>isRandom()?S.r:dealNumber(S.d);
+const isStale=()=>!isRandom()&&S.d!==pacificDate();
+const gameLabel=()=>isRandom()?`Random deal ${S.r}`:`Puzzle ${puzzleNumber(S.d)}`;
+
+// ---------- results history (browser storage) ----------
+// Official = the daily puzzle; unofficial = random practice games. Every finished game is kept.
+// [{id,mode:'daily'|'random',official:bool,date,deal,result:'won'|'lost',end:'win'|'surrender'|'abandoned',at:ISO endedAt,startedAt:ISO|null,durationMs,moves,foundation}]
+const HIST_KEY='solitaire-history';
+function loadHistory(){
+  try{const h=JSON.parse(localStorage.getItem(HIST_KEY));return Array.isArray(h)?h.map(x=>({...x,official:x.mode==='daily'})):[]}catch(e){return []}
+}
+function saveHistory(h){try{localStorage.setItem(HIST_KEY,JSON.stringify(h))}catch(e){}}
+// Idempotent: a finished game is recorded once, keyed by mode/date/deal/start time.
+function recordResult(){
+  if(!S.e)return;
+  const end=S.e[1],result=end==='win'?'won':'lost';
+  const id=`${isRandom()?'r':'d'}-${S.d}-${dealOf()}-${S.s}`;
+  const h=loadHistory();
+  if(h.some(x=>x.id===id))return;
+  h.push({id,mode:isRandom()?'random':'daily',official:!isRandom(),date:S.d,deal:dealOf(),result,end,
+    at:new Date((S.s==null?Date.now():S.s)+S.e[0]).toISOString(),
+    startedAt:S.s==null?null:iso(S.s),durationMs:S.e[0],moves:g.log.length,foundation:foundCount(g)});
+  saveHistory(h);
+}
+const dailyPlayed=()=>loadHistory().some(x=>x.mode==='daily'&&x.date===pacificDate());
 function save(){
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){}
 }
@@ -319,13 +356,13 @@ function act(mv){
   g.log[g.log.length-1].at=new Date(now).toISOString();
   S.m.push(mv.k==='m'?[mv.t,'m',mv.from,mv.to,mv.n]:[mv.t,mv.k]);
   if(mv.auto){const e=S.m[S.m.length-1];while(e.length<5)e.push(0);e[5]=1} // 6th field marks Auto-solve moves
-  if(foundCount(g)===52)S.e=[mv.t,'win'];
+  if(foundCount(g)===52){S.e=[mv.t,'win'];recordResult()}
   save();return true;
 }
 function surrender(){
   if(ended()||busy||!confirm('Surrender and end this game?'))return;
   const now=Date.now();if(S.s==null)S.s=now;
-  S.e=[now-S.s,'surrender'];sel=null;save();render();
+  S.e=[now-S.s,'surrender'];sel=null;recordResult();save();render();
 }
 
 function onClick(e){
@@ -386,11 +423,14 @@ function render(){
   });
   h+='</div>';
   $('board').innerHTML=h;
-  $('title').textContent=`Daily Klondike · Draw ${DRAW}`;
-  $('date').textContent=S.d+(S.d!==pacificDate()?' (past)':'');
+  $('title').textContent=`${isRandom()?'Random':'Daily'} Klondike · Draw ${DRAW}`;
+  $('date').textContent=isRandom()?`Deal ${S.r}`:S.d+(isStale()?' (past)':'');
   $('moves').textContent=g.log.length;
   $('surrender').hidden=ended()||busy;
   $('auto').hidden=ended()||busy||g.tab.some(p=>p.some(x=>!x.up));
+  const played=dailyPlayed();
+  $('random').hidden=busy||!played;
+  $('daily').hidden=busy||!isRandom()||played;
   renderPanel();tick();
 }
 const fmtTime=ms=>{const s=Math.floor(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`};
@@ -401,7 +441,7 @@ setInterval(()=>{if(!ended())tick()},1000);
 function renderPanel(){
   const p=$('panel');
   if(!ended()){
-    const stale=S.d!==pacificDate();
+    const stale=isStale();
     p.hidden=!(note||stale);
     p.innerHTML=(note?`<div>${note}</div>`:'')+(stale?`<div>This game is from ${S.d}. <button id="newDay">Start today’s puzzle</button></div>`:'');
     if(stale)$('newDay').onclick=()=>newDay();
@@ -412,20 +452,22 @@ function renderPanel(){
   p.innerHTML=`<h2>${won?'You won! 🎉':'Game over — surrendered'}</h2>
     <div>${summary()}</div>
     <div class="row">
+      ${dailyPlayed()?'<button id="again">Play a random puzzle</button>':''}
       <button id="exJson">Export JSON</button>
       <button id="exText">Copy text</button>
     </div>`;
+  if($('again'))$('again').onclick=()=>startRandom();
   $('exJson').onclick=downloadJson;
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
 }
-const summary=()=>`Puzzle ${puzzleNumber(S.d)} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
+const summary=()=>`${gameLabel()} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
 // ---------- export ----------
 const iso=ms=>new Date(ms).toISOString();
 function exportData(){
   return {
     game:'solitaire',variant:'klondike',draw:DRAW,passes:'unlimited',
-    date:S.d,puzzle:puzzleNumber(S.d),timezone:'America/Los_Angeles',seed:seedString(dealNumber(S.d)),
+    mode:isRandom()?'random':'daily',date:S.d,puzzle:isRandom()?null:puzzleNumber(S.d),deal:dealOf(),timezone:'America/Los_Angeles',seed:seedString(dealOf()),
     result:S.e?(S.e[1]==='win'?'won':'surrendered'):'in-progress',
     startedAt:S.s==null?null:iso(S.s),
     endedAt:S.e&&S.s!=null?iso(S.s+S.e[0]):null,
@@ -444,13 +486,13 @@ function exportData(){
 }
 function downloadJson(){
   const blob=new Blob([JSON.stringify(exportData(),null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`solitaire-${puzzleNumber(S.d)}-${S.d}.json`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`solitaire-${isRandom()?'random-'+S.r:puzzleNumber(S.d)}-${S.d}.json`;
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 const place=a=>a==='w'?'waste':a==='s'?'stock':a[0]==='f'?`foundation ${SUITS[+a[1]]}`:`column ${+a[1]+1}`;
 function gameText(){
-  const lines=[`Klondike Solitaire (draw ${DRAW}) — puzzle ${puzzleNumber(S.d)}, ${S.d}`,
-    `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),`Seed: ${seedString(dealNumber(S.d))}`,
+  const lines=[`Klondike Solitaire (draw ${DRAW}) — ${gameLabel().toLowerCase()}, ${S.d}`,
+    `Result: ${S.e[1]==='win'?'Won':'Surrendered'}`,summary(),`Seed: ${seedString(dealOf())}`,
     'Foundations: '+SUITS.map((s,i)=>s+g.found[i].length).join(' '),'',
     ...g.log.map(m=>{
       const body=m.type==='draw'?`Draw → ${m.cards.join(' ')}`:m.type==='recycle'?'Recycle waste to stock'
@@ -560,16 +602,73 @@ function autoSolve(){
   next();
 }
 $('auto').addEventListener('click',autoSolve);
+// Leaving an unfinished game that has moves counts it as lost.
+function leaveGame(){
+  if(busy)return false;
+  if(!ended()&&S.m.length){
+    if(!confirm('Leave this game? It will be recorded as lost.'))return false;
+    S.e=[Date.now()-S.s,'abandoned'];recordResult();
+  }
+  return true;
+}
 function newDay(){
+  if(!leaveGame())return;
   const d=pacificDate();
   S={v:1,d,s:null,m:[],e:null};g=newGame(d);note=null;sel=null;save();render();
 }
+// A random deal from the curated winnable list: not today's, and not one already played if any are left.
+function startRandom(){
+  if(!dailyPlayed()||!leaveGame())return;
+  const d=pacificDate(),today=dealNumber(d),seen=new Set(loadHistory().map(x=>x.deal));
+  const all=[...new Set(DEALS)].filter(n=>n!==today);
+  const fresh=all.filter(n=>!seen.has(n)),pool=fresh.length?fresh:all;
+  const r=pool[crypto.getRandomValues(new Uint32Array(1))[0]%pool.length];
+  S={v:1,d,r,s:null,m:[],e:null};g=newGame(d,r);note=null;sel=null;save();render();
+}
+$('random').addEventListener('click',startRandom);
+$('daily').addEventListener('click',newDay);
+
+// ---------- stats ----------
+function computeStats(h){
+  const ord=h.slice().sort((a,b)=>a.at<b.at?-1:1),wins=ord.filter(x=>x.result==='won');
+  let cur=0,best=0;for(const x of ord){cur=x.result==='won'?cur+1:0;best=Math.max(best,cur)}
+  const avg=a=>a.length?a.reduce((t,x)=>t+x,0)/a.length:null,min=a=>a.length?Math.min(...a):null;
+  const by=m=>{const a=ord.filter(x=>x.mode===m);return {played:a.length,won:a.filter(x=>x.result==='won').length}};
+  return {ord,played:ord.length,won:wins.length,lost:ord.length-wins.length,cur,best,
+    avgTime:avg(wins.map(x=>x.durationMs)),bestTime:min(wins.map(x=>x.durationMs)),
+    avgMoves:avg(wins.map(x=>x.moves)),fewest:min(wins.map(x=>x.moves)),daily:by('daily'),random:by('random')};
+}
+let statsTab='official';
+function renderStats(){
+  const all=loadHistory(),p=$('statsPanel');
+  const rows=statsTab==='all'?all:all.filter(x=>x.official===(statsTab==='official'));
+  const st=computeStats(rows);
+  const pct=(w,n)=>n?Math.round(100*w/n)+'%':'–',t=ms=>ms==null?'–':fmtTime(ms),n=x=>x==null?'–':Math.round(x);
+  const cell=(v,l)=>`<div><b>${v}</b>${l}</div>`;
+  const tab=(k,l)=>`<button data-tab="${k}" ${k===statsTab?'style="background:#ffd54f"':''}>${l} (${k==='all'?all.length:all.filter(x=>x.official===(k==='official')).length})</button>`;
+  p.innerHTML=`<h2>Your stats</h2>
+    <div class="row">${tab('official','Official (daily)')}${tab('unofficial','Unofficial (random)')}${tab('all','All')}</div>
+    <div class="sgrid">${cell(st.played,'Played')}${cell(st.won,'Won')}${cell(st.lost,'Lost')}${cell(pct(st.won,st.played),'Win rate')}
+      ${cell(st.cur,'Current streak')}${cell(st.best,'Best streak')}${cell(t(st.bestTime),'Best time')}${cell(t(st.avgTime),'Avg win time')}
+      ${cell(n(st.fewest),'Fewest moves')}${cell(n(st.avgMoves),'Avg win moves')}</div>
+        ${st.played?`<table><tr><th>Ended</th><th>Game</th><th>Result</th><th>Time</th><th>Moves</th></tr>${
+      st.ord.slice(-10).reverse().map(x=>`<tr><td>${new Date(x.at).toLocaleString([],{dateStyle:'short',timeStyle:'short'})}</td><td>${x.mode==='daily'?'Daily '+x.date:'Random #'+x.deal}</td><td>${x.end==='abandoned'?'abandoned':x.result}</td><td>${fmtTime(x.durationMs)}</td><td>${x.moves}</td></tr>`).join('')}</table>`:'<div>No finished games yet.</div>'}
+    <div class="row"><button id="statsClose">Close</button><button id="statsExport">Export JSON</button></div>`;
+  p.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{statsTab=b.dataset.tab;renderStats()});
+  $('statsClose').onclick=()=>{p.hidden=true};
+  $('statsExport').onclick=()=>{
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(loadHistory(),null,2)],{type:'application/json'}));
+    a.download='solitaire-history.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  };
+}
+$('statsBtn').addEventListener('click',()=>{const p=$('statsPanel');if(p.hidden){renderStats();p.hidden=false}else p.hidden=true});
+recordResult(); // backfill a game that finished before history existed
 save();
 render();
 // App left open past midnight: swap in the new day's puzzle on return unless a game is mid-play
 // (then the panel offers the swap).
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState!=='visible'||busy||S.d===pacificDate())return;
+  if(document.visibilityState!=='visible'||busy||!isStale())return;
   if(!S.m.length||ended())newDay();else render();
 });
 if('serviceWorker' in navigator){
