@@ -17,6 +17,6 @@ date: 2020-09-01T08:00:00
 - [The Daniels Maneuver Generator](/daniels-maneuver-generator)
 - [Annual Journal Layout](/annual-journal)
 - [timecat](/timecat)
-- [daily Yahtzee](/yahtzee)
+- [Daily Yahtzee](/yahtzee)
 - [Daily Solitaire](/solitaire)
 - [Pictionary Clue Generator](/pictionary)
