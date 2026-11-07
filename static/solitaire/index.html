@@ -325,19 +325,21 @@ const isStale=()=>!isRandom()&&S.d!==pacificDate();
 const gameLabel=()=>isRandom()?`Random deal ${S.r}`:`Puzzle ${puzzleNumber(S.d)}`;
 
 // ---------- results history (browser storage) ----------
-// [{id,mode:'daily'|'random',date,deal,result:'won'|'lost',at:ISO endedAt,startedAt:ISO|null,durationMs,moves,foundation}]
+// Official = the daily puzzle; unofficial = random practice games. Every finished game is kept.
+// [{id,mode:'daily'|'random',official:bool,date,deal,result:'won'|'lost',end:'win'|'surrender'|'abandoned',at:ISO endedAt,startedAt:ISO|null,durationMs,moves,foundation}]
 const HIST_KEY='solitaire-history';
 function loadHistory(){
-  try{const h=JSON.parse(localStorage.getItem(HIST_KEY));return Array.isArray(h)?h:[]}catch(e){return []}
+  try{const h=JSON.parse(localStorage.getItem(HIST_KEY));return Array.isArray(h)?h.map(x=>({...x,official:x.mode==='daily'})):[]}catch(e){return []}
 }
 function saveHistory(h){try{localStorage.setItem(HIST_KEY,JSON.stringify(h))}catch(e){}}
 // Idempotent: a finished game is recorded once, keyed by mode/date/deal/start time.
-function recordResult(result){
+function recordResult(){
   if(!S.e)return;
+  const end=S.e[1],result=end==='win'?'won':'lost';
   const id=`${isRandom()?'r':'d'}-${S.d}-${dealOf()}-${S.s}`;
   const h=loadHistory();
   if(h.some(x=>x.id===id))return;
-  h.push({id,mode:isRandom()?'random':'daily',date:S.d,deal:dealOf(),result,
+  h.push({id,mode:isRandom()?'random':'daily',official:!isRandom(),date:S.d,deal:dealOf(),result,end,
     at:new Date((S.s==null?Date.now():S.s)+S.e[0]).toISOString(),
     startedAt:S.s==null?null:iso(S.s),durationMs:S.e[0],moves:g.log.length,foundation:foundCount(g)});
   saveHistory(h);
@@ -354,13 +356,13 @@ function act(mv){
   g.log[g.log.length-1].at=new Date(now).toISOString();
   S.m.push(mv.k==='m'?[mv.t,'m',mv.from,mv.to,mv.n]:[mv.t,mv.k]);
   if(mv.auto){const e=S.m[S.m.length-1];while(e.length<5)e.push(0);e[5]=1} // 6th field marks Auto-solve moves
-  if(foundCount(g)===52){S.e=[mv.t,'win'];recordResult('won')}
+  if(foundCount(g)===52){S.e=[mv.t,'win'];recordResult()}
   save();return true;
 }
 function surrender(){
   if(ended()||busy||!confirm('Surrender and end this game?'))return;
   const now=Date.now();if(S.s==null)S.s=now;
-  S.e=[now-S.s,'surrender'];sel=null;recordResult('lost');save();render();
+  S.e=[now-S.s,'surrender'];sel=null;recordResult();save();render();
 }
 
 function onClick(e){
@@ -605,7 +607,7 @@ function leaveGame(){
   if(busy)return false;
   if(!ended()&&S.m.length){
     if(!confirm('Leave this game? It will be recorded as lost.'))return false;
-    S.e=[Date.now()-S.s,'surrender'];recordResult('lost');
+    S.e=[Date.now()-S.s,'abandoned'];recordResult();
   }
   return true;
 }
@@ -636,18 +638,23 @@ function computeStats(h){
     avgTime:avg(wins.map(x=>x.durationMs)),bestTime:min(wins.map(x=>x.durationMs)),
     avgMoves:avg(wins.map(x=>x.moves)),fewest:min(wins.map(x=>x.moves)),daily:by('daily'),random:by('random')};
 }
+let statsTab='official';
 function renderStats(){
-  const st=computeStats(loadHistory()),p=$('statsPanel');
+  const all=loadHistory(),p=$('statsPanel');
+  const rows=statsTab==='all'?all:all.filter(x=>x.official===(statsTab==='official'));
+  const st=computeStats(rows);
   const pct=(w,n)=>n?Math.round(100*w/n)+'%':'–',t=ms=>ms==null?'–':fmtTime(ms),n=x=>x==null?'–':Math.round(x);
   const cell=(v,l)=>`<div><b>${v}</b>${l}</div>`;
+  const tab=(k,l)=>`<button data-tab="${k}" ${k===statsTab?'style="background:#ffd54f"':''}>${l} (${k==='all'?all.length:all.filter(x=>x.official===(k==='official')).length})</button>`;
   p.innerHTML=`<h2>Your stats</h2>
+    <div class="row">${tab('official','Official (daily)')}${tab('unofficial','Unofficial (random)')}${tab('all','All')}</div>
     <div class="sgrid">${cell(st.played,'Played')}${cell(st.won,'Won')}${cell(st.lost,'Lost')}${cell(pct(st.won,st.played),'Win rate')}
       ${cell(st.cur,'Current streak')}${cell(st.best,'Best streak')}${cell(t(st.bestTime),'Best time')}${cell(t(st.avgTime),'Avg win time')}
       ${cell(n(st.fewest),'Fewest moves')}${cell(n(st.avgMoves),'Avg win moves')}</div>
-    <div>Daily: ${st.daily.won}/${st.daily.played} won · Random: ${st.random.won}/${st.random.played} won</div>
-    ${st.played?`<table><tr><th>Ended</th><th>Game</th><th>Result</th><th>Time</th><th>Moves</th></tr>${
-      st.ord.slice(-10).reverse().map(x=>`<tr><td>${new Date(x.at).toLocaleString([],{dateStyle:'short',timeStyle:'short'})}</td><td>${x.mode==='daily'?'Daily '+x.date:'Random #'+x.deal}</td><td>${x.result}</td><td>${fmtTime(x.durationMs)}</td><td>${x.moves}</td></tr>`).join('')}</table>`:'<div>No finished games yet.</div>'}
+        ${st.played?`<table><tr><th>Ended</th><th>Game</th><th>Result</th><th>Time</th><th>Moves</th></tr>${
+      st.ord.slice(-10).reverse().map(x=>`<tr><td>${new Date(x.at).toLocaleString([],{dateStyle:'short',timeStyle:'short'})}</td><td>${x.mode==='daily'?'Daily '+x.date:'Random #'+x.deal}</td><td>${x.end==='abandoned'?'abandoned':x.result}</td><td>${fmtTime(x.durationMs)}</td><td>${x.moves}</td></tr>`).join('')}</table>`:'<div>No finished games yet.</div>'}
     <div class="row"><button id="statsClose">Close</button><button id="statsExport">Export JSON</button></div>`;
+  p.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{statsTab=b.dataset.tab;renderStats()});
   $('statsClose').onclick=()=>{p.hidden=true};
   $('statsExport').onclick=()=>{
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(loadHistory(),null,2)],{type:'application/json'}));
@@ -655,7 +662,7 @@ function renderStats(){
   };
 }
 $('statsBtn').addEventListener('click',()=>{const p=$('statsPanel');if(p.hidden){renderStats();p.hidden=false}else p.hidden=true});
-recordResult(S.e&&S.e[1]==='win'?'won':'lost'); // backfill a game that finished before history existed
+recordResult(); // backfill a game that finished before history existed
 save();
 render();
 // App left open past midnight: swap in the new day's puzzle on return unless a game is mid-play
