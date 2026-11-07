@@ -29,6 +29,7 @@ header h1{font-size:18px;margin:0}
 .stats b{font-weight:600}
 button{font:inherit;border:0;border-radius:6px;padding:6px 12px;background:#fff;color:var(--ink);cursor:pointer}
 button.danger{background:#ffcdd2}
+button.primary{background:var(--sel);font-weight:600}
 button:hover{filter:brightness(.93)}
 a{color:#fff}
 .board{width:calc(var(--cw)*7 + var(--gap)*6);margin:8px auto 40px}
@@ -452,6 +453,7 @@ function renderPanel(){
   p.innerHTML=`<h2>${won?'You won! 🎉':'Game over — surrendered'}</h2>
     <div>${summary()}</div>
     <div class="row">
+      <button id="share" class="primary">Share</button>
       ${dailyPlayed()?'<button id="again">Play a random puzzle</button>':''}
       <button id="exJson">Export JSON</button>
       <button id="exText">Copy text</button>
@@ -459,6 +461,7 @@ function renderPanel(){
   if($('again'))$('again').onclick=()=>startRandom();
   $('exJson').onclick=downloadJson;
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
+  $('share').onclick=()=>copy(shareResult(),'Results copied');
 }
 const summary=()=>`${gameLabel()} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
@@ -501,9 +504,28 @@ function gameText(){
     }),''];
   return lines.join('\n');
 }
-async function copy(text,msg){
-  try{await navigator.clipboard.writeText(text)}
-  catch{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}
+// Share: result only — no cards or moves, so it can't spoil the deal. Surrenders show foundation progress per suit.
+function shareResult(){
+  const won=S.e[1]==='win',url=`${location.origin}/solitaire/`;
+  const title=isRandom()?`Random Klondike · Deal ${S.r}`:`Daily Klondike #${puzzleNumber(S.d)}`;
+  const head=`${title} · Draw ${DRAW}`;
+  const lines=[won?`✅ Won · ${g.log.length} moves · ${fmtTime(elapsed())}`
+    :`🏳️ ${foundCount(g)}/52 · ${g.log.length} moves · ${fmtTime(elapsed())}`];
+  if(!won)SUITS.forEach((su,i)=>{const n=g.found[i].length;lines.push(`${su} ${'🟩'.repeat(n)}${'⬜'.repeat(13-n)}`)});
+  return {text:[head,...lines,url].join('\n'),html:`<a href="${url}">${title}</a> · Draw ${DRAW}<br>${lines.join('<br>')}`};
+}
+// text, or {text,html}: rich copy where supported so pasted titles link to the game
+async function copy(data,msg){
+  const {text,html}=typeof data==='string'?{text:data}:data;
+  try{
+    if(html&&window.ClipboardItem&&navigator.clipboard.write)await navigator.clipboard.write([new ClipboardItem({
+      'text/plain':new Blob([text],{type:'text/plain'}),'text/html':new Blob([html],{type:'text/html'})})]);
+    else await navigator.clipboard.writeText(text);
+  }
+  catch{
+    try{await navigator.clipboard.writeText(text)}
+    catch{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}
+  }
   toast(msg);
 }
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1800)}
