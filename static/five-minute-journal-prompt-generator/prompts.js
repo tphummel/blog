@@ -28,7 +28,7 @@ window.PROMPTS = [
   ["Lists You'll Love", "List 7 things you're currently obsessed with."],
   ["Lists You'll Love", "List 4 things you want to learn."],
   ["Lists You'll Love", "List 6 people you look up to."],
-  ["Lists You'll Love", "List 10 accomplishments from 2026."],
+  ["Lists You'll Love", "List 10 accomplishments from this year."],
   ["Lists You'll Love", "List 3 things you'd buy if money wasn't an issue."],
   ["Lists You'll Love", "List 10 small ways to improve your mood."],
   ["Lists You'll Love", "List 3 parts of your routine that are essential."],
