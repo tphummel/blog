@@ -144,11 +144,12 @@ function exportJson() {
 // text is for plain paste; html links the title to the game for rich paste
 function shareCard() {
   const url = new URL('/yahtzee/', location.href).href;
-  const title = `Yahtzee Daily #${puzzle}`;
-  const lines = [dateKey(new Date()), `Score ${totals(game).total}`];
+  const t = totals(game);
+  const heading = `Yahtzee Daily #${puzzle}`;
+  const lines = [dateKey(new Date()), `Total: ${t.total}`, `Upper: ${t.upper + t.upperBonus}, Lower: ${t.lower}`];
   return {
-    text: [`${title}: ${url}`, ...lines].join('\n'),
-    html: [`<a href="${url}">${title}</a>`, ...lines].join('<br>'),
+    text: [heading, ...lines].join('\n'),
+    html: [`<a href="${url}">Yahtzee Daily</a> #${puzzle}`, ...lines].join('<br>'),
   };
 }
 

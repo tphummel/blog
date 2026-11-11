@@ -466,9 +466,9 @@ function renderPanel(){
 // text is for plain paste; html links the title to the game for rich paste
 function shareCard(){
   const url=new URL('/solitaire/',location.href).href;
-  const title=`Klondike #${puzzleNumber(S.d)}`;
+  const n=puzzleNumber(S.d);
   const lines=[S.d,S.e[1]==='win'?`Won in ${fmtTime(S.e[0])}`:`Surrendered at ${foundCount(g)}/52`,`${g.log.length} moves`];
-  return {text:[`${title}: ${url}`,...lines].join('\n'),html:[`<a href="${url}">${title}</a>`,...lines].join('<br>')};
+  return {text:[`Klondike Daily #${n}`,...lines].join('\n'),html:[`<a href="${url}">Klondike Daily</a> #${n}`,...lines].join('<br>')};
 }
 async function copyCard(card,msg){
   try{await navigator.clipboard.write([new ClipboardItem({'text/plain':new Blob([card.text],{type:'text/plain'}),'text/html':new Blob([card.html],{type:'text/html'})})])}
