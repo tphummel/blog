@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rock Paper Scissors Tracker</title>
+  <meta name="description" content="Track rock paper scissors matches in sessions, with leaderboards and exports. Everything stays in this browser.">
+  <meta name="theme-color" content="#2b6cb0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="RPS">
+  <link rel="manifest" href="/rps/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="/rps/icon-192.png">
+  <link rel="apple-touch-icon" href="/rps/apple-touch-icon.png">
+  <style>
+    :root {
+      --bg: #fafafa; --fg: #222; --muted: #777; --accent: #2b6cb0; --border: #ccc;
+      --card: #fff; --win: #2f855a; --loss: #c53030; --soft: #eee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b1c1d; --fg: #e6e6e6; --muted: #999; --accent: #63a4e0; --border: #444;
+        --card: #252627; --win: #68d391; --loss: #fc8181; --soft: #2f3031;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); max-width: 40rem; margin: 0 auto; padding: 1rem; padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+    h1 { font-size: 1.3rem; margin: 0; }
+    h2 { font-size: 1.05rem; margin: 0 0 0.5rem; }
+    a { color: var(--accent); }
+    button, select, input { font: inherit; color: var(--fg); padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+    button { cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    button.danger { color: var(--loss); border-color: var(--loss); }
+    button.small { padding: 0.2rem 0.6rem; font-size: 0.85rem; }
+    label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; font-size: 0.9rem; }
+    select, input[type="text"] { width: 100%; }
+    header { margin-bottom: 0.75rem; }
+    header .session { color: var(--muted); font-size: 0.9rem; margin-top: 0.15rem; }
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1rem; }
+    .tabs button { flex: 1; border: 0; border-radius: 6px 6px 0 0; background: none; font-weight: 600; color: var(--muted); padding: 0.6rem 0.25rem; font-size: 0.92rem; }
+    .tabs button[aria-selected="true"] { color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; margin-bottom: 1rem; }
+    .row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .row > input { flex: 1 1 10rem; }
+    .seg { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+    .seg button { flex: 1; padding: 0.6rem 0.25rem; }
+    .seg button .glyph { display: block; font-size: 1.7rem; line-height: 1.2; }
+    .seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .big { width: 100%; padding: 0.9rem; font-size: 1.1rem; margin-top: 1rem; }
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .notice { padding: 0.6rem 0.8rem; border-radius: 6px; margin-bottom: 1rem; background: var(--soft); font-weight: 600; }
+    .notice.error { color: var(--loss); }
+    .notice.ok { color: var(--win); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 0.4rem; border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: 0; }
+    th { color: var(--muted); font-size: 0.85rem; }
+    td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+    .item { border-bottom: 1px solid var(--border); padding: 0.6rem 0; }
+    .item:first-child { padding-top: 0; }
+    .item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .item .top { display: flex; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
+    .item .top strong { word-break: break-word; }
+    .item .btns { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .won { color: var(--win); font-weight: 600; }
+    .badge { font-size: 0.75rem; background: var(--accent); color: #fff; border-radius: 999px; padding: 0.1rem 0.5rem; margin-left: 0.4rem; white-space: nowrap; }
+    .stack > * + * { margin-top: 0.5rem; }
+    .stack button { width: 100%; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rock Paper Scissors Tracker</h1>
+    <div class="session" id="session-line"></div>
+  </header>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main id="view"></main>
+  <datalist id="players"></datalist>
+  <datalist id="venues"></datalist>
+  <p class="muted" style="margin-top:2rem">Everything is stored in this browser only (localStorage). Export to keep a copy. <a href="/experiments/">&larr; experiments</a></p>
+
+<script>
+(function () {
+  'use strict'
+
+  const STORAGE_KEY = 'rps-tracker-v1'
+  const MOVES = ['rock', 'paper', 'scissors']
+  const GLYPH = { rock: '✊', paper: '✋', scissors: '✌️' }
+  const BEATS = { rock: 'scissors', paper: 'rock', scissors: 'paper' }
+  const TABS = [['play', 'Play'], ['board', 'Leaderboard'], ['sessions', 'Sessions'], ['data', 'Data']]
+
+  // ---- state ----
+  // Relational, like the original SQLite schema: matches reference two
+  // players, one venue and one session by id.
+  function emptyState () {
+    return { version: 1, players: [], venues: [], sessions: [], matches: [], currentSessionId: null }
+  }
+
+  let state = emptyState()
+  let saveFailed = false
+  const ui = {
+    tab: 'play',
+    form: { playerOne: '', playerTwo: '', venue: '', moveOne: null, moveTwo: null },
+    notice: null,
+    boardScope: 'current'
+  }
+
+  function load () {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
+      if (saved && saved.version === 1) state = Object.assign(emptyState(), saved)
+    } catch (e) {}
+  }
+
+  function save () {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+      saveFailed = false
+    } catch (e) { saveFailed = true }
+  }
+
+  function uid () {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID()
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
+  }
+
+  const now = () => new Date().toISOString()
+  const byId = (list, id) => list.find(x => x.id === id)
+  const sameName = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase()
+  const currentSession = () => byId(state.sessions, state.currentSessionId) || null
+  const sessionMatches = id => state.matches.filter(m => m.sessionId === id)
+  const nameOf = (list, id) => (byId(list, id) || { name: '(unknown)' }).name
+
+  function findOrCreate (list, name) {
+    let row = list.find(x => sameName(x.name, name))
+    if (!row) {
+      row = { id: uid(), name: name.trim(), createdAt: now() }
+      list.push(row)
+    }
+    return row
+  }
+
+  function outcomeOf (moveOne, moveTwo) {
+    if (moveOne === moveTwo) return 'draw'
+    return BEATS[moveOne] === moveTwo ? 'player_one' : 'player_two'
+  }
+
+  function leaderboard (matches) {
+    const rows = new Map()
+    const row = id => {
+      if (!rows.has(id)) rows.set(id, { playerId: id, name: nameOf(state.players, id), played: 0, wins: 0, losses: 0, draws: 0 })
+      return rows.get(id)
+    }
+    for (const m of matches) {
+      const a = row(m.playerOneId)
+      const b = row(m.playerTwoId)
+      a.played++; b.played++
+      if (m.outcome === 'draw') { a.draws++; b.draws++ } else if (m.outcome === 'player_one') { a.wins++; b.losses++ } else { b.wins++; a.losses++ }
+    }
+    const list = [...rows.values()]
+    for (const r of list) r.winPct = r.played ? r.wins / r.played : 0
+    list.sort((x, y) => y.wins - x.wins || y.winPct - x.winPct || x.losses - y.losses || x.name.localeCompare(y.name))
+    return list
+  }
+
+  // ---- actions ----
+  function defaultSessionName () {
+    const base = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+    let name = base
+    for (let i = 2; state.sessions.some(s => sameName(s.name, name)); i++) name = base + ' #' + i
+    return name
+  }
+
+  function startSession (name) {
+    const session = { id: uid(), name: name.trim() || defaultSessionName(), createdAt: now() }
+    state.sessions.push(session)
+    state.currentSessionId = session.id
+    ui.form.moveOne = ui.form.moveTwo = null
+    save()
+    return session
+  }
+
+  function recordMatch () {
+    const f = ui.form
+    const session = currentSession()
+    const errors = []
+    if (!session) errors.push('Start a session first.')
+    if (!f.playerOne.trim()) errors.push('Player 1 name is required.')
+    if (!f.playerTwo.trim()) errors.push('Player 2 name is required.')
+    if (f.playerOne.trim() && f.playerTwo.trim() && sameName(f.playerOne, f.playerTwo)) errors.push('Players must be different people.')
+    if (!f.venue.trim()) errors.push('Venue name is required.')
+    if (!MOVES.includes(f.moveOne)) errors.push('Pick a move for Player 1.')
+    if (!MOVES.includes(f.moveTwo)) errors.push('Pick a move for Player 2.')
+    if (errors.length) {
+      ui.notice = { type: 'error', text: errors.join(' ') }
+      return
+    }
+    const p1 = findOrCreate(state.players, f.playerOne)
+    const p2 = findOrCreate(state.players, f.playerTwo)
+    const venue = findOrCreate(state.venues, f.venue)
+    const outcome = outcomeOf(f.moveOne, f.moveTwo)
+    state.matches.push({
+      id: uid(), sessionId: session.id, playedAt: now(),
+      playerOneId: p1.id, playerTwoId: p2.id, venueId: venue.id,
+      moveOne: f.moveOne, moveTwo: f.moveTwo, outcome
+    })
+    save()
+    const text = outcome === 'draw'
+      ? `Draw: both threw ${f.moveOne}.`
+      : outcome === 'player_one'
+        ? `${p1.name} wins: ${f.moveOne} beats ${f.moveTwo}.`
+        : `${p2.name} wins: ${f.moveTwo} beats ${f.moveOne}.`
+    ui.notice = { type: 'ok', text }
+    // players and venue stay filled in for the rematch; only the moves reset
+    f.playerOne = p1.name; f.playerTwo = p2.name; f.venue = venue.name
+    f.moveOne = f.moveTwo = null
+  }
+
+  function deleteMatch (id) {
+    state.matches = state.matches.filter(m => m.id !== id)
+    save()
+  }
+
+  function deleteSession (id) {
+    state.sessions = state.sessions.filter(s => s.id !== id)
+    state.matches = state.matches.filter(m => m.sessionId !== id)
+    if (state.currentSessionId === id) state.currentSessionId = null
+    save()
+  }
+
+  // ---- export / import ----
+  function matchView (m) {
+    return {
+      id: m.id,
+      playedAt: m.playedAt,
+      session: nameOf(state.sessions, m.sessionId),
+      venue: nameOf(state.venues, m.venueId),
+      playerOne: nameOf(state.players, m.playerOneId),
+      moveOne: m.moveOne,
+      playerTwo: nameOf(state.players, m.playerTwoId),
+      moveTwo: m.moveTwo,
+      outcome: m.outcome,
+      winner: m.outcome === 'draw' ? '' : nameOf(state.players, m.outcome === 'player_one' ? m.playerOneId : m.playerTwoId)
+    }
+  }
+
+  function boardExport (matches) {
+    return leaderboard(matches).map((r, i) => ({
+      rank: i + 1, player: r.name, played: r.played, wins: r.wins, losses: r.losses, draws: r.draws, winPct: Math.round(r.winPct * 1000) / 10
+    }))
+  }
+
+  function sessionExport (session) {
+    const matches = sessionMatches(session.id)
+    const playerIds = new Set(matches.flatMap(m => [m.playerOneId, m.playerTwoId]))
+    const venueIds = new Set(matches.map(m => m.venueId))
+    return {
+      app: 'rps', version: 1, scope: 'session', exportedAt: now(),
+      session,
+      players: state.players.filter(p => playerIds.has(p.id)),
+      venues: state.venues.filter(v => venueIds.has(v.id)),
+      matches,
+      leaderboard: boardExport(matches)
+    }
+  }
+
+  function allExport () {
+    return {
+      app: 'rps', version: 1, scope: 'all', exportedAt: now(),
+      currentSessionId: state.currentSessionId,
+      sessions: state.sessions,
+      players: state.players,
+      venues: state.venues,
+      matches: state.matches,
+      leaderboard: boardExport(state.matches)
+    }
+  }
+
+  function csv (matches) {
+    const cols = ['playedAt', 'session', 'venue', 'playerOne', 'moveOne', 'playerTwo', 'moveTwo', 'outcome', 'winner']
+    const cell = v => /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v
+    const lines = [cols.join(',')]
+    for (const m of matches) {
+      const v = matchView(m)
+      lines.push(cols.map(c => cell(String(v[c]))).join(','))
+    }
+    return lines.join('\r\n') + '\r\n'
+  }
+
+  function download (filename, text, type) {
+    const url = URL.createObjectURL(new Blob([text], { type }))
+    const a = h('a', { href: url, download: filename })
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'session'
+  const stamp = () => new Date().toISOString().slice(0, 10)
+  const downloadJson = (filename, data) => download(filename, JSON.stringify(data, null, 2), 'application/json')
+
+  // Merges a session export or a full export into what is already here.
+  // Rows with a known id are skipped; players and venues that match an
+  // existing name are folded into the existing row.
+  function importData (data) {
+    if (!data || data.app !== 'rps' || !Array.isArray(data.matches)) throw new Error('This is not an RPS tracker export.')
+    const sessions = data.sessions || (data.session ? [data.session] : [])
+    const remap = { players: new Map(), venues: new Map() }
+    for (const key of ['players', 'venues']) {
+      for (const row of data[key] || []) {
+        if (!row || !row.id || typeof row.name !== 'string') continue
+        const existing = byId(state[key], row.id) || state[key].find(x => sameName(x.name, row.name))
+        if (existing) remap[key].set(row.id, existing.id)
+        else state[key].push({ id: row.id, name: row.name, createdAt: row.createdAt || now() })
+      }
+    }
+    let addedSessions = 0
+    for (const s of sessions) {
+      if (!s || !s.id || byId(state.sessions, s.id)) continue
+      state.sessions.push({ id: s.id, name: String(s.name || 'Imported session'), createdAt: s.createdAt || now() })
+      addedSessions++
+    }
+    let addedMatches = 0
+    for (const m of data.matches) {
+      if (!m || !m.id || byId(state.matches, m.id)) continue
+      const row = {
+        id: m.id, sessionId: m.sessionId, playedAt: m.playedAt || now(),
+        playerOneId: remap.players.get(m.playerOneId) || m.playerOneId,
+        playerTwoId: remap.players.get(m.playerTwoId) || m.playerTwoId,
+        venueId: remap.venues.get(m.venueId) || m.venueId,
+        moveOne: m.moveOne, moveTwo: m.moveTwo
+      }
+      const valid = byId(state.sessions, row.sessionId) && byId(state.players, row.playerOneId) &&
+        byId(state.players, row.playerTwoId) && row.playerOneId !== row.playerTwoId &&
+        byId(state.venues, row.venueId) && MOVES.includes(row.moveOne) && MOVES.includes(row.moveTwo)
+      if (!valid) continue
+      row.outcome = outcomeOf(row.moveOne, row.moveTwo)
+      state.matches.push(row)
+      addedMatches++
+    }
+    save()
+    return { addedSessions, addedMatches }
+  }
+
+  // ---- rendering ----
+  function h (tag, attrs, ...children) {
+    const el = document.createElement(tag)
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (k.startsWith('on')) el.addEventListener(k.slice(2), v)
+      else if (v === true) el.setAttribute(k, '')
+      else if (v !== false && v != null) el.setAttribute(k, v)
+    }
+    for (const c of children.flat()) {
+      if (c == null || c === false) continue
+      el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c)
+    }
+    return el
+  }
+
+  const fmtTime = iso => new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+  const fmtDate = iso => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+  const plural = (n, word) => `${n} ${word}${n === 1 ? '' : (word.endsWith('ch') ? 'es' : 's')}`
+
+  function go (tab) {
+    ui.tab = tab
+    ui.notice = null
+    render()
+  }
+
+  function moveButtons (key) {
+    return h('div', { class: 'seg', role: 'group' }, MOVES.map(move =>
+      h('button', {
+        type: 'button',
+        'aria-pressed': String(ui.form[key] === move),
+        onclick: () => { ui.form[key] = move; ui.notice = null; render() }
+      }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, GLYPH[move]), move[0].toUpperCase() + move.slice(1))
+    ))
+  }
+
+  function textInput (key, id, list) {
+    return h('input', {
+      type: 'text', id, list, autocomplete: 'off', autocapitalize: 'words', value: ui.form[key],
+      oninput: e => { ui.form[key] = e.target.value }
+    })
+  }
+
+  function newSessionForm (label) {
+    const input = h('input', { type: 'text', id: 'new-session', placeholder: defaultSessionName(), 'aria-label': 'Session name' })
+    return h('form', {
+      class: 'row',
+      onsubmit: e => {
+        e.preventDefault()
+        const s = startSession(input.value)
+        ui.tab = 'play'
+        ui.notice = { type: 'ok', text: `Started session “${s.name}”.` }
+        render()
+      }
+    }, input, h('button', { class: 'primary', type: 'submit' }, label))
+  }
+
+  function matchesTable (matches) {
+    return h('table', null,
+      h('thead', null, h('tr', null, h('th', null, 'When'), h('th', null, 'Player 1'), h('th', null, 'Player 2'), h('th', null, 'Venue'), h('th', null, ''))),
+      h('tbody', null, matches.map(m => {
+        const side = (id, move, won) => h('td', { class: won ? 'won' : null }, `${GLYPH[move]} ${nameOf(state.players, id)}`)
+        return h('tr', null,
+          h('td', { class: 'muted' }, fmtTime(m.playedAt)),
+          side(m.playerOneId, m.moveOne, m.outcome === 'player_one'),
+          side(m.playerTwoId, m.moveTwo, m.outcome === 'player_two'),
+          h('td', { class: 'muted' }, nameOf(state.venues, m.venueId)),
+          h('td', { class: 'n' }, h('button', {
+            class: 'small', type: 'button', title: 'Delete this match', 'aria-label': 'Delete this match',
+            onclick: () => { if (confirm('Delete this match?')) { deleteMatch(m.id); ui.notice = null; render() } }
+          }, '✕'))
+        )
+      }))
+    )
+  }
+
+  function boardTable (matches) {
+    const rows = leaderboard(matches)
+    if (!rows.length) return h('p', { class: 'muted' }, 'No matches yet.')
+    return h('table', null,
+      h('thead', null, h('tr', null,
+        h('th', { class: 'n' }, '#'), h('th', null, 'Player'), h('th', { class: 'n' }, 'W'), h('th', { class: 'n' }, 'L'),
+        h('th', { class: 'n' }, 'D'), h('th', { class: 'n' }, 'Win %'))),
+      h('tbody', null, rows.map((r, i) => h('tr', null,
+        h('td', { class: 'n' }, String(i + 1)),
+        h('td', null, r.name),
+        h('td', { class: 'n' }, String(r.wins)),
+        h('td', { class: 'n' }, String(r.losses)),
+        h('td', { class: 'n' }, String(r.draws)),
+        h('td', { class: 'n' }, Math.round(r.winPct * 100) + '%')
+      )))
+    )
+  }
+
+  function viewPlay () {
+    const session = currentSession()
+    if (!session) {
+      return [h('div', { class: 'card' },
+        h('h2', null, 'Start a session'),
+        h('p', { class: 'muted' }, 'A session groups matches together, with its own leaderboard and export. Name it after the night, the trip, the tournament.'),
+        newSessionForm('Start'))]
+    }
+    const matches = sessionMatches(session.id).slice().reverse()
+    return [
+      h('form', { class: 'card', onsubmit: e => { e.preventDefault(); recordMatch(); render() } },
+        h('label', { for: 'player-one' }, 'Player 1'),
+        textInput('playerOne', 'player-one', 'players'),
+        moveButtons('moveOne'),
+        h('label', { for: 'player-two' }, 'Player 2'),
+        textInput('playerTwo', 'player-two', 'players'),
+        moveButtons('moveTwo'),
+        h('label', { for: 'venue' }, 'Venue'),
+        textInput('venue', 'venue', 'venues'),
+        h('button', { class: 'primary big', type: 'submit' }, 'Record match')
+      ),
+      h('div', { class: 'card' },
+        h('h2', null, 'Session leaderboard'),
+        boardTable(matches)),
+      h('div', { class: 'card' },
+        h('h2', null, `Recent matches (${matches.length} total)`),
+        matches.length ? matchesTable(matches.slice(0, 10)) : h('p', { class: 'muted' }, 'No matches recorded yet.'))
+    ]
+  }
+
+  function viewBoard () {
+    if (ui.boardScope !== 'all' && ui.boardScope !== 'current' && !byId(state.sessions, ui.boardScope)) ui.boardScope = 'current'
+    const current = currentSession()
+    const scopeId = ui.boardScope === 'current' ? (current ? current.id : 'all') : ui.boardScope
+    const matches = scopeId === 'all' ? state.matches : sessionMatches(scopeId)
+    const select = h('select', { id: 'scope', onchange: e => { ui.boardScope = e.target.value; render() } },
+      h('option', { value: 'all', selected: scopeId === 'all' }, 'All time'),
+      state.sessions.slice().reverse().map(s => h('option', { value: s.id, selected: scopeId === s.id },
+        s.name + (current && s.id === current.id ? ' (current)' : ''))))
+    return [h('div', { class: 'card' },
+      h('label', { for: 'scope', style: 'margin-top:0' }, 'Leaderboard for'),
+      select,
+      h('p', { class: 'muted' }, plural(matches.length, 'match') + '. Ranked by wins, then win percentage.'),
+      boardTable(matches))]
+  }
+
+  function viewSessions () {
+    const current = currentSession()
+    const list = state.sessions.slice().reverse()
+    return [
+      h('div', { class: 'card' },
+        h('h2', null, 'New session'),
+        h('p', { class: 'muted' }, 'Starting a session makes it the current one. Earlier sessions are kept and can be resumed.'),
+        newSessionForm('Start')),
+      h('div', { class: 'card' },
+        h('h2', null, 'Sessions'),
+        list.length ? list.map(s => {
+          const matches = sessionMatches(s.id)
+          const isCurrent = current && s.id === current.id
+          const top = leaderboard(matches)[0]
+          const file = `rps-session-${slug(s.name)}-${stamp()}`
+          return h('div', { class: 'item' },
+            h('div', { class: 'top' },
+              h('span', null, h('strong', null, s.name), isCurrent ? h('span', { class: 'badge' }, 'current') : null),
+              h('span', { class: 'muted' }, fmtDate(s.createdAt))),
+            h('div', { class: 'muted' }, plural(matches.length, 'match') + (top && top.wins ? ` · leader: ${top.name} (${top.wins}W)` : '')),
+            h('div', { class: 'btns' },
+              isCurrent ? null : h('button', { class: 'small', type: 'button', onclick: () => { state.currentSessionId = s.id; save(); go('play') } }, 'Resume'),
+              h('button', { class: 'small', type: 'button', onclick: () => { ui.boardScope = s.id; go('board') } }, 'Leaderboard'),
+              h('button', { class: 'small', type: 'button', onclick: () => downloadJson(file + '.json', sessionExport(s)) }, 'Export JSON'),
+              h('button', { class: 'small', type: 'button', onclick: () => download(file + '.csv', csv(matches), 'text/csv') }, 'Export CSV'),
+              h('button', {
+                class: 'small', type: 'button',
+                onclick: () => {
+                  const name = prompt('Session name', s.name)
+                  if (name && name.trim()) { s.name = name.trim(); save(); render() }
+                }
+              }, 'Rename'),
+              h('button', {
+                class: 'small danger', type: 'button',
+                onclick: () => {
+                  if (confirm(`Delete session “${s.name}” and its ${plural(matches.length, 'match')}? This cannot be undone.`)) { deleteSession(s.id); render() }
+                }
+              }, 'Delete')))
+        }) : h('p', { class: 'muted' }, 'No sessions yet.'))
+    ]
+  }
+
+  function viewData () {
+    const file = h('input', {
+      type: 'file', accept: 'application/json,.json', style: 'display:none',
+      onchange: async e => {
+        const f = e.target.files[0]
+        if (!f) return
+        try {
+          const r = importData(JSON.parse(await f.text()))
+          ui.notice = { type: 'ok', text: `Imported ${plural(r.addedSessions, 'session')} and ${plural(r.addedMatches, 'match')}.` }
+        } catch (err) {
+          ui.notice = { type: 'error', text: 'Import failed: ' + (err instanceof SyntaxError ? 'the file is not valid JSON.' : err.message) }
+        }
+        render()
+      }
+    })
+    const all = `rps-all-${stamp()}`
+    return [
+      h('div', { class: 'card stack' },
+        h('h2', null, 'Export all data'),
+        h('p', { class: 'muted' }, `${plural(state.sessions.length, 'session')}, ${plural(state.matches.length, 'match')}, ${plural(state.players.length, 'player')}, ${plural(state.venues.length, 'venue')}. To export one session, use the Sessions tab.`),
+        h('button', { type: 'button', onclick: () => downloadJson(all + '.json', allExport()) }, 'Export everything (JSON)'),
+        h('button', { type: 'button', onclick: () => download(all + '.csv', csv(state.matches), 'text/csv') }, 'Export all matches (CSV)')),
+      h('div', { class: 'card stack' },
+        h('h2', null, 'Import'),
+        h('p', { class: 'muted' }, 'Merge a JSON export (one session or everything) into this browser. Matches already here are skipped.'),
+        file,
+        h('button', { type: 'button', onclick: () => file.click() }, 'Import JSON…')),
+      h('div', { class: 'card stack' },
+        h('h2', null, 'Erase'),
+        h('p', { class: 'muted' }, 'Removes every session, match, player and venue from this browser.'),
+        h('button', {
+          class: 'danger', type: 'button',
+          onclick: () => {
+            if (confirm('Erase all RPS data in this browser? This cannot be undone.')) {
+              state = emptyState()
+              save()
+              ui.form = { playerOne: '', playerTwo: '', venue: '', moveOne: null, moveTwo: null }
+              ui.notice = { type: 'ok', text: 'All data erased.' }
+              render()
+            }
+          }
+        }, 'Erase all data'))
+    ]
+  }
+
+  const VIEWS = { play: viewPlay, board: viewBoard, sessions: viewSessions, data: viewData }
+
+  function render () {
+    const session = currentSession()
+    document.getElementById('session-line').textContent = session
+      ? `Session: ${session.name} · ${plural(sessionMatches(session.id).length, 'match')}`
+      : 'No session in progress'
+
+    document.getElementById('tabs').replaceChildren(...TABS.map(([id, label]) =>
+      h('button', { type: 'button', role: 'tab', 'aria-selected': String(ui.tab === id), onclick: () => go(id) }, label)))
+
+    const fill = (id, rows) => document.getElementById(id).replaceChildren(
+      ...rows.slice().sort((a, b) => a.name.localeCompare(b.name)).map(r => h('option', { value: r.name })))
+    fill('players', state.players)
+    fill('venues', state.venues)
+
+    const notice = saveFailed
+      ? { type: 'error', text: 'Could not save to this browser’s storage. Export your data now to avoid losing it.' }
+      : ui.notice
+    document.getElementById('view').replaceChildren(
+      ...(notice ? [h('div', { class: 'notice ' + notice.type, role: 'status' }, notice.text)] : []),
+      ...VIEWS[ui.tab]())
+  }
+
+  load()
+  render()
+
+  // ask the browser not to evict this origin's storage under pressure
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {})
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/rps/sw.js', { scope: '/rps/' })
+      .catch((err) => console.warn('SW registration failed:', err))
+  }
+})()
+</script>
+</body>
+</html>
