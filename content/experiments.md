@@ -21,3 +21,4 @@ date: 2020-09-01T08:00:00
 - [Daily Solitaire](/solitaire)
 - [Pictionary Clue Generator](/pictionary)
 - [Charades](/charades)
+- [The Perfect Form](/perfect-form)
