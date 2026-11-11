@@ -13,7 +13,7 @@ date: 2020-09-01T08:00:00
 
 ## 🎉 Party Games
 
-- 🎨 [Pictionary Clue Generator](/pictionary)
+- 🎨 [Pictionary](/pictionary)
 - 🎭 [Charades](/charades)
 
 ## 🧸 Toys
