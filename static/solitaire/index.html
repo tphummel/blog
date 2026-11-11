@@ -453,12 +453,27 @@ function renderPanel(){
     <div>${summary()}</div>
     <div class="row">
       ${dailyPlayed()?'<button id="again">Play a random puzzle</button>':''}
+      ${isRandom()?'':'<button id="share">Copy result</button>'}
       <button id="exJson">Export JSON</button>
       <button id="exText">Copy text</button>
     </div>`;
   if($('again'))$('again').onclick=()=>startRandom();
+  if($('share'))$('share').onclick=()=>copyCard(shareCard(),'Result copied');
   $('exJson').onclick=downloadJson;
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
+}
+// spoiler-free share card: the puzzle, its date and the result are shared, never the cards.
+// text is for plain paste; html links the title to the game for rich paste
+function shareCard(){
+  const url=new URL('/solitaire/',location.href).href;
+  const n=puzzleNumber(S.d);
+  const lines=[S.d,S.e[1]==='win'?`Won in ${fmtTime(S.e[0])}`:`Surrendered at ${foundCount(g)}/52`,`${g.log.length} moves`];
+  return {text:[`Klondike Daily #${n}`,...lines].join('\n'),html:[`<a href="${url}">Klondike Daily</a> #${n}`,...lines].join('<br>')};
+}
+async function copyCard(card,msg){
+  try{await navigator.clipboard.write([new ClipboardItem({'text/plain':new Blob([card.text],{type:'text/plain'}),'text/html':new Blob([card.html],{type:'text/html'})})])}
+  catch{return copy(card.text,msg)}
+  toast(msg);
 }
 const summary=()=>`${gameLabel()} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
