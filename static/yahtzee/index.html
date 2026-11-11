@@ -146,7 +146,7 @@ function shareCard() {
   const url = new URL('/yahtzee/', location.href).href;
   const t = totals(game);
   const heading = `Yahtzee Daily #${puzzle}`;
-  const lines = [dateKey(new Date()), `Total: ${t.total}`, `Upper: ${t.upper + t.upperBonus}, Lower: ${t.lower}`];
+  const lines = [`🃏 ${dateKey(new Date())}`, `Total: ${t.total}`, `Upper: ${t.upper + t.upperBonus}, Lower: ${t.lower}`];
   return {
     text: [heading, ...lines].join('\n'),
     html: [`<a href="${url}">Yahtzee Daily</a> #${puzzle}`, ...lines].join('<br>'),
@@ -234,7 +234,7 @@ function renderControls() {
     label = `Re-roll (${3 - game.rolls} left)`;
     status = `Turn ${game.turn} of 13 · tap dice to keep`;
   }
-  const action = game.over ? '<button class="primary" data-act="share">Copy result</button>' :
+  const action = game.over ? '<button class="primary" data-act="share">Social Share</button>' :
     `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`;
   return `<div class="bar"><span class="muted">${status}</span><span>${action}</span></div>`;
 }
@@ -247,7 +247,7 @@ function renderMode() {
 
 function renderExport() {
   return `<div class="bar" style="margin-top:16px"><span class="muted">Export</span><span>` +
-    `<button data-act="copy" ${tokens ? '' : 'disabled'}>Copy text</button> ` +
+    `<button data-act="copy" ${tokens ? '' : 'disabled'}>Copy Transcript</button> ` +
     `<button data-act="json" ${tokens ? '' : 'disabled'}>Download JSON</button></span></div>`;
 }
 
@@ -297,8 +297,8 @@ document.getElementById('app').addEventListener('click', (e) => {
     held[i] = !held[i];
     render();
   } else if (el.dataset.act === 'roll') roll();
-  else if (el.dataset.act === 'copy') copyToClipboard('copy', 'Copy text', exportText());
-  else if (el.dataset.act === 'share') copyCard('share', 'Copy result', shareCard());
+  else if (el.dataset.act === 'copy') copyToClipboard('copy', 'Copy Transcript', exportText());
+  else if (el.dataset.act === 'share') copyCard('share', 'Social Share', shareCard());
   else if (el.dataset.act === 'json') downloadJson();
   else if (el.dataset.tab) setTab(el.dataset.tab);
   else if (el.dataset.score !== undefined) score(Number(el.dataset.score));
