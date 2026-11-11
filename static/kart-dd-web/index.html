@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tomhummel.com - kart-dd-web</title>
+  <style>
+    :root {
+      --bg: #fafafa; --fg: #222; --muted: #777; --accent: #2b6cb0; --border: #ccc;
+      --card: #fff; --good: #2f855a; --bad: #c53030; --soft: #eee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b1c1d; --fg: #e6e6e6; --muted: #999; --accent: #63a4e0; --border: #444;
+        --card: #252627; --good: #68d391; --bad: #fc8181; --soft: #2f3031;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); max-width: 44rem; margin: 0 auto; padding: 1rem; }
+    h1 { font-size: 1.3rem; margin: 0; }
+    h2 { font-size: 1.05rem; margin: 0 0 0.5rem; }
+    a { color: var(--accent); }
+    button, select, input, textarea { font: inherit; color: var(--fg); padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+    button { cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    button.danger { color: var(--bad); border-color: var(--bad); }
+    button.small { padding: 0.2rem 0.5rem; font-size: 0.85rem; }
+    label { display: block; margin: 0.7rem 0 0.2rem; font-weight: 600; font-size: 0.9rem; }
+    select, input[type="text"], input[type="number"], textarea { width: 100%; }
+    .top { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+    .top .grow { flex: 1 1 10rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; margin-bottom: 1rem; }
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .err { color: var(--bad); font-weight: 600; margin: 0.5rem 0 0; min-height: 1.2em; }
+    .banner { background: var(--soft); border: 1px solid var(--bad); border-radius: 8px; padding: 0.6rem; margin-bottom: 1rem; }
+    .ok { color: var(--good); font-weight: 600; }
+    .sess { display: block; text-decoration: none; color: inherit; }
+    .sess .name { font-weight: 600; }
+    .sess:hover { border-color: var(--accent); }
+    .tag { display: inline-block; font-size: 0.75rem; padding: 0 0.4rem; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); }
+    .scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+    th, td { padding: 0.3rem 0.5rem; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .pos { color: var(--good); } .neg { color: var(--bad); }
+    .players { display: grid; gap: 0.6rem; }
+    .player { border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; }
+    .player .head { display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 0.3rem; }
+    .player .head select { width: 6rem; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+    .grid3 label { margin: 0 0 0.1rem; font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+    .grid3 select { padding: 0.35rem 0.3rem; }
+    @media (max-width: 30rem) { .grid3 { grid-template-columns: 1fr; } }
+    .row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.4rem; }
+    .row input { flex: 1; }
+    .editing { border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="engine.js"></script>
+  <script>
+  'use strict';
+  const E = KartEngine;
+  const app = document.getElementById('app');
+  let store = E.loadStore(window.localStorage);
+  let persistOK = true;
+  let flash = '';            // one-shot message shown after import etc.
+  let entryError = '';
+  let editingRaceId = null;  // race currently loaded into the entry form
+  let draft = null;          // unsaved entry form values, survives re-render
+
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const find = (id) => store.sessions.find((s) => s.id === id);
+  const fmtDate = (iso) => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); };
+  const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'session';
+  const signed = (n) => (n > 0 ? '+' : '') + n;
+  const options = (list, sel, blank) =>
+    (blank ? `<option value="">${esc(blank)}</option>` : '') +
+    list.map((v) => `<option${v === sel ? ' selected' : ''}>${esc(v)}</option>`).join('');
+
+  function save() {
+    persistOK = E.saveStore(window.localStorage, store);
+  }
+
+  function download(filename, text, type) {
+    const url = URL.createObjectURL(new Blob([text], { type }));
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  const stamp = () => new Date().toISOString().slice(0, 10);
+  function exportSessions(sessions, base, kind) {
+    if (kind === 'csv') download(`${base}-${stamp()}.csv`, E.toCSV(sessions), 'text/csv');
+    else download(`${base}-${stamp()}.json`, E.toJSON(sessions), 'application/json');
+  }
+
+  // ---- views --------------------------------------------------------------
+
+  function banner() {
+    let h = '';
+    if (!persistOK) h += '<div class="banner">Browser storage is unavailable or full, so changes are <b>not being saved</b>. Export your data now.</div>';
+    if (flash) { h += `<div class="banner"><span class="ok">${esc(flash)}</span></div>`; flash = ''; }
+    return h;
+  }
+
+  function homeView() {
+    const list = store.sessions.slice().sort((a, b) => b.created.localeCompare(a.created));
+    const items = list.map((s) => {
+      const lead = E.leader(s);
+      const limit = s.format.raceLimit ? `/${s.format.raceLimit}` : '';
+      return `<a class="card sess" href="#/s/${esc(s.id)}">
+        <div class="name">${esc(s.name)} ${s.closed ? '<span class="tag">closed</span>' : ''}</div>
+        <div class="muted">${esc(fmtDate(s.created))}${s.venue ? ' · ' + esc(s.venue) : ''}</div>
+        <div class="muted">${esc(s.format.name)} · ${s.races.length}${limit} races · ${esc(s.players.join(', '))}</div>
+        ${lead ? `<div class="muted">Leader: <b>${esc(lead.player)}</b> (${lead.points} pts)</div>` : ''}
+      </a>`;
+    }).join('');
+    return `${banner()}
+      <div class="top"><h1 class="grow">Kart-dd-web</h1><a href="/experiments">experiments</a></div>
+      <p class="muted">Mario Kart: Double Dash league sessions, kept in this browser only. Create a session, log races in its console, export when you want a copy.</p>
+      <div class="actions">
+        <a href="#/new"><button class="primary">New session</button></a>
+        <button data-action="export-all-json"${store.sessions.length ? '' : ' disabled'}>Export all (JSON)</button>
+        <button data-action="export-all-csv"${store.sessions.length ? '' : ' disabled'}>Export all (CSV)</button>
+        <button data-action="import">Import JSON</button>
+        <input type="file" id="importFile" accept=".json,application/json" hidden>
+      </div>
+      ${items || '<div class="card muted">No sessions yet.</div>'}`;
+  }
+
+  let newState = null;
+  function resetNewState() {
+    const f = E.FORMATS.gp2;
+    newState = {
+      name: '', venue: '', formatKey: 'gp2',
+      players: Array(f.players).fill(''),
+      racers: f.racers, points: f.points.join(','), raceLimit: f.raceLimit,
+      error: '',
+    };
+  }
+
+  function pastPlayerNames() {
+    const set = new Set();
+    store.sessions.forEach((s) => s.players.forEach((p) => set.add(p)));
+    return [...set].sort();
+  }
+
+  function newView() {
+    if (!newState) resetNewState();
+    const n = newState;
+    const custom = n.formatKey === 'custom';
+    const fmt = E.FORMATS[n.formatKey];
+    const fixedCount = !custom;
+    const rows = n.players.map((p, i) => `<div class="row">
+        <input type="text" list="pastPlayers" data-player="${i}" value="${esc(p)}" placeholder="Player ${i + 1}" maxlength="24" autocomplete="off">
+        ${custom && n.players.length > 2 ? `<button class="small" data-action="rm-player" data-i="${i}" aria-label="remove player ${i + 1}">✕</button>` : ''}
+      </div>`).join('');
+    return `${banner()}
+      <div class="top"><a href="#/">← sessions</a><h1 class="grow">New session</h1></div>
+      <form id="newForm" class="card" autocomplete="off">
+        <label for="nName">Session name</label>
+        <input type="text" id="nName" value="${esc(n.name)}" placeholder="e.g. Friday night at Nick's" maxlength="60">
+        <label for="nVenue">Venue (optional)</label>
+        <input type="text" id="nVenue" value="${esc(n.venue)}" maxlength="60">
+        <label for="nFormat">Format</label>
+        <select id="nFormat">${Object.values(E.FORMATS).map((f) => `<option value="${f.key}"${f.key === n.formatKey ? ' selected' : ''}>${esc(f.name)}</option>`).join('')}</select>
+        ${fixedCount ? `<div class="muted">${fmt.racers} racers · points ${fmt.points.join('-')} · ${fmt.raceLimit ? fmt.raceLimit + ' races' : 'open-ended'} · ${fmt.courses.length === 1 ? esc(fmt.courses[0]) : fmt.courses.length + ' courses'}</div>` : `
+        <label for="nRacers">Racers per race (humans + bots)</label>
+        <input type="number" id="nRacers" min="2" max="8" value="${esc(n.racers)}">
+        <label for="nPoints">Points by finish position (comma separated)</label>
+        <input type="text" id="nPoints" value="${esc(n.points)}">
+        <label for="nLimit">Race limit (0 = open-ended)</label>
+        <input type="number" id="nLimit" min="0" value="${esc(n.raceLimit)}">`}
+        <label>Players</label>
+        ${rows}
+        ${custom && n.players.length < Math.min(8, Number(n.racers) || 8) ? '<button type="button" class="small" data-action="add-player">+ player</button>' : ''}
+        <datalist id="pastPlayers">${pastPlayerNames().map((p) => `<option value="${esc(p)}">`).join('')}</datalist>
+        <p class="err" id="newErr" role="alert">${esc(n.error)}</p>
+        <div class="actions"><button class="primary" type="submit">Create session</button></div>
+      </form>`;
+  }
+
+  function entryFormHTML(s) {
+    const f = s.format;
+    const last = s.races[s.races.length - 1];
+    const editing = editingRaceId && s.races.find((r) => r.id === editingRaceId);
+    const full = !editing && f.raceLimit > 0 && s.races.length >= f.raceLimit;
+    if (s.closed && !editing) return '<div class="card muted">Session is closed. Reopen it to log more races.</div>';
+    if (full) return `<div class="card muted">Session is full (${f.raceLimit} races).</div>`;
+
+    // Defaults: editing => that race; else copy the previous race's picks,
+    // blank finishes, and advance to the next course in order.
+    let d = draft;
+    if (!d) {
+      if (editing) {
+        d = { course: editing.course, notes: editing.notes, perfs: editing.perfs.map((p) => ({ ...p })) };
+      } else {
+        const idx = last ? f.courses.indexOf(last.course) : -1;
+        const nextCourse = f.courses.length === 1 ? f.courses[0]
+          : (last && idx >= 0 ? f.courses[(idx + 1) % f.courses.length] : f.courses[0]);
+        d = {
+          course: nextCourse, notes: '',
+          perfs: s.players.map((name) => {
+            const p = last && last.perfs.find((x) => x.player === name);
+            return { player: name, kart: p ? p.kart : '', driver: p ? p.driver : '', rear: p ? p.rear : '', finish: '' };
+          }),
+        };
+      }
+    }
+    const finishes = Array.from({ length: f.racers }, (_, i) => i + 1);
+    const cards = d.perfs.map((p, i) => `<div class="player">
+        <div class="head"><span>${esc(p.player)}</span>
+          <select data-f="finish" data-i="${i}" aria-label="${esc(p.player)} finish">
+            <option value="">Pos</option>${finishes.map((n) => `<option value="${n}"${Number(p.finish) === n ? ' selected' : ''}>${n}</option>`).join('')}
+          </select></div>
+        <div class="grid3">
+          <div><label>Kart</label><select data-f="kart" data-i="${i}">${options(E.KARTS, p.kart, 'Kart')}</select></div>
+          <div><label>Driver</label><select data-f="driver" data-i="${i}">${options(E.DRIVERS, p.driver, 'Driver')}</select></div>
+          <div><label>Rear</label><select data-f="rear" data-i="${i}">${options(E.DRIVERS, p.rear, 'Rear')}</select></div>
+        </div></div>`).join('');
+    const courseField = f.courses.length === 1
+      ? `<div class="muted">Course: <b>${esc(f.courses[0])}</b></div>`
+      : `<label for="eCourse">Course</label><select id="eCourse">${options(f.courses, d.course)}</select>`;
+    return `<form id="entryForm" class="card${editing ? ' editing' : ''}" autocomplete="off">
+      <h2>${editing ? `Edit race ${editing.seq}` : `Race ${s.races.length + 1}${f.raceLimit ? ' of ' + f.raceLimit : ''}`}</h2>
+      ${courseField}
+      <div class="players" style="margin-top:0.6rem">${cards}</div>
+      <label for="eNotes">Notes</label>
+      <textarea id="eNotes" rows="2" maxlength="500">${esc(d.notes)}</textarea>
+      <p class="err" id="entryErr" role="alert">${esc(entryError)}</p>
+      <div class="actions">
+        <button class="primary" type="submit">${editing ? 'Save changes' : 'Submit race'}</button>
+        ${editing ? '<button type="button" data-action="cancel-edit">Cancel</button>' : ''}
+      </div></form>`;
+  }
+
+  function standingsHTML(s) {
+    const rows = E.standings(s);
+    const head = Array.from({ length: s.format.racers }, (_, i) => `<th class="num">${i + 1}</th>`).join('');
+    const body = rows.map((r) => `<tr><td>${r.rank}</td><td>${esc(r.player)}</td><td class="num">${r.races}</td>
+      <td class="num"><b>${r.points}</b></td><td class="num">${r.races ? r.ppr.toFixed(2) : '–'}</td>
+      ${r.finishes.map((n) => `<td class="num">${n}</td>`).join('')}</tr>`).join('');
+    return `<div class="card"><h2>Standings</h2><div class="scroll"><table>
+      <thead><tr><th>#</th><th>Player</th><th class="num">Races</th><th class="num">Pts</th><th class="num">PPR</th>${head}</tr></thead>
+      <tbody>${body}</tbody></table></div>
+      <div class="muted" style="margin-top:0.4rem">Points ${s.format.points.join('-')}. Ties: head-to-head gap, then races played. Columns 1–${s.format.racers} count finishes by place.</div></div>`;
+  }
+
+  function gapHTML(s) {
+    if (!s.races.length) return '';
+    const g = E.gapMatrix(s);
+    const head = s.players.map((p) => `<th class="num">${esc(p)}</th>`).join('');
+    const body = s.players.map((a) => `<tr><td><b>${esc(a)}</b></td>${s.players.map((b) => {
+      if (a === b) return '<td class="num muted">·</td>';
+      const c = g[a][b];
+      return `<td class="num ${c.gap > 0 ? 'pos' : c.gap < 0 ? 'neg' : ''}">${signed(c.gap)}</td>`;
+    }).join('')}</tr>`).join('');
+    return `<div class="card"><h2>Head to head</h2><div class="scroll"><table>
+      <thead><tr><th>vs →</th>${head}</tr></thead><tbody>${body}</tbody></table></div>
+      <div class="muted" style="margin-top:0.4rem">Row player's total finish-place gap over the column player. Positive = row finished ahead.</div></div>`;
+  }
+
+  function logHTML(s) {
+    if (!s.races.length) return '<div class="card muted">No races logged yet.</div>';
+    const rows = s.races.slice().reverse().map((r) => {
+      const ordered = r.perfs.slice().sort((a, b) => a.finish - b.finish);
+      const cells = ordered.map((p) => `${p.finish}. ${esc(p.player)} <span class="muted">(${esc(p.kart)}, ${esc(p.driver)}/${esc(p.rear)})</span>`).join('<br>');
+      return `<tr><td>${r.seq}</td><td>${esc(r.course)}${r.notes ? `<br><span class="muted">${esc(r.notes)}</span>` : ''}</td>
+        <td style="white-space:normal">${cells}</td>
+        <td><button class="small" data-action="edit-race" data-id="${esc(r.id)}">edit</button>
+            <button class="small danger" data-action="delete-race" data-id="${esc(r.id)}">delete</button></td></tr>`;
+    }).join('');
+    return `<div class="card"><h2>Race log</h2><div class="scroll"><table>
+      <thead><tr><th>#</th><th>Course</th><th>Result</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }
+
+  function sessionView(s) {
+    const f = s.format;
+    return `${banner()}
+      <div class="top"><a href="#/">← sessions</a><h1 class="grow">${esc(s.name)} ${s.closed ? '<span class="tag">closed</span>' : ''}</h1></div>
+      <div class="muted">${esc(fmtDate(s.created))}${s.venue ? ' · ' + esc(s.venue) : ''} · ${esc(f.name)} · ${s.races.length}${f.raceLimit ? '/' + f.raceLimit : ''} races</div>
+      <div class="actions">
+        <button data-action="export-session-json">Export session (JSON)</button>
+        <button data-action="export-session-csv">Export session (CSV)</button>
+        <button data-action="toggle-closed">${s.closed ? 'Reopen' : 'Close session'}</button>
+        <button class="danger" data-action="delete-session">Delete session</button>
+      </div>
+      ${entryFormHTML(s)}
+      ${standingsHTML(s)}
+      ${gapHTML(s)}
+      ${logHTML(s)}`;
+  }
+
+  function render() {
+    const m = location.hash.match(/^#\/s\/([^/]+)/);
+    if (location.hash === '#/new') {
+      app.innerHTML = newView();
+    } else if (m) {
+      const s = find(decodeURIComponent(m[1]));
+      app.innerHTML = s ? sessionView(s) : `<p>Session not found. <a href="#/">Back to sessions</a></p>`;
+    } else {
+      app.innerHTML = homeView();
+    }
+  }
+
+  // ---- events -------------------------------------------------------------
+
+  const currentSession = () => {
+    const m = location.hash.match(/^#\/s\/([^/]+)/);
+    return m ? find(decodeURIComponent(m[1])) : null;
+  };
+
+  function readEntryForm(s) {
+    const perfs = s.players.map((name, i) => {
+      const get = (f) => app.querySelector(`[data-f="${f}"][data-i="${i}"]`).value;
+      return { player: name, kart: get('kart'), driver: get('driver'), rear: get('rear'), finish: get('finish') };
+    });
+    const courseEl = app.querySelector('#eCourse');
+    return {
+      course: courseEl ? courseEl.value : s.format.courses[0],
+      notes: app.querySelector('#eNotes').value,
+      perfs,
+    };
+  }
+
+  function syncNewState() {
+    const q = (id) => app.querySelector(id);
+    if (!q('#nName')) return;
+    newState.name = q('#nName').value;
+    newState.venue = q('#nVenue').value;
+    if (q('#nRacers')) {
+      newState.racers = q('#nRacers').value;
+      newState.points = q('#nPoints').value;
+      newState.raceLimit = q('#nLimit').value;
+    }
+    newState.players = [...app.querySelectorAll('[data-player]')].map((el) => el.value);
+  }
+
+  app.addEventListener('change', (e) => {
+    if (e.target.id === 'nFormat') {
+      syncNewState();
+      const f = E.FORMATS[e.target.value];
+      newState.formatKey = f.key;
+      newState.racers = f.racers; newState.points = f.points.join(','); newState.raceLimit = f.raceLimit;
+      const want = f.players;
+      const p = newState.players.slice(0, want);
+      while (p.length < want) p.push('');
+      newState.players = p;
+      newState.error = '';
+      render();
+    } else if (e.target.id === 'importFile') {
+      const file = e.target.files[0];
+      if (!file) return;
+      file.text().then((text) => {
+        try {
+          const res = E.mergeImport(store, E.parseImport(text));
+          save();
+          flash = `Imported ${res.added} session(s)` + (res.copies ? `, ${res.copies} as copies` : '') + (res.skipped ? `, ${res.skipped} already present` : '') + '.';
+        } catch (err) {
+          flash = 'Import failed: ' + err.message;
+        }
+        render();
+      });
+    } else if (e.target.closest('#entryForm')) {
+      const s = currentSession();
+      if (s) draft = readEntryForm(s); // keep selections across re-renders
+    }
+  });
+
+  app.addEventListener('input', (e) => {
+    if (e.target.closest('#entryForm') && e.target.id === 'eNotes') {
+      const s = currentSession();
+      if (s) draft = readEntryForm(s);
+    }
+    if (e.target.closest('#newForm')) syncNewState();
+  });
+
+  app.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (e.target.id === 'newForm') {
+      syncNewState();
+      const n = newState;
+      try {
+        let format;
+        if (n.formatKey === 'custom') {
+          const racers = Number(n.racers);
+          if (!Number.isInteger(racers) || racers < 2 || racers > 8) throw new Error('Racers must be 2-8');
+          const pts = String(n.points).split(',').map((x) => x.trim()).filter((x) => x !== '').map(Number);
+          if (pts.length !== racers || pts.some((x) => !Number.isFinite(x))) throw new Error(`Give exactly ${racers} point values`);
+          format = E.makeFormat('custom', { players: n.players.filter((p) => p.trim()).length, racers, points: pts, raceLimit: n.raceLimit });
+        } else {
+          format = E.makeFormat(n.formatKey);
+        }
+        const s = E.newSession({ name: n.name, venue: n.venue, players: n.players, format });
+        if (n.formatKey !== 'custom' && s.players.length !== format.players) throw new Error(`This format needs exactly ${format.players} players`);
+        store.sessions.push(s);
+        save();
+        newState = null; draft = null; editingRaceId = null; entryError = '';
+        location.hash = '#/s/' + s.id;
+      } catch (err) {
+        n.error = err.message;
+        render();
+      }
+    } else if (e.target.id === 'entryForm') {
+      const s = currentSession();
+      if (!s) return;
+      const input = readEntryForm(s);
+      draft = input;
+      try {
+        if (editingRaceId) E.updateRace(s, editingRaceId, input);
+        else E.addRace(s, input);
+        save();
+        editingRaceId = null; draft = null; entryError = '';
+      } catch (err) {
+        entryError = err.message;
+      }
+      render();
+    }
+  });
+
+  app.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const a = btn.dataset.action;
+    const s = currentSession();
+    if (a === 'import') app.querySelector('#importFile').click();
+    else if (a === 'export-all-json') exportSessions(store.sessions, 'kart-dd-web-all', 'json');
+    else if (a === 'export-all-csv') exportSessions(store.sessions, 'kart-dd-web-all', 'csv');
+    else if (a === 'export-session-json' && s) exportSessions([s], 'kart-dd-web-' + slug(s.name), 'json');
+    else if (a === 'export-session-csv' && s) exportSessions([s], 'kart-dd-web-' + slug(s.name), 'csv');
+    else if (a === 'add-player') { syncNewState(); newState.players.push(''); render(); }
+    else if (a === 'rm-player') { syncNewState(); newState.players.splice(Number(btn.dataset.i), 1); render(); }
+    else if (a === 'toggle-closed' && s) { s.closed = !s.closed; editingRaceId = null; draft = null; save(); render(); }
+    else if (a === 'delete-session' && s) {
+      if (confirm(`Delete "${s.name}" and its ${s.races.length} races? Export first if you want a copy.`)) {
+        store.sessions = store.sessions.filter((x) => x.id !== s.id);
+        save(); location.hash = '#/';
+      }
+    } else if (a === 'edit-race' && s) {
+      editingRaceId = btn.dataset.id; draft = null; entryError = ''; render();
+      const form = app.querySelector('#entryForm'); if (form) form.scrollIntoView({ block: 'start' });
+    } else if (a === 'cancel-edit') { editingRaceId = null; draft = null; entryError = ''; render(); }
+    else if (a === 'delete-race' && s) {
+      const r = s.races.find((x) => x.id === btn.dataset.id);
+      if (r && confirm(`Delete race ${r.seq} (${r.course})?`)) {
+        E.deleteRace(s, r.id);
+        if (editingRaceId === r.id) { editingRaceId = null; draft = null; }
+        save(); render();
+      }
+    }
+  });
+
+  window.addEventListener('hashchange', () => { editingRaceId = null; draft = null; entryError = ''; render(); });
+  render();
+  </script>
+</body>
+</html>
