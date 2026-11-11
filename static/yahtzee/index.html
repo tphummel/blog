@@ -146,7 +146,7 @@ function shareCard() {
   const url = new URL('/yahtzee/', location.href).href;
   const t = totals(game);
   const heading = `Yahtzee Daily #${puzzle}`;
-  const lines = [`🃏 ${dateKey(new Date())}`, `Total: ${t.total}`, `Upper: ${t.upper + t.upperBonus}, Lower: ${t.lower}`];
+  const lines = [`🎲 ${dateKey(new Date())}`, `Total: ${t.total}`, `Upper: ${t.upper + t.upperBonus}, Lower: ${t.lower}`];
   return {
     text: [heading, ...lines].join('\n'),
     html: [`<a href="${url}">Yahtzee Daily</a> #${puzzle}`, ...lines].join('<br>'),
@@ -234,7 +234,7 @@ function renderControls() {
     label = `Re-roll (${3 - game.rolls} left)`;
     status = `Turn ${game.turn} of 13 · tap dice to keep`;
   }
-  const action = game.over ? '<button class="primary" data-act="share">Social Share</button>' :
+  const action = game.over ? '<button class="primary" data-act="share" title="Copy a share card to paste into a post or message" aria-label="Social Share: copy a share card">Social Share</button>' :
     `<button class="primary" data-act="roll" ${disabled ? 'disabled' : ''}>${label}</button>`;
   return `<div class="bar"><span class="muted">${status}</span><span>${action}</span></div>`;
 }
@@ -247,8 +247,8 @@ function renderMode() {
 
 function renderExport() {
   return `<div class="bar" style="margin-top:16px"><span class="muted">Export</span><span>` +
-    `<button data-act="copy" ${tokens ? '' : 'disabled'}>Copy Transcript</button> ` +
-    `<button data-act="json" ${tokens ? '' : 'disabled'}>Download JSON</button></span></div>`;
+    `<button data-act="copy" title="Copy every roll and score as text" ${tokens ? '' : 'disabled'}>Copy Transcript</button> ` +
+    `<button data-act="json" title="Save the full game as a file" ${tokens ? '' : 'disabled'}>Download JSON</button></span></div>`;
 }
 
 function renderScorecard() {
