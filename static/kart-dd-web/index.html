@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>tomhummel.com - kart-dd-web</title>
+  <title>tomhummel.com - Mario Kart: Double Dash!! tracker</title>
   <style>
     :root {
       --bg: #fafafa; --fg: #222; --muted: #777; --accent: #2b6cb0; --border: #ccc;
@@ -121,8 +121,8 @@
       </a>`;
     }).join('');
     return `${banner()}
-      <div class="top"><h1 class="grow">Kart-dd-web</h1><a href="/experiments">experiments</a></div>
-      <p class="muted">Mario Kart: Double Dash league sessions, kept in this browser only. Create a session, log races in its console, export when you want a copy.</p>
+      <div class="top"><h1 class="grow">Mario Kart: Double Dash!! tracker</h1><a href="/experiments">experiments</a></div>
+      <p class="muted">League sessions, kept in this browser only. Create a session, log races in its console, export when you want a copy.</p>
       <div class="actions">
         <a href="#/new"><button class="primary">New session</button></a>
         <button data-action="export-all-json"${store.sessions.length ? '' : ' disabled'}>Export all (JSON)</button>
