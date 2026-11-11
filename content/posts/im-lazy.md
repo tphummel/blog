@@ -1,5 +1,5 @@
 ---
-title: "I’m lazy"
+title: "I’m Lazy"
 date: 2026-11-11T00:00:00-08:00
 draft: false
 toc: false
@@ -17,4 +17,4 @@ In 2026 our profession is changing significantly with agentic programming upendi
 
 We’re all working hard to keep up, reading what experts are having success with, testing out a new model, tuning the newest harness, writing a new skill or plugin. Then once this new way of building is “solved” and everyone achieves a new level of leveraged productivity, there will be so much more value to create that we’ll be working more than ever. I find this energizing. 
 
-Imagine a teammate coming to a meeting in 2026 saying, “I’m lazy so I had Anthropic do my work for me.”
+Imagine a teammate in 2026 actually saying aloud, “I’m lazy so I had Anthropic do my work for me.”
