@@ -140,13 +140,31 @@ function exportJson() {
   }, null, 2);
 }
 
-// spoiler-free share card: the dice are the same for everyone each day, so only
-// the scoring outcome of each turn is shared (🟩 scored points, ⬛ scored zero)
-function shareText() {
-  const squares = game.turns.map((turn) => (turn.points > 0 ? '🟩' : '⬛'));
-  const rows = [];
-  for (let i = 0; i < squares.length; i += 7) rows.push(squares.slice(i, i + 7).join(''));
-  return [`Yahtzee Daily #${puzzle} · ${totals(game).total}`, ...rows].join('\n');
+// spoiler-free share card: only the puzzle, its date and the total are shared, never the dice.
+// text is for plain paste; html links the title to the game for rich paste
+function shareCard() {
+  const url = new URL('/yahtzee/', location.href).href;
+  const title = `Yahtzee Daily #${puzzle}`;
+  const lines = [dateKey(new Date()), `Score ${totals(game).total}`];
+  return {
+    text: [`${title}: ${url}`, ...lines].join('\n'),
+    html: [`<a href="${url}">${title}</a>`, ...lines].join('<br>'),
+  };
+}
+
+async function copyCard(act, label, card) {
+  const btn = document.querySelector(`[data-act=${act}]`);
+  let ok = true;
+  try {
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/plain': new Blob([card.text], { type: 'text/plain' }),
+      'text/html': new Blob([card.html], { type: 'text/html' }),
+    })]);
+  } catch (e) {
+    try { await navigator.clipboard.writeText(card.text); } catch (e2) { ok = false; }
+  }
+  if (btn) btn.textContent = ok ? 'Copied!' : 'Copy failed';
+  setTimeout(() => { const b = document.querySelector(`[data-act=${act}]`); if (b) b.textContent = label; }, 1500);
 }
 
 async function copyToClipboard(act, label, text) {
@@ -279,7 +297,7 @@ document.getElementById('app').addEventListener('click', (e) => {
     render();
   } else if (el.dataset.act === 'roll') roll();
   else if (el.dataset.act === 'copy') copyToClipboard('copy', 'Copy text', exportText());
-  else if (el.dataset.act === 'share') copyToClipboard('share', 'Copy result', shareText());
+  else if (el.dataset.act === 'share') copyCard('share', 'Copy result', shareCard());
   else if (el.dataset.act === 'json') downloadJson();
   else if (el.dataset.tab) setTab(el.dataset.tab);
   else if (el.dataset.score !== undefined) score(Number(el.dataset.score));
