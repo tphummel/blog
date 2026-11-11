@@ -1648,6 +1648,7 @@
     let current = null
     let hidden = false
     const STORAGE_KEY = 'pictionary-history'
+    const TIMER_SECONDS = 60
     // newest first: { id, ts, text, category, difficulty, player, success }
     let history = []
     try { history = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [] } catch (e) {}
@@ -1655,6 +1656,9 @@
     // clues already shown, per "category|difficulty" pool, so repeats wait until the pool is used up
     const used = {}
     let timerId = null
+    // when the running timer started, and the clue it is timing (null if no clue was in play)
+    let timerStart = 0
+    let timerEntryId = null
 
     ;[ALL, ...Object.keys(CLUES)].forEach(name => {
       const opt = document.createElement('option')
@@ -1685,7 +1689,8 @@
         category: current.category,
         difficulty,
         player: '',
-        success: false
+        success: false,
+        seconds: null
       })
       save()
       render()
@@ -1725,7 +1730,7 @@
 
       const table = document.createElement('table')
       const thead = table.createTHead().insertRow()
-      ;['Time', 'Clue', 'Player', 'Success', ''].forEach(label => {
+      ;['Time', 'Clue', 'Player', 'Success', 'Timer', ''].forEach(label => {
         const th = document.createElement('th')
         th.textContent = label
         thead.appendChild(th)
@@ -1742,7 +1747,7 @@
           tbody = table.createTBody()
           const th = document.createElement('th')
           th.className = 'date'
-          th.colSpan = 5
+          th.colSpan = 6
           th.textContent = new Date(entry.ts).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
           tbody.insertRow().appendChild(th)
         }
@@ -1774,6 +1779,8 @@
         box.addEventListener('change', () => { entry.success = box.checked; save() })
         cell(tr, 'success').appendChild(box)
 
+        cell(tr, 'time').textContent = entry.seconds == null ? '' : entry.seconds + 's'
+
         const del = document.createElement('button')
         del.type = 'button'
         del.textContent = 'Delete'
@@ -1788,15 +1795,28 @@
       historyEl.appendChild(table)
     }
 
+    // save how long the timer ran onto the clue that was in play when it started
+    function recordTimer (seconds) {
+      const entry = history.find(h => h.id === timerEntryId)
+      timerEntryId = null
+      if (!entry) return
+      entry.seconds = seconds
+      save()
+      renderHistory()
+    }
+
     function toggleTimer () {
       if (timerId) {
         clearInterval(timerId)
         timerId = null
+        recordTimer(Math.min(TIMER_SECONDS, Math.max(0, Math.round((Date.now() - timerStart) / 1000))))
         timerEl.textContent = ''
         timerBtn.textContent = 'Start 60s timer'
         return
       }
-      let left = 60
+      let left = TIMER_SECONDS
+      timerStart = Date.now()
+      timerEntryId = currentId
       timerEl.textContent = left + 's'
       timerBtn.textContent = 'Stop timer'
       timerId = setInterval(() => {
@@ -1806,6 +1826,7 @@
           clearInterval(timerId)
           timerId = null
           timerBtn.textContent = 'Start 60s timer'
+          recordTimer(TIMER_SECONDS)
         }
       }, 1000)
     }
