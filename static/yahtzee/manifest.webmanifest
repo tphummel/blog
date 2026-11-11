@@ -1,7 +1,7 @@
 {
   "name": "Yahtzee",
   "short_name": "Yahtzee",
-  "description": "Play Yahtzee. Your game is saved in the URL.",
+  "description": "Play Yahtzee. Your daily games are saved in this browser.",
   "start_url": "/yahtzee/",
   "scope": "/yahtzee/",
   "display": "standalone",

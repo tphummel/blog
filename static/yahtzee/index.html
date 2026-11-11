@@ -40,6 +40,7 @@
     ol.log { list-style:none; margin:8px 0 0; padding:0; }
     ol.log li { padding:6px 0; border-bottom:1px solid var(--line); }
     ol.log li:first-child { font-weight:600; }
+    a { color:var(--accent); }
     .glyphs { font-size:1.3rem; letter-spacing:2px; }
   </style>
 </head>
@@ -48,172 +49,8 @@
   <h1>Yahtzee</h1>
   <div id="app"></div>
 </main>
+<script src="/yahtzee/engine.js"></script>
 <script>
-const CATS = [
-  'Ones', 'Twos', 'Threes', 'Fours', 'Fives', 'Sixes',
-  'Three of a kind', 'Four of a kind', 'Full house',
-  'Small straight', 'Large straight', 'Yahtzee', 'Chance'
-];
-const YAHTZEE = 11;
-const FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-const CAT_CHARS = 'abcdefghijklm';
-const TOKEN_RE = /r[1-6]{5}|x[0-9a-v][1-6]{5}|s[a-m]/g;
-const VALID_RE = /^(?:r[1-6]{5}|x[0-9a-v][1-6]{5}|s[a-m])*$/;
-
-const glyphs = (dice) => dice.map((d) => FACES[d]).join('');
-const sum = (a) => a.reduce((x, y) => x + y, 0);
-
-function counts(dice) {
-  const c = [0, 0, 0, 0, 0, 0, 0];
-  dice.forEach((d) => c[d]++);
-  return c;
-}
-
-function isYahtzee(dice) { return dice.every((d) => d === dice[0]); }
-
-function hasRun(dice, len) {
-  const c = counts(dice);
-  for (let s = 1; s + len - 1 <= 6; s++) {
-    let ok = true;
-    for (let i = s; i < s + len; i++) if (!c[i]) { ok = false; break; }
-    if (ok) return true;
-  }
-  return false;
-}
-
-// joker = yahtzee rolled while the Yahtzee box is already filled
-function points(cat, dice, joker) {
-  const c = counts(dice);
-  const max = Math.max(...c);
-  if (cat < 6) return c[cat + 1] * (cat + 1);
-  switch (cat) {
-    case 6: return max >= 3 ? sum(dice) : 0;
-    case 7: return max >= 4 ? sum(dice) : 0;
-    case 8: return joker || (c.includes(3) && c.includes(2)) ? 25 : 0;
-    case 9: return joker || hasRun(dice, 4) ? 30 : 0;
-    case 10: return joker || hasRun(dice, 5) ? 40 : 0;
-    case 11: return isYahtzee(dice) ? 50 : 0;
-    default: return sum(dice);
-  }
-}
-
-function newState() {
-  return { scores: Array(13).fill(null), bonus: 0, turn: 1, rolls: 0, dice: [], log: [], turns: [], cur: null, over: false };
-}
-
-function isJoker(s) {
-  return s.dice.length === 5 && isYahtzee(s.dice) && s.scores[YAHTZEE] !== null;
-}
-
-function legalCats(s) {
-  const open = s.scores.map((v, i) => (v === null ? i : -1)).filter((i) => i >= 0);
-  if (!isJoker(s)) return open;
-  const upper = s.dice[0] - 1;
-  if (s.scores[upper] === null) return [upper];
-  const lower = open.filter((i) => i >= 6);
-  return lower.length ? lower : open;
-}
-
-// apply one token; returns false if the token is not legal in this state
-function apply(s, tok) {
-  const kind = tok[0];
-  if (s.over) return false;
-  if (kind === 'r') {
-    if (s.rolls !== 0) return false;
-    s.dice = tok.slice(1).split('').map(Number);
-    s.rolls = 1;
-    s.cur = { turn: s.turn, rolls: [{ dice: [...s.dice], kept: [] }] };
-    s.log.unshift(`Turn ${s.turn} · roll 1: <span class="glyphs">${glyphs(s.dice)}</span>`);
-    return true;
-  }
-  if (kind === 'x') {
-    if (s.rolls < 1 || s.rolls >= 3) return false;
-    const mask = parseInt(tok[1], 32);
-    if (mask === 31) return false;
-    const next = tok.slice(2).split('').map(Number);
-    for (let i = 0; i < 5; i++) if (mask & (1 << i) && next[i] !== s.dice[i]) return false;
-    const held = s.dice.filter((_, i) => mask & (1 << i));
-    s.cur.rolls.push({ dice: next, kept: s.dice.map((_, i) => !!(mask & (1 << i))) });
-    s.dice = next;
-    s.rolls++;
-    s.log.unshift(`Turn ${s.turn} · roll ${s.rolls}: <span class="glyphs">${glyphs(next)}</span> ` +
-      `<span class="muted">(kept ${held.length ? glyphs(held) : 'none'})</span>`);
-    return true;
-  }
-  if (kind === 's') {
-    if (s.rolls < 1) return false;
-    const cat = CAT_CHARS.indexOf(tok[1]);
-    if (!legalCats(s).includes(cat)) return false;
-    const joker = isJoker(s);
-    const pts = points(cat, s.dice, joker);
-    let note = '';
-    if (isYahtzee(s.dice) && s.scores[YAHTZEE] === 50) { s.bonus++; note = ' + 100 Yahtzee bonus'; }
-    s.scores[cat] = pts;
-    s.turns.push({ ...s.cur, category: CATS[cat], points: pts, yahtzeeBonus: note ? 100 : 0 });
-    s.cur = null;
-    s.log.unshift(`Turn ${s.turn} · scored <b>${CATS[cat]}</b>: ${pts}${note}`);
-    s.rolls = 0;
-    s.dice = [];
-    if (s.scores.every((v) => v !== null)) {
-      s.over = true;
-      s.log.unshift(`Game over · final score <b>${totals(s).total}</b>`);
-    } else {
-      s.turn++;
-    }
-    return true;
-  }
-  return false;
-}
-
-function totals(s) {
-  const upper = sum(s.scores.slice(0, 6).map((v) => v || 0));
-  const upperBonus = upper >= 63 ? 35 : 0;
-  const lower = sum(s.scores.slice(6).map((v) => v || 0));
-  const yb = s.bonus * 100;
-  return { upper, upperBonus, lower, yb, total: upper + upperBonus + lower + yb };
-}
-
-// --- daily puzzle ---
-// Puzzles 1-365 follow a non-leap calendar (Mar 1 is always 60); Feb 29 is 366.
-// The seed is the puzzle number alone, so the same date has the same dice every year.
-const MONTH_START = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-
-function puzzleFor(date) {
-  const m = date.getMonth();
-  const d = date.getDate();
-  return m === 1 && d === 29 ? 366 : MONTH_START[m] + d;
-}
-
-const todayPuzzle = () => puzzleFor(new Date());
-
-function dateKey(date) {
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
-
-function hashString(str) {
-  let h = 1779033703 ^ str.length;
-  for (let i = 0; i < str.length; i++) {
-    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
-    h = (h << 13) | (h >>> 19);
-  }
-  h = Math.imul(h ^ (h >>> 16), 2246822507);
-  h = Math.imul(h ^ (h >>> 13), 3266489909);
-  return (h ^ (h >>> 16)) >>> 0;
-}
-
-function mulberry32(a) {
-  a = (a + 0x6D2B79F5) | 0;
-  let t = Math.imul(a ^ (a >>> 15), 1 | a);
-  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-}
-
-// each die value depends only on (puzzle, turn, roll number, position), never on earlier choices
-function tapeDie(puzzle, turn, rollNo, die) {
-  return Math.floor(mulberry32(hashString(`yahtzee:${puzzle}:${turn}:${rollNo}:${die}`)) * 6) + 1;
-}
-
 // finished/in-progress daily games live in this browser only, keyed by local date
 const storeKey = () => `yahtzee:daily:${dateKey(new Date())}`;
 
@@ -227,17 +64,7 @@ function loadDaily() {
 function saveDaily() {
   if (puzzle !== todayPuzzle()) return; // page was left open past midnight
   try { localStorage.setItem(storeKey(), tokens); } catch (e) { /* storage unavailable */ }
-}
-
-function replay(tokens) {
-  const s = newState();
-  const toks = tokens.match(TOKEN_RE) || [];
-  let good = '';
-  for (const t of toks) {
-    if (!apply(s, t)) break; // stop at first bad token; keep what was valid
-    good += t;
-  }
-  return { s, tokens: good };
+  recordMove(dateKey(new Date()), puzzle, tokens); // timestamped history for /yahtzee/stats/
 }
 
 // --- app state ---
@@ -249,6 +76,7 @@ let held = [false, false, false, false, false];
 
 // only today's puzzle is playable; its moves are kept in browser storage, not the URL
 function load() {
+  backfillRecords();
   puzzle = todayPuzzle();
   const r = replay(loadDaily());
   tokens = r.tokens;
@@ -385,7 +213,8 @@ function renderControls() {
 
 function renderMode() {
   const date = new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
-  return `<div class="bar" style="margin-bottom:8px"><b>Daily puzzle #${puzzle}</b><span class="muted">${date}</span></div>`;
+  return `<div class="bar" style="margin-bottom:8px"><b>Daily puzzle #${puzzle}</b>` +
+    `<span class="muted">${date} · <a href="/yahtzee/stats/">Stats</a></span></div>`;
 }
 
 function renderExport() {

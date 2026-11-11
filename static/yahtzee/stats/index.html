@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yahtzee Stats</title>
+  <meta name="theme-color" content="#1f6b45">
+  <link rel="manifest" href="/yahtzee/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="/yahtzee/icon-192.png">
+  <link rel="apple-touch-icon" href="/yahtzee/apple-touch-icon.png">
+  <style>
+    :root { --bg:#fafafa; --fg:#222; --muted:#6b6b6b; --line:#ccc; --grid:#e4e4e4; --accent:#2a6; --card:#fff; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#161616; --fg:#e8e8e8; --muted:#a0a0a0; --line:#444; --grid:#2c2c2c; --accent:#4c8; --card:#202020; }
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; padding:16px; background:var(--bg); color:var(--fg); font:16px/1.4 system-ui, sans-serif; }
+    main { max-width:720px; margin:0 auto; }
+    h1 { font-size:1.4rem; margin:0; }
+    h2 { font-size:1.05rem; margin:28px 0 8px; }
+    a { color:var(--accent); }
+    button, label.btn { font:inherit; font-size:.9rem; color:inherit; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; }
+    .bar { display:flex; gap:8px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .muted { color:var(--muted); }
+    .small { font-size:.85rem; }
+    .tiles { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:8px; margin-top:16px; }
+    .tile { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+    .tile .k { font-size:.8rem; color:var(--muted); }
+    .tile .v { font-size:1.5rem; font-weight:700; font-variant-numeric:tabular-nums; }
+    .tile .s { font-size:.8rem; color:var(--muted); }
+    .chart { position:relative; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; }
+    .chart svg { display:block; width:100%; height:auto; overflow:visible; }
+    .chart text { fill:var(--muted); font-size:11px; font-family:system-ui, sans-serif; }
+    .chart .grid { stroke:var(--grid); stroke-width:1; }
+    .chart .axis { stroke:var(--line); stroke-width:1; }
+    .chart .series { stroke:var(--accent); stroke-width:2; fill:none; stroke-linejoin:round; }
+    .chart .dot { fill:var(--accent); stroke:var(--card); stroke-width:2; }
+    .chart text.halo { paint-order:stroke; stroke:var(--card); stroke-width:4px; stroke-linejoin:round; }
+    .chart .avg { stroke:var(--muted); stroke-width:1; stroke-dasharray:4 4; }
+    .chart .bar-fill { fill:var(--accent); }
+    .chart .bar-fill.on, .chart .dot.on { opacity:.7; }
+    .chart .hover { stroke:var(--muted); stroke-width:1; }
+    .tip { position:absolute; pointer-events:none; background:var(--fg); color:var(--bg); font-size:.8rem; padding:4px 8px; border-radius:4px; white-space:nowrap; transform:translate(-50%, -100%); display:none; }
+    table { width:100%; border-collapse:collapse; font-size:.9rem; }
+    td, th { padding:5px 6px; border-bottom:1px solid var(--line); text-align:left; }
+    th { font-weight:600; color:var(--muted); font-size:.8rem; }
+    td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; }
+    .scroll { overflow-x:auto; }
+    details { border-bottom:1px solid var(--line); padding:6px 0; }
+    summary { cursor:pointer; font-variant-numeric:tabular-nums; }
+    pre { font:13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; white-space:pre-wrap; margin:8px 0; }
+    .empty { padding:24px 0; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="bar"><h1>Yahtzee Stats</h1><a href="/yahtzee/">← Play today's puzzle</a></div>
+  <div id="report"></div>
+  <h2>Data</h2>
+  <p class="muted small">Every game is stored in this browser with each roll, hold and score, and the time of each move.
+    Games from before stats were added have moves but no times. Export a backup to keep your history safe or to move it to another device.</p>
+  <div class="bar" style="justify-content:flex-start">
+    <button id="export">Export all (JSON)</button>
+    <label class="btn">Import JSON<input id="import" type="file" accept="application/json,.json" hidden></label>
+    <span id="io-status" class="muted small"></span>
+  </div>
+</main>
+<script src="/yahtzee/engine.js"></script>
+<script>
+const $ = (sel) => document.querySelector(sel);
+const fmt1 = (v) => (Number.isFinite(v) ? v.toFixed(1) : '–');
+const pct = (n, d) => (d ? `${Math.round((100 * n) / d)}%` : '–');
+const mean = (a) => (a.length ? sum(a) / a.length : NaN);
+function median(a) {
+  if (!a.length) return NaN;
+  const s = [...a].sort((x, y) => x - y);
+  const m = s.length >> 1;
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+}
+const shortDate = (key) => parseDateKey(key).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+function duration(ms) {
+  if (!Number.isFinite(ms)) return '–';
+  const s = Math.round(ms / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  return m < 60 ? `${m}m ${String(s % 60).padStart(2, '0')}s` : `${Math.floor(m / 60)}h ${m % 60}m`;
+}
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// --- analysis: replay every stored game ---
+function analyze(records) {
+  return records.map((rec) => {
+    const { s } = replay(rec.encoded);
+    const toks = tokenList(rec.encoded);
+    const t = totals(s);
+    const times = rec.times || [];
+    // per-turn think time: first roll of the turn → the score token
+    let turnStart = null;
+    const turnTimes = [];
+    toks.forEach((tok, i) => {
+      if (tok[0] === 'r') turnStart = times[i];
+      if (tok[0] === 's') turnTimes.push(turnStart != null && times[i] != null ? times[i] - turnStart : null);
+    });
+    const first = times[0], last = times[toks.length - 1];
+    return {
+      rec, s, t,
+      date: rec.date,
+      complete: s.over,
+      timed: times.length > 0 && times.every((v) => v != null),
+      duration: first != null && last != null ? last - first : NaN,
+      turnTimes,
+    };
+  });
+}
+
+function streaks(doneDates) {
+  const set = new Set(doneDates);
+  let longest = 0, run = 0, prev = null;
+  for (const d of [...set].sort()) {
+    const day = parseDateKey(d);
+    run = prev && Math.round((day - prev) / 864e5) === 1 ? run + 1 : 1; // round: DST days are 23/25h
+    longest = Math.max(longest, run);
+    prev = day;
+  }
+  // current: ending today, or yesterday if today isn't finished yet
+  let cur = 0;
+  const d = new Date(); d.setHours(12, 0, 0, 0);
+  if (!set.has(dateKey(d))) d.setDate(d.getDate() - 1);
+  while (set.has(dateKey(d))) { cur++; d.setDate(d.getDate() - 1); }
+  return { cur, longest };
+}
+
+// --- charts (inline SVG, one series, shared tooltip) ---
+// draw at the real pixel width so labels stay readable on phones
+const chartW = () => Math.max(300, Math.min(704, ($('main').clientWidth || 704) - 18));
+function niceMax(v, step) { return Math.max(step, Math.ceil(v / step) * step); }
+
+function scoreChart(games) {
+  const W = chartW(), H = 230, L = 36, R = 12, T = 14, B = 26;
+  const days = games.map((g) => Math.round(parseDateKey(g.date) / 864e5));
+  const d0 = days[0], d1 = days[days.length - 1];
+  const yMax = niceMax(Math.max(...games.map((g) => g.t.total)), 50);
+  const x = (d) => (d1 === d0 ? L + (W - L - R) / 2 : L + ((d - d0) / (d1 - d0)) * (W - L - R));
+  const y = (v) => T + (1 - v / yMax) * (H - T - B);
+  const parts = [];
+  for (let v = 0; v <= yMax; v += 50) {
+    parts.push(`<line class="${v ? 'grid' : 'axis'}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>`,
+      `<text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`);
+  }
+  const avg = mean(games.map((g) => g.t.total));
+  parts.push(`<line class="avg" x1="${L}" x2="${W - R}" y1="${y(avg)}" y2="${y(avg)}"/>`,
+    `<text class="halo" x="${W - R}" y="${y(avg) - 5}" text-anchor="end">avg ${Math.round(avg)}</text>`);
+  parts.push(`<text x="${L}" y="${H - 6}">${esc(shortDate(games[0].date))}</text>`);
+  if (games.length > 1) parts.push(`<text x="${W - R}" y="${H - 6}" text-anchor="end">${esc(shortDate(games[games.length - 1].date))}</text>`);
+  const pts = games.map((g, i) => [x(days[i]), y(g.t.total)]);
+  if (pts.length > 1) parts.push(`<polyline class="series" points="${pts.map((p) => p.join(',')).join(' ')}"/>`);
+  parts.push(`<line class="hover" id="sc-cross" x1="0" x2="0" y1="${T}" y2="${H - B}" visibility="hidden"/>`);
+  pts.forEach((p, i) => parts.push(`<circle class="dot" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="4"/>`));
+  parts.push(`<rect id="sc-hit" x="${L}" y="0" width="${W - L - R}" height="${H}" fill="transparent"/>`);
+  return {
+    html: `<div class="chart" id="sc"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Final score by day">${parts.join('')}</svg><div class="tip"></div></div>`,
+    wire() {
+      const box = $('#sc'), svg = box.querySelector('svg'), tip = box.querySelector('.tip'), cross = $('#sc-cross');
+      const hide = () => { tip.style.display = 'none'; cross.setAttribute('visibility', 'hidden'); svg.querySelectorAll('.dot.on').forEach((d) => d.classList.remove('on')); };
+      $('#sc-hit').addEventListener('pointermove', (e) => {
+        const r = svg.getBoundingClientRect();
+        const sx = ((e.clientX - r.left) / r.width) * W;
+        let best = 0;
+        pts.forEach((p, i) => { if (Math.abs(p[0] - sx) < Math.abs(pts[best][0] - sx)) best = i; });
+        const g = games[best], [px, py] = pts[best];
+        hide();
+        cross.setAttribute('x1', px); cross.setAttribute('x2', px); cross.setAttribute('visibility', 'visible');
+        svg.querySelector(`.dot[data-i="${best}"]`).classList.add('on');
+        tip.innerHTML = `${esc(shortDate(g.date))} · #${g.rec.puzzle}<br><b>${g.t.total}</b> pts`;
+        tip.style.left = `${(px / W) * box.clientWidth}px`;
+        tip.style.top = `${(py / H) * svg.clientHeight + 2}px`;
+        tip.style.display = 'block';
+      });
+      $('#sc-hit').addEventListener('pointerleave', hide);
+    },
+  };
+}
+
+function barChart(id, bins, label, tipFor) {
+  const W = chartW(), H = 180, L = 36, R = 12, T = 12, B = 26;
+  const yMax = niceMax(Math.max(...bins.map((b) => b.n)), bins.length > 0 && Math.max(...bins.map((b) => b.n)) > 10 ? 5 : 1);
+  const step = yMax <= 5 ? 1 : yMax <= 20 ? 5 : 10;
+  const bw = (W - L - R) / bins.length;
+  const y = (v) => T + (1 - v / yMax) * (H - T - B);
+  const parts = [];
+  for (let v = 0; v <= yMax; v += step) {
+    parts.push(`<line class="${v ? 'grid' : 'axis'}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>`,
+      `<text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`);
+  }
+  const every = Math.ceil(bins.length / Math.max(4, Math.floor((W - L - R) / 44)));
+  bins.forEach((b, i) => {
+    const x0 = L + i * bw + 1, w = Math.max(1, bw - 2), top = y(b.n), base = y(0), r = Math.min(4, w / 2, base - top);
+    if (b.n > 0) {
+      parts.push(`<path class="bar-fill" data-i="${i}" d="M${x0},${base} V${top + r} Q${x0},${top} ${x0 + r},${top} H${x0 + w - r} Q${x0 + w},${top} ${x0 + w},${top + r} V${base} Z"/>`);
+    }
+    parts.push(`<rect class="bar-hit" data-i="${i}" x="${L + i * bw}" y="${T}" width="${bw}" height="${H - T - B}" fill="transparent"/>`);
+    if (i % every === 0) parts.push(`<text x="${L + i * bw + bw / 2}" y="${H - 8}" text-anchor="middle">${b.label}</text>`);
+  });
+  return {
+    html: `<div class="chart" id="${id}"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">${parts.join('')}</svg><div class="tip"></div></div>`,
+    wire() {
+      const box = $(`#${id}`), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
+      svg.querySelectorAll('.bar-hit').forEach((hit) => {
+        hit.addEventListener('pointerenter', () => {
+          const i = Number(hit.dataset.i), b = bins[i];
+          svg.querySelectorAll('.bar-fill.on').forEach((el) => el.classList.remove('on'));
+          const fill = svg.querySelector(`.bar-fill[data-i="${i}"]`);
+          if (fill) fill.classList.add('on');
+          tip.innerHTML = tipFor(b);
+          tip.style.left = `${((L + i * bw + bw / 2) / W) * box.clientWidth}px`;
+          tip.style.top = `${(y(b.n) / H) * svg.clientHeight - 4}px`;
+          tip.style.display = 'block';
+        });
+      });
+      svg.addEventListener('pointerleave', () => { tip.style.display = 'none'; svg.querySelectorAll('.bar-fill.on').forEach((el) => el.classList.remove('on')); });
+    },
+  };
+}
+
+// --- transcript for one game ---
+function transcript(g) {
+  const times = g.rec.times || [];
+  const lines = [];
+  g.s.turns.forEach((turn, ti) => {
+    const tt = g.turnTimes[ti];
+    lines.push(`Turn ${turn.turn}${tt != null ? `  (${duration(tt)})` : ''}`);
+    turn.rolls.forEach((r, i) => {
+      const keptDice = r.dice.filter((_, j) => r.kept[j]);
+      const kept = i ? `  kept ${keptDice.length ? glyphs(keptDice) : 'none'}` : '';
+      lines.push(`  Roll ${i + 1}: ${glyphs(r.dice)}${kept}`);
+    });
+    lines.push(`  → ${turn.category}: ${turn.points}${turn.joker ? ' (joker)' : ''}${turn.yahtzeeBonus ? ' + 100 bonus' : ''}`);
+  });
+  if (g.s.cur) {
+    lines.push(`Turn ${g.s.turn} (in progress)`);
+    g.s.cur.rolls.forEach((r, i) => lines.push(`  Roll ${i + 1}: ${glyphs(r.dice)}`));
+  }
+  const t = g.t;
+  lines.push('', `Upper ${t.upper} + bonus ${t.upperBonus} · Lower ${t.lower} · Yahtzee bonuses ${t.yb} · Total ${t.total}`);
+  const started = times[0] != null ? new Date(times[0]).toLocaleString() : null;
+  return `<pre>${esc(lines.join('\n'))}</pre>` +
+    `<p class="muted small">${started ? `Started ${esc(started)} · ` : ''}source: ${esc(g.rec.source || 'live')} · ` +
+    `<code>${esc(g.rec.encoded)}</code></p>`;
+}
+
+// --- report ---
+function render() {
+  const games = analyze(allRecords());
+  const done = games.filter((g) => g.complete);
+  const open = games.filter((g) => !g.complete);
+  const el = $('#report');
+  if (!games.length) {
+    el.innerHTML = `<p class="empty muted">No games yet. <a href="/yahtzee/">Play today's puzzle</a> and your results will show up here.</p>`;
+    return;
+  }
+
+  const scores = done.map((g) => g.t.total);
+  const best = done.reduce((a, g) => (!a || g.t.total > a.t.total ? g : a), null);
+  const worst = done.reduce((a, g) => (!a || g.t.total < a.t.total ? g : a), null);
+  const st = streaks(done.map((g) => g.date));
+  const bonusGames = done.filter((g) => g.t.upperBonus).length;
+  const allTurns = done.flatMap((g) => g.s.turns);
+  const yahtzees = allTurns.filter((tu) => isYahtzee(tu.rolls[tu.rolls.length - 1].dice)).length;
+  const durations = done.filter((g) => g.timed).map((g) => g.duration);
+
+  const tile = (k, v, s = '') => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
+  let html = `<div class="tiles">` +
+    tile('Games completed', done.length, open.length ? `${open.length} in progress` : '&nbsp;') +
+    tile('Average score', done.length ? Math.round(mean(scores)) : '–', done.length ? `median ${fmt1(median(scores)).replace(/\.0$/, '')}` : '&nbsp;') +
+    tile('Best', best ? best.t.total : '–', best ? esc(shortDate(best.date)) : '&nbsp;') +
+    tile('Worst', worst ? worst.t.total : '–', worst ? esc(shortDate(worst.date)) : '&nbsp;') +
+    tile('Current streak', `${st.cur}d`, `longest ${st.longest}d`) +
+    tile('Upper bonus', pct(bonusGames, done.length), `${bonusGames} of ${done.length} games`) +
+    tile('Yahtzees rolled', yahtzees, ((n) => `${n} bonus Yahtzee${n === 1 ? '' : 's'}`)(sum(done.map((g) => g.s.bonus)))) +
+    tile('Median game time', durations.length ? duration(median(durations)) : '–', durations.length ? `${durations.length} timed games` : 'no timed games yet') +
+    `</div>`;
+
+  const charts = [];
+  if (done.length) {
+    const sc = scoreChart(done);
+    charts.push(sc);
+    html += `<h2>Score by day</h2>${sc.html}`;
+
+    const width = 25;
+    const top = Math.max(...scores);
+    const bins = [];
+    for (let lo = 0; lo <= top; lo += width) bins.push({ lo, hi: lo + width - 1, n: 0, label: lo });
+    scores.forEach((v) => bins[Math.floor(v / width)].n++);
+    const first = bins.findIndex((b) => b.n);
+    const hist = barChart('hist', bins.slice(Math.max(0, first - 1)), 'Distribution of final scores',
+      (b) => `${b.lo}–${b.hi} pts<br><b>${b.n}</b> game${b.n === 1 ? '' : 's'}`);
+    charts.push(hist);
+    html += `<h2>Score distribution</h2>${hist.html}`;
+
+    // categories
+    const rows = CATS.map((name, cat) => {
+      const ts = allTurns.filter((tu) => tu.cat === cat);
+      const pts = ts.map((tu) => tu.points);
+      return `<tr><td>${name}</td><td class="n">${fmt1(mean(pts))}</td><td class="n">${pts.length ? Math.max(...pts) : '–'}</td>` +
+        `<td class="n">${pct(pts.filter((p) => p === 0).length, pts.length)}</td>` +
+        `<td class="n">${fmt1(mean(ts.map((tu) => tu.turn)))}</td><td class="n">${fmt1(mean(ts.map((tu) => tu.rolls.length)))}</td></tr>`;
+    });
+    const upperAvg = mean(done.map((g) => g.t.upper));
+    html += `<h2>Categories</h2><div class="scroll"><table>` +
+      `<tr><th>Category</th><th class="n">Avg</th><th class="n">Best</th><th class="n">Scratched</th><th class="n">Avg turn</th><th class="n">Avg rolls</th></tr>` +
+      rows.join('') + `</table></div>` +
+      `<p class="muted small">Upper section averages ${fmt1(upperAvg)} (63 earns the bonus). “Avg turn” is when in the game you fill the box.</p>`;
+
+    // rolls per turn and turn timing
+    const rc = [0, 0, 0, 0];
+    allTurns.forEach((tu) => rc[tu.rolls.length]++);
+    const tts = done.flatMap((g) => g.turnTimes).filter((v) => v != null);
+    html += `<h2>Turns</h2><table>` +
+      `<tr><th>Rolls used</th><th class="n">Turns</th><th class="n">Share</th></tr>` +
+      [1, 2, 3].map((n) => `<tr><td>${n}</td><td class="n">${rc[n]}</td><td class="n">${pct(rc[n], allTurns.length)}</td></tr>`).join('') +
+      `</table><p class="muted small">${tts.length ? `Median turn takes ${duration(median(tts))}; slowest ${duration(Math.max(...tts))}.` : 'Turn timing appears once you play with stats tracking on.'}</p>`;
+
+    // dice faces: count only dice actually thrown (first roll + re-rolled dice)
+    const faces = [0, 0, 0, 0, 0, 0, 0];
+    allTurns.forEach((tu) => tu.rolls.forEach((r, i) => r.dice.forEach((d, j) => { if (!i || !r.kept[j]) faces[d]++; })));
+    const thrown = sum(faces);
+    html += `<h2>Dice thrown</h2><table>` +
+      `<tr><th>Face</th><th class="n">Count</th><th class="n">Share</th></tr>` +
+      [1, 2, 3, 4, 5, 6].map((f) => `<tr><td><span style="font-size:1.2rem">${FACES[f]}</span> ${f}</td><td class="n">${faces[f]}</td><td class="n">${thrown ? (100 * faces[f] / thrown).toFixed(1) : '–'}%</td></tr>`).join('') +
+      `</table><p class="muted small">${thrown} dice thrown; a fair die lands on each face 16.7% of the time.</p>`;
+  }
+
+  // game list, newest first
+  html += `<h2>Games</h2>` + [...games].reverse().map((g) =>
+    `<details><summary>${esc(shortDate(g.date))} · #${g.rec.puzzle} · <b>${g.t.total}</b>` +
+    `${g.complete ? '' : ' <span class="muted">(in progress)</span>'}` +
+    `${g.timed && g.complete ? ` <span class="muted">· ${duration(g.duration)}</span>` : ''}</summary>${transcript(g)}</details>`).join('');
+
+  el.innerHTML = html;
+  charts.forEach((c) => c.wire());
+}
+
+// --- export / import ---
+$('#export').addEventListener('click', () => {
+  const data = {
+    game: 'yahtzee', kind: 'history', schema: RECORD_SCHEMA, exportedAt: new Date().toISOString(),
+    games: allRecords().map(expandRecord),
+  };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `yahtzee-history-${dateKey(new Date())}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+$('#import').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  const status = $('#io-status');
+  try {
+    const data = JSON.parse(await file.text());
+    // accepts a history export, or a single-game download from the game page
+    const list = Array.isArray(data.games) ? data.games : data.encoded ? [data] : [];
+    const tally = {};
+    for (const g of list) {
+      if (!g.date && g.puzzle) { tally.skipped = (tally.skipped || 0) + 1; continue; } // single-game files carry no date
+      const r = importRecord(g);
+      tally[r] = (tally[r] || 0) + 1;
+    }
+    status.textContent = list.length ? Object.entries(tally).map(([k, v]) => `${v} ${k}`).join(', ') : 'No games found in that file.';
+    render();
+  } catch (err) {
+    status.textContent = 'Could not read that file.';
+  }
+});
+
+backfillRecords();
+render();
+let lastW = chartW();
+window.addEventListener('resize', () => { if (chartW() !== lastW) { lastW = chartW(); render(); } });
+</script>
+</body>
+</html>
