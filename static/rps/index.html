@@ -91,17 +91,17 @@
   const TABS = [['play', 'Play'], ['board', 'Leaderboard'], ['sessions', 'Sessions'], ['data', 'Data']]
 
   // ---- state ----
-  // Relational, like the original SQLite schema: matches reference two
-  // players, one venue and one session by id.
+  // Relational, like the original SQLite schema: a session references one
+  // venue; a match references two players and its session by id.
   function emptyState () {
-    return { version: 1, players: [], venues: [], sessions: [], matches: [], currentSessionId: null }
+    return { version: 2, players: [], venues: [], sessions: [], matches: [], currentSessionId: null }
   }
 
   let state = emptyState()
   let saveFailed = false
   const ui = {
     tab: 'play',
-    form: { playerOne: '', playerTwo: '', venue: '', moveOne: null, moveTwo: null },
+    form: { playerOne: '', playerTwo: '', moveOne: null, moveTwo: null },
     notice: null,
     boardScope: 'current'
   }
@@ -109,8 +109,22 @@
   function load () {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
-      if (saved && saved.version === 1) state = Object.assign(emptyState(), saved)
+      if (saved && (saved.version === 1 || saved.version === 2)) state = migrate(Object.assign(emptyState(), saved))
     } catch (e) {}
+  }
+
+  // v1 stored the venue on every match; v2 stores it once on the session.
+  // A session takes the venue of its first match.
+  function migrate (s) {
+    if (s.version === 1) {
+      for (const sess of s.sessions) {
+        const first = s.matches.find(m => m.sessionId === sess.id && m.venueId)
+        sess.venueId = first ? first.venueId : findOrCreate(s.venues, 'Unknown venue').id
+      }
+      for (const m of s.matches) delete m.venueId
+      s.version = 2
+    }
+    return s
   }
 
   function save () {
@@ -172,8 +186,9 @@
     return name
   }
 
-  function startSession (name) {
-    const session = { id: uid(), name: name.trim() || defaultSessionName(), createdAt: now() }
+  function startSession (name, venueName) {
+    const venue = findOrCreate(state.venues, venueName)
+    const session = { id: uid(), name: name.trim() || defaultSessionName(), venueId: venue.id, createdAt: now() }
     state.sessions.push(session)
     state.currentSessionId = session.id
     ui.form.moveOne = ui.form.moveTwo = null
@@ -189,7 +204,6 @@
     if (!f.playerOne.trim()) errors.push('Player 1 name is required.')
     if (!f.playerTwo.trim()) errors.push('Player 2 name is required.')
     if (f.playerOne.trim() && f.playerTwo.trim() && sameName(f.playerOne, f.playerTwo)) errors.push('Players must be different people.')
-    if (!f.venue.trim()) errors.push('Venue name is required.')
     if (!MOVES.includes(f.moveOne)) errors.push('Pick a move for Player 1.')
     if (!MOVES.includes(f.moveTwo)) errors.push('Pick a move for Player 2.')
     if (errors.length) {
@@ -198,11 +212,10 @@
     }
     const p1 = findOrCreate(state.players, f.playerOne)
     const p2 = findOrCreate(state.players, f.playerTwo)
-    const venue = findOrCreate(state.venues, f.venue)
     const outcome = outcomeOf(f.moveOne, f.moveTwo)
     state.matches.push({
       id: uid(), sessionId: session.id, playedAt: now(),
-      playerOneId: p1.id, playerTwoId: p2.id, venueId: venue.id,
+      playerOneId: p1.id, playerTwoId: p2.id,
       moveOne: f.moveOne, moveTwo: f.moveTwo, outcome
     })
     save()
@@ -212,8 +225,8 @@
         ? `${p1.name} wins: ${f.moveOne} beats ${f.moveTwo}.`
         : `${p2.name} wins: ${f.moveTwo} beats ${f.moveOne}.`
     ui.notice = { type: 'ok', text }
-    // players and venue stay filled in for the rematch; only the moves reset
-    f.playerOne = p1.name; f.playerTwo = p2.name; f.venue = venue.name
+    // players stay filled in for the rematch; only the moves reset
+    f.playerOne = p1.name; f.playerTwo = p2.name
     f.moveOne = f.moveTwo = null
   }
 
@@ -230,12 +243,14 @@
   }
 
   // ---- export / import ----
+  const venueOfSession = id => nameOf(state.venues, (byId(state.sessions, id) || {}).venueId)
+
   function matchView (m) {
     return {
       id: m.id,
       playedAt: m.playedAt,
       session: nameOf(state.sessions, m.sessionId),
-      venue: nameOf(state.venues, m.venueId),
+      venue: venueOfSession(m.sessionId),
       playerOne: nameOf(state.players, m.playerOneId),
       moveOne: m.moveOne,
       playerTwo: nameOf(state.players, m.playerTwoId),
@@ -254,12 +269,11 @@
   function sessionExport (session) {
     const matches = sessionMatches(session.id)
     const playerIds = new Set(matches.flatMap(m => [m.playerOneId, m.playerTwoId]))
-    const venueIds = new Set(matches.map(m => m.venueId))
     return {
       app: 'rps', version: 1, scope: 'session', exportedAt: now(),
       session,
       players: state.players.filter(p => playerIds.has(p.id)),
-      venues: state.venues.filter(v => venueIds.has(v.id)),
+      venues: state.venues.filter(v => v.id === session.venueId),
       matches,
       leaderboard: boardExport(matches)
     }
@@ -319,7 +333,11 @@
     let addedSessions = 0
     for (const s of sessions) {
       if (!s || !s.id || byId(state.sessions, s.id)) continue
-      state.sessions.push({ id: s.id, name: String(s.name || 'Imported session'), createdAt: s.createdAt || now() })
+      // exports from before venues moved onto sessions carry the venue on each match
+      const legacy = data.matches.find(m => m && m.sessionId === s.id && m.venueId)
+      const wanted = s.venueId || (legacy && legacy.venueId)
+      const venueId = remap.venues.get(wanted) || (byId(state.venues, wanted) && wanted) || findOrCreate(state.venues, 'Unknown venue').id
+      state.sessions.push({ id: s.id, name: String(s.name || 'Imported session'), venueId, createdAt: s.createdAt || now() })
       addedSessions++
     }
     let addedMatches = 0
@@ -329,12 +347,10 @@
         id: m.id, sessionId: m.sessionId, playedAt: m.playedAt || now(),
         playerOneId: remap.players.get(m.playerOneId) || m.playerOneId,
         playerTwoId: remap.players.get(m.playerTwoId) || m.playerTwoId,
-        venueId: remap.venues.get(m.venueId) || m.venueId,
         moveOne: m.moveOne, moveTwo: m.moveTwo
       }
       const valid = byId(state.sessions, row.sessionId) && byId(state.players, row.playerOneId) &&
-        byId(state.players, row.playerTwoId) && row.playerOneId !== row.playerTwoId &&
-        byId(state.venues, row.venueId) && MOVES.includes(row.moveOne) && MOVES.includes(row.moveTwo)
+        byId(state.players, row.playerTwoId) && row.playerOneId !== row.playerTwoId && MOVES.includes(row.moveOne) && MOVES.includes(row.moveTwo)
       if (!valid) continue
       row.outcome = outcomeOf(row.moveOne, row.moveTwo)
       state.matches.push(row)
@@ -387,29 +403,33 @@
   }
 
   function newSessionForm (label) {
-    const input = h('input', { type: 'text', id: 'new-session', placeholder: defaultSessionName(), 'aria-label': 'Session name' })
+    const cur = currentSession()
+    const name = h('input', { type: 'text', id: 'new-session', placeholder: defaultSessionName() })
+    const venue = h('input', { type: 'text', id: 'new-venue', list: 'venues', autocomplete: 'off', autocapitalize: 'words', required: true, value: cur ? nameOf(state.venues, cur.venueId) : '' })
     return h('form', {
-      class: 'row',
       onsubmit: e => {
         e.preventDefault()
-        const s = startSession(input.value)
+        if (!venue.value.trim()) return
+        const s = startSession(name.value, venue.value)
         ui.tab = 'play'
-        ui.notice = { type: 'ok', text: `Started session “${s.name}”.` }
+        ui.notice = { type: 'ok', text: `Started session “${s.name}” at ${nameOf(state.venues, s.venueId)}.` }
         render()
       }
-    }, input, h('button', { class: 'primary', type: 'submit' }, label))
+    },
+      h('label', { for: 'new-session', style: 'margin-top:0' }, 'Session name'), name,
+      h('label', { for: 'new-venue' }, 'Venue'), venue,
+      h('button', { class: 'primary big', type: 'submit', style: 'margin-top:0.75rem' }, label))
   }
 
   function matchesTable (matches) {
     return h('table', null,
-      h('thead', null, h('tr', null, h('th', null, 'When'), h('th', null, 'Player 1'), h('th', null, 'Player 2'), h('th', null, 'Venue'), h('th', null, ''))),
+      h('thead', null, h('tr', null, h('th', null, 'When'), h('th', null, 'Player 1'), h('th', null, 'Player 2'), h('th', null, ''))),
       h('tbody', null, matches.map(m => {
         const side = (id, move, won) => h('td', { class: won ? 'won' : null }, `${GLYPH[move]} ${nameOf(state.players, id)}`)
         return h('tr', null,
           h('td', { class: 'muted' }, fmtTime(m.playedAt)),
           side(m.playerOneId, m.moveOne, m.outcome === 'player_one'),
           side(m.playerTwoId, m.moveTwo, m.outcome === 'player_two'),
-          h('td', { class: 'muted' }, nameOf(state.venues, m.venueId)),
           h('td', { class: 'n' }, h('button', {
             class: 'small', type: 'button', title: 'Delete this match', 'aria-label': 'Delete this match',
             onclick: () => { if (confirm('Delete this match?')) { deleteMatch(m.id); ui.notice = null; render() } }
@@ -442,7 +462,7 @@
     if (!session) {
       return [h('div', { class: 'card' },
         h('h2', null, 'Start a session'),
-        h('p', { class: 'muted' }, 'A session groups matches together, with its own leaderboard and export. Name it after the night, the trip, the tournament.'),
+        h('p', { class: 'muted' }, 'A session is one sitting at one venue. Its matches get their own leaderboard and export.'),
         newSessionForm('Start'))]
     }
     const matches = sessionMatches(session.id).slice().reverse()
@@ -454,8 +474,6 @@
         h('label', { for: 'player-two' }, 'Player 2'),
         textInput('playerTwo', 'player-two', 'players'),
         moveButtons('moveTwo'),
-        h('label', { for: 'venue' }, 'Venue'),
-        textInput('venue', 'venue', 'venues'),
         h('button', { class: 'primary big', type: 'submit' }, 'Record match')
       ),
       h('div', { class: 'card' },
@@ -502,7 +520,7 @@
             h('div', { class: 'top' },
               h('span', null, h('strong', null, s.name), isCurrent ? h('span', { class: 'badge' }, 'current') : null),
               h('span', { class: 'muted' }, fmtDate(s.createdAt))),
-            h('div', { class: 'muted' }, plural(matches.length, 'match') + (top && top.wins ? ` · leader: ${top.name} (${top.wins}W)` : '')),
+            h('div', { class: 'muted' }, nameOf(state.venues, s.venueId) + ' · ' + plural(matches.length, 'match') + (top && top.wins ? ` · leader: ${top.name} (${top.wins}W)` : '')),
             h('div', { class: 'btns' },
               isCurrent ? null : h('button', { class: 'small', type: 'button', onclick: () => { state.currentSessionId = s.id; save(); go('play') } }, 'Resume'),
               h('button', { class: 'small', type: 'button', onclick: () => { ui.boardScope = s.id; go('board') } }, 'Leaderboard'),
@@ -515,6 +533,13 @@
                   if (name && name.trim()) { s.name = name.trim(); save(); render() }
                 }
               }, 'Rename'),
+              h('button', {
+                class: 'small', type: 'button',
+                onclick: () => {
+                  const name = prompt('Venue for this session', nameOf(state.venues, s.venueId))
+                  if (name && name.trim()) { s.venueId = findOrCreate(state.venues, name).id; save(); render() }
+                }
+              }, 'Change venue'),
               h('button', {
                 class: 'small danger', type: 'button',
                 onclick: () => {
@@ -561,7 +586,7 @@
             if (confirm('Erase all RPS data in this browser? This cannot be undone.')) {
               state = emptyState()
               save()
-              ui.form = { playerOne: '', playerTwo: '', venue: '', moveOne: null, moveTwo: null }
+              ui.form = { playerOne: '', playerTwo: '', moveOne: null, moveTwo: null }
               ui.notice = { type: 'ok', text: 'All data erased.' }
               render()
             }
@@ -575,7 +600,7 @@
   function render () {
     const session = currentSession()
     document.getElementById('session-line').textContent = session
-      ? `Session: ${session.name} · ${plural(sessionMatches(session.id).length, 'match')}`
+      ? `Session: ${session.name} · ${nameOf(state.venues, session.venueId)} · ${plural(sessionMatches(session.id).length, 'match')}`
       : 'No session in progress'
 
     document.getElementById('tabs').replaceChildren(...TABS.map(([id, label]) =>
