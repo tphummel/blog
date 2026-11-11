@@ -453,12 +453,22 @@ function renderPanel(){
     <div>${summary()}</div>
     <div class="row">
       ${dailyPlayed()?'<button id="again">Play a random puzzle</button>':''}
+      ${isRandom()?'':'<button id="share">Copy result</button>'}
       <button id="exJson">Export JSON</button>
       <button id="exText">Copy text</button>
     </div>`;
   if($('again'))$('again').onclick=()=>startRandom();
+  if($('share'))$('share').onclick=()=>copy(shareText(),'Result copied');
   $('exJson').onclick=downloadJson;
   $('exText').onclick=()=>copy(gameText(),'Game text copied');
+}
+// spoiler-free share card: the deal is the same for everyone each day, so only the
+// kind of each move is shared (🟩 to a foundation, 🟨 within the tableau, ⬛ draw or recycle)
+function shareText(){
+  const squares=g.log.map(m=>m.type==='move'&&m.to[0]==='f'?'🟩':m.type==='move'?'🟨':'⬛');
+  const rows=[];for(let i=0;i<squares.length;i+=13)rows.push(squares.slice(i,i+13).join(''));
+  const result=S.e[1]==='win'?`won in ${fmtTime(S.e[0])}`:`surrendered at ${foundCount(g)}/52`;
+  return [`Klondike #${puzzleNumber(S.d)} · ${result} · ${g.log.length} moves`,...rows].join('\n');
 }
 const summary=()=>`${gameLabel()} · ${S.d} · ${foundCount(g)}/52 on foundations · ${g.log.length} moves · ${fmtTime(elapsed())}`;
 
