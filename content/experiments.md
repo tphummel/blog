@@ -10,6 +10,7 @@ date: 2020-09-01T08:00:00
 - 🃏 [Daily Solitaire](/solitaire)
 - 💰 [Craps Simulator](/craps)
 - ⏱️ [timecat](/timecat)
+- 🏎️ [Mario Kart: Double Dash!! tracker](/mario-kart-double-dash-tracker)
 
 ## 🎉 Party Games
 
