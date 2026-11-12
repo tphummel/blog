@@ -15,6 +15,7 @@ date: 2020-09-01T08:00:00
 
 - 🎨 [Pictionary](/pictionary)
 - 🎭 [Charades](/charades)
+- ✊ [Rock Paper Scissors Tracker](/rps)
 
 ## 🧸 Toys
 
