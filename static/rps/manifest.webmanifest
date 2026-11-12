@@ -1,0 +1,15 @@
+{
+  "name": "Rock Paper Scissors Tracker",
+  "short_name": "RPS",
+  "description": "Track rock paper scissors matches in sessions, with leaderboards and exports. Everything stays in this browser.",
+  "start_url": "/rps/",
+  "scope": "/rps/",
+  "display": "standalone",
+  "background_color": "#2b6cb0",
+  "theme_color": "#2b6cb0",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
