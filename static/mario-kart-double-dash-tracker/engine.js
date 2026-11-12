@@ -1,10 +1,10 @@
-// Kart-dd-web engine: rules, standings, export/import and browser storage.
+// Mario Kart: Double Dash!! tracker engine: rules, standings, export/import and browser storage.
 // Pure logic (no DOM) so it can be tested in node. Loaded as a classic script
 // in the browser (global `KartEngine`) and via require() in node.
 (function (root) {
   'use strict';
 
-  const STORE_KEY = 'kart-dd-web:v1';
+  const STORE_KEY = 'mario-kart-double-dash-tracker:v1';
   const SCHEMA = 1;
 
   // Vocabulary carried over from the original gaej-kart League.java.
@@ -236,7 +236,7 @@
 
   function toJSON(sessions, now) {
     return JSON.stringify({
-      app: 'kart-dd-web', schema: SCHEMA,
+      app: 'mario-kart-double-dash-tracker', schema: SCHEMA,
       exported: (now || new Date()).toISOString(), sessions,
     }, null, 2);
   }
@@ -245,8 +245,8 @@
   function parseImport(text) {
     let data;
     try { data = JSON.parse(text); } catch (e) { throw new Error('Not valid JSON'); }
-    if (!data || data.app !== 'kart-dd-web' || !Array.isArray(data.sessions)) {
-      throw new Error('Not a kart-dd-web export');
+    if (!data || data.app !== 'mario-kart-double-dash-tracker' || !Array.isArray(data.sessions)) {
+      throw new Error('Not a Mario Kart: Double Dash!! tracker export');
     }
     if (data.schema > SCHEMA) throw new Error('Export is from a newer version');
     return data.sessions.map((s, i) => {

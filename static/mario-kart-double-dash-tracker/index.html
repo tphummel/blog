@@ -429,10 +429,10 @@
     const a = btn.dataset.action;
     const s = currentSession();
     if (a === 'import') app.querySelector('#importFile').click();
-    else if (a === 'export-all-json') exportSessions(store.sessions, 'kart-dd-web-all', 'json');
-    else if (a === 'export-all-csv') exportSessions(store.sessions, 'kart-dd-web-all', 'csv');
-    else if (a === 'export-session-json' && s) exportSessions([s], 'kart-dd-web-' + slug(s.name), 'json');
-    else if (a === 'export-session-csv' && s) exportSessions([s], 'kart-dd-web-' + slug(s.name), 'csv');
+    else if (a === 'export-all-json') exportSessions(store.sessions, 'mario-kart-double-dash-tracker-all', 'json');
+    else if (a === 'export-all-csv') exportSessions(store.sessions, 'mario-kart-double-dash-tracker-all', 'csv');
+    else if (a === 'export-session-json' && s) exportSessions([s], 'mario-kart-double-dash-tracker-' + slug(s.name), 'json');
+    else if (a === 'export-session-csv' && s) exportSessions([s], 'mario-kart-double-dash-tracker-' + slug(s.name), 'csv');
     else if (a === 'add-player') { syncNewState(); newState.players.push(''); render(); }
     else if (a === 'rm-player') { syncNewState(); newState.players.splice(Number(btn.dataset.i), 1); render(); }
     else if (a === 'toggle-closed' && s) { s.closed = !s.closed; editingRaceId = null; draft = null; save(); render(); }

@@ -1,6 +1,6 @@
-// Run: node tools/kart-dd-web/engine.test.js
+// Run: node tools/mario-kart-double-dash-tracker/engine.test.js
 const assert = require('assert');
-const E = require('../../static/kart-dd-web/engine.js');
+const E = require('../../static/mario-kart-double-dash-tracker/engine.js');
 
 const perfs = (rows) => rows.map(([player, kart, driver, rear, finish]) => ({ player, kart, driver, rear, finish }));
 const mk = (fmt = 'baby4', players = ['A', 'B', 'C', 'D']) =>

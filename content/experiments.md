@@ -22,4 +22,4 @@ date: 2020-09-01T08:00:00
 - [Pictionary Clue Generator](/pictionary)
 - [5 Minute Journal Prompt Generator](/five-minute-journal-prompt-generator)
 - [Charades](/charades)
-- [Mario Kart: Double Dash!! tracker](/kart-dd-web)
+- [Mario Kart: Double Dash!! tracker](/mario-kart-double-dash-tracker)
