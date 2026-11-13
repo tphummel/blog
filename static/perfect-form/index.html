@@ -55,6 +55,11 @@
     .yes { color: var(--win); font-weight: 600; }
     .no { color: var(--muted); }
     nav { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; font-size: 0.9rem; margin: 0.75rem 0; }
+    #env { margin: 0.75rem 0; font-size: 0.8rem; }
+    #env summary { cursor: pointer; color: var(--muted); }
+    #env dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.2rem 0.75rem; margin: 0.5rem 0 0; }
+    #env dt { color: var(--muted); }
+    #env dd { margin: 0; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, monospace; }
     pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.8rem; background: var(--soft); padding: 0.5rem; border-radius: 6px; margin: 0.5rem 0 0; }
   </style>
 </head>
@@ -67,6 +72,10 @@
     what was filled (passwords and card numbers are masked). The grey text under each field is the
     markup that drives its behavior.
   </p>
+  <details id="env" open>
+    <summary>This browser</summary>
+    <dl></dl>
+  </details>
   <nav aria-label="Sections">
     <a href="#contact">Contact</a>
     <a href="#signup">Sign up</a>
@@ -649,6 +658,43 @@
           }
         } catch (err) { /* nothing to show */ }
       }
+
+      // Environment readout, so screenshots say which browser produced them.
+      (function () {
+        var ua = navigator.userAgent;
+        var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var osMatch = ua.match(/OS (\d+)[_.](\d+)/);
+        var named = [[/BraveApp|Brave\//, 'Brave'], [/CriOS\//, 'Chrome'], [/FxiOS\//, 'Firefox'], [/EdgiOS\//, 'Edge'], [/DuckDuckGo\//, 'DuckDuckGo'], [/GSA\//, 'Google app']];
+        var browser = null;
+        named.forEach(function (n) { if (!browser && n[0].test(ua)) browser = n[1]; });
+        if (!browser && /Safari\//.test(ua) && /Version\//.test(ua)) browser = 'Safari (or a browser that hides its name)';
+        var rows = document.querySelector('#env dl');
+        function add(k, v) {
+          var dt = document.createElement('dt'); dt.textContent = k;
+          var dd = document.createElement('dd'); dd.textContent = v;
+          rows.appendChild(dt); rows.appendChild(dd);
+          return dd;
+        }
+        add('Browser', browser || 'unknown');
+        var braveDd = add('Brave API', navigator.brave ? 'checking…' : 'not present');
+        if (navigator.brave && navigator.brave.isBrave) {
+          navigator.brave.isBrave().then(function (r) { braveDd.textContent = r ? 'yes' : 'no'; }, function () { braveDd.textContent = 'error'; });
+        }
+        add('Platform', (ios ? 'iOS' : 'not iOS') + (osMatch ? ' ' + osMatch[1] + '.' + osMatch[2] : ''));
+        add('HTTPS', window.isSecureContext ? 'yes' : 'NO: passwords and passkeys will not work');
+        add('Home screen app', navigator.standalone || matchMedia('(display-mode: standalone)').matches ? 'yes' : 'no');
+        var sel = 'none';
+        try { document.body.matches(':autofill'); sel = ':autofill'; } catch (e) {
+          try { document.body.matches(':-webkit-autofill'); sel = ':-webkit-autofill'; } catch (e2) { /* none */ }
+        }
+        add('Autofill detection', sel);
+        add('Passkeys API', window.PublicKeyCredential ? 'yes' : 'no');
+        add('User agent', ua);
+        if (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+          var pk = add('Platform authenticator', 'checking…');
+          PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function (r) { pk.textContent = r ? 'yes' : 'no'; }, function () { pk.textContent = 'error'; });
+        }
+      })();
 
       // Passkeys: client-only, nothing verifies the result.
       var out = document.getElementById('passkey-out');
