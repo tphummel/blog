@@ -38,3 +38,4 @@ date: 2020-09-01T08:00:00
 - ⚾ [MLB Scoreboard](/mlb-scoreboard)
 - ✅ [Kids Weekly Checklist](/checklist)
 - 📓 [Annual Journal Layout](/annual-journal)
+- 📝 [The Perfect Form](/perfect-form)

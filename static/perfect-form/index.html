@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tomhummel.com - the perfect form</title>
+  <style>
+    :root {
+      --bg: #fafafa; --fg: #222; --muted: #777; --accent: #2b6cb0; --border: #ccc;
+      --card: #fff; --win: #2f855a; --loss: #c53030; --soft: #eee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b1c1d; --fg: #e6e6e6; --muted: #999; --accent: #63a4e0; --border: #444;
+        --card: #252627; --win: #68d391; --loss: #fc8181; --soft: #2f3031;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); max-width: 40rem; margin: 0 auto; padding: 1rem; line-height: 1.4; }
+    h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+    h2 { font-size: 1.1rem; margin: 0 0 0.25rem; }
+    a { color: var(--accent); }
+    /* 16px minimum on every control: anything smaller makes iOS Safari zoom on focus */
+    button, select, input, textarea { font: inherit; font-size: 1rem; color: var(--fg); }
+    input, select, textarea { width: 100%; padding: 0.6rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--card); min-height: 2.75rem; }
+    input[type="checkbox"], input[type="radio"] { width: auto; min-height: 0; padding: 0; margin: 0; inline-size: 1.25rem; block-size: 1.25rem; accent-color: var(--accent); }
+    input[type="range"] { padding: 0; border: 0; background: none; accent-color: var(--accent); }
+    input[type="color"] { padding: 0.2rem; }
+    input[type="file"] { padding: 0.5rem; }
+    select[multiple] { min-height: 6rem; }
+    input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: var(--loss); }
+    button { cursor: pointer; padding: 0.7rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--card); min-height: 2.75rem; touch-action: manipulation; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+    label { display: block; margin: 0 0 0.25rem; font-weight: 600; font-size: 0.9rem; }
+    .muted { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.75rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; margin: 1rem 0; }
+    .field { margin-bottom: 0.9rem; min-width: 0; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.75rem; }
+    .grid.three > :first-child { grid-column: 1 / -1; }
+    .attrs { display: block; margin-top: 0.25rem; font-family: ui-monospace, Menlo, monospace; font-size: 0.7rem; color: var(--muted); overflow-wrap: anywhere; }
+    .check { display: flex; align-items: center; gap: 0.6rem; font-weight: 400; font-size: 1rem; min-height: 2.75rem; margin: 0; }
+    fieldset { border: 0; padding: 0; margin: 0 0 0.9rem; min-width: 0; }
+    legend { padding: 0; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .actions { display: flex; gap: 0.5rem; align-items: center; }
+    .status { display: block; margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); }
+    .previews { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .previews figure { margin: 0; width: 6rem; font-size: 0.7rem; color: var(--muted); overflow-wrap: anywhere; }
+    .previews img, .previews video { width: 6rem; height: 6rem; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); display: block; }
+    #results { border-color: var(--win); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
+    th { color: var(--muted); font-size: 0.8rem; }
+    .yes { color: var(--win); font-weight: 600; }
+    .no { color: var(--muted); }
+    nav { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; font-size: 0.9rem; margin: 0.75rem 0; }
+    #env { margin: 0.75rem 0; font-size: 0.8rem; }
+    #env summary { cursor: pointer; color: var(--muted); }
+    #env dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.2rem 0.75rem; margin: 0.5rem 0 0; }
+    #env dt { color: var(--muted); }
+    #env dd { margin: 0; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, monospace; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.8rem; background: var(--soft); padding: 0.5rem; border-radius: 6px; margin: 0.5rem 0 0; }
+  </style>
+</head>
+<body>
+  <h1>The Perfect Form</h1>
+  <p class="muted">
+    Every mobile web form feature I could think of, marked up with best practices, to see how well
+    iOS Safari fills it from a contact card, a password manager, and saved cards.
+    <strong>Nothing leaves this device</strong>: there is no server, and submitting only shows a local report of
+    what was filled (passwords and card numbers are masked). The grey text under each field is the
+    markup that drives its behavior.
+  </p>
+  <details id="env" open>
+    <summary>This browser</summary>
+    <dl></dl>
+  </details>
+  <nav aria-label="Sections">
+    <a href="#contact">Contact</a>
+    <a href="#signup">Sign up</a>
+    <a href="#signin">Sign in</a>
+    <a href="#passkey">Passkey</a>
+    <a href="#otp">One-time code</a>
+    <a href="#payment">Payment</a>
+    <a href="#media">Photos &amp; files</a>
+    <a href="#keyboards">Keyboards</a>
+    <a href="#pickers">Pickers</a>
+  </nav>
+
+  <section id="results" class="card" hidden tabindex="-1" aria-live="polite"></section>
+
+  <!-- ───────────── Contact card ───────────── -->
+  <form id="contact" class="card" action="#results" method="post" autocomplete="on">
+    <h2>Contact &amp; address</h2>
+    <p class="muted">Tap a field and pick “AutoFill Contact” above the keyboard. One tap should fill everything here.</p>
+
+    <div class="grid">
+      <div class="field">
+        <label for="given-name">First name</label>
+        <input id="given-name" name="given-name" type="text" autocomplete="given-name" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" required>
+      </div>
+      <div class="field">
+        <label for="family-name">Last name</label>
+        <input id="family-name" name="family-name" type="text" autocomplete="family-name" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" required>
+      </div>
+    </div>
+    <div class="field">
+      <label for="organization">Company</label>
+      <input id="organization" name="organization" type="text" autocomplete="organization" autocapitalize="words" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="organization-title">Job title</label>
+      <input id="organization-title" name="organization-title" type="text" autocomplete="organization-title" autocapitalize="words" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required>
+    </div>
+    <div class="field">
+      <label for="tel">Phone</label>
+      <input id="tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="bday">Birthday</label>
+      <input id="bday" name="bday" type="date" autocomplete="bday">
+    </div>
+    <div class="field">
+      <label for="url">Website</label>
+      <input id="url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next">
+    </div>
+
+    <div class="field">
+      <label for="country">Country</label>
+      <select id="country" name="country" autocomplete="country">
+        <option value="">Select…</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="MX">Mexico</option>
+        <option value="GB">United Kingdom</option>
+        <option value="IE">Ireland</option>
+        <option value="DE">Germany</option>
+        <option value="FR">France</option>
+        <option value="ES">Spain</option>
+        <option value="IT">Italy</option>
+        <option value="NL">Netherlands</option>
+        <option value="AU">Australia</option>
+        <option value="NZ">New Zealand</option>
+        <option value="JP">Japan</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="address-line1">Street address</label>
+      <input id="address-line1" name="address-line1" type="text" autocomplete="address-line1" autocapitalize="words" autocorrect="off" enterkeyhint="next" required>
+    </div>
+    <div class="field">
+      <label for="address-line2">Apartment, suite, etc. (optional)</label>
+      <input id="address-line2" name="address-line2" type="text" autocomplete="address-line2" autocapitalize="words" autocorrect="off" enterkeyhint="next">
+    </div>
+    <div class="grid three">
+      <div class="field">
+        <label for="address-level2">City</label>
+        <input id="address-level2" name="address-level2" type="text" autocomplete="address-level2" autocapitalize="words" autocorrect="off" enterkeyhint="next" required>
+      </div>
+      <div class="field">
+        <label for="address-level1">State</label>
+        <input id="address-level1" name="address-level1" type="text" autocomplete="address-level1" autocapitalize="characters" autocorrect="off" enterkeyhint="next" required>
+      </div>
+      <div class="field">
+        <label for="postal-code">ZIP code</label>
+        <input id="postal-code" name="postal-code" type="text" inputmode="numeric" autocomplete="postal-code" autocorrect="off" enterkeyhint="done" required>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="primary">Submit contact</button>
+      <button type="reset">Clear</button>
+    </div>
+    <output class="status"></output>
+  </form>
+
+  <!-- ───────────── Sign up ───────────── -->
+  <form id="signup" class="card" action="#results" method="post" autocomplete="on">
+    <h2>Create account</h2>
+    <p class="muted">Safari should suggest your email, offer a strong password that follows the rules below, and offer to save the login when you submit.</p>
+    <div class="field">
+      <label for="signup-username">Email</label>
+      <input id="signup-username" name="username" type="email" inputmode="email" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required>
+    </div>
+    <div class="field">
+      <label for="new-password">Password</label>
+      <input id="new-password" name="new-password" type="password" autocomplete="new-password" minlength="12" passwordrules="minlength: 12; required: lower; required: upper; required: digit; required: [-];" aria-describedby="pw-help" enterkeyhint="next" required>
+      <span id="pw-help" class="muted">At least 12 characters.</span>
+    </div>
+    <div class="field">
+      <label for="confirm-password">Confirm password</label>
+      <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" minlength="12" enterkeyhint="done" required>
+    </div>
+    <label class="check"><input type="checkbox" name="show-password" data-toggle-password> Show passwords</label>
+    <div class="actions">
+      <button type="submit" class="primary">Create account</button>
+      <button type="reset">Clear</button>
+    </div>
+    <output class="status"></output>
+  </form>
+
+  <!-- ───────────── Sign in ───────────── -->
+  <form id="signin" class="card" action="#results" method="post" autocomplete="on">
+    <h2>Sign in</h2>
+    <p class="muted">The keyboard should offer the saved login for this site (after Face ID), or the key icon to pick one.</p>
+    <div class="field">
+      <label for="signin-username">Email</label>
+      <input id="signin-username" name="username" type="email" inputmode="email" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required>
+    </div>
+    <div class="field">
+      <label for="current-password">Password</label>
+      <input id="current-password" name="current-password" type="password" autocomplete="current-password" enterkeyhint="go" required>
+    </div>
+    <label class="check"><input type="checkbox" name="show-password" data-toggle-password> Show password</label>
+    <div class="actions">
+      <button type="submit" class="primary">Sign in</button>
+      <button type="reset">Clear</button>
+    </div>
+    <output class="status"></output>
+  </form>
+
+  <!-- ───────────── Passkey ───────────── -->
+  <section id="passkey" class="card">
+    <h2>Passkey</h2>
+    <p class="muted">Creates a real passkey for this site in your password manager, then signs in with it. Nothing verifies it, so it is only a test of the system sheets. Delete it afterwards in Passwords.</p>
+    <div class="actions">
+      <button type="button" id="passkey-create">Create passkey</button>
+      <button type="button" id="passkey-get">Sign in with passkey</button>
+    </div>
+    <pre id="passkey-out" hidden></pre>
+  </section>
+
+  <!-- ───────────── One-time code ───────────── -->
+  <form id="otp" class="card" action="#results" method="post">
+    <h2>One-time code</h2>
+    <p class="muted">When a text message with a code arrives while this field is focused, iOS offers it above the keyboard. Text yourself “Your code is 123456” to try it.</p>
+    <div class="field">
+      <label for="one-time-code">Verification code</label>
+      <input id="one-time-code" name="one-time-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{4,8}" maxlength="8" enterkeyhint="done" required>
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary">Verify</button>
+      <button type="reset">Clear</button>
+    </div>
+    <output class="status"></output>
+  </form>
+
+  <!-- ───────────── Payment ───────────── -->
+  <form id="payment" class="card" action="#results" method="post" autocomplete="on">
+    <h2>Payment</h2>
+    <p class="muted">Safari should offer saved cards and “Scan Card” with the camera. Only the last four digits appear in the report.</p>
+    <div class="field">
+      <label for="cc-name">Name on card</label>
+      <input id="cc-name" name="cc-name" type="text" autocomplete="cc-name" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" required>
+    </div>
+    <div class="field">
+      <label for="cc-number">Card number</label>
+      <input id="cc-number" name="cc-number" type="text" inputmode="numeric" autocomplete="cc-number" autocorrect="off" spellcheck="false" enterkeyhint="next" required>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label for="cc-exp">Expiration (MM/YY)</label>
+        <input id="cc-exp" name="cc-exp" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="7" enterkeyhint="next" required>
+      </div>
+      <div class="field">
+        <label for="cc-csc">Security code</label>
+        <input id="cc-csc" name="cc-csc" type="text" inputmode="numeric" autocomplete="cc-csc" maxlength="4" enterkeyhint="next" required>
+      </div>
+    </div>
+    <div class="field">
+      <label for="billing-postal-code">Billing ZIP code</label>
+      <input id="billing-postal-code" name="billing-postal-code" type="text" inputmode="numeric" autocomplete="billing postal-code" autocorrect="off" enterkeyhint="done">
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary">Pay nothing</button>
+      <button type="reset">Clear</button>
+    </div>
+    <output class="status"></output>
+  </form>
+
+  <!-- ───────────── Photos & files ───────────── -->
+  <form id="media" class="card" action="#results" method="post" enctype="multipart/form-data">
+    <h2>Photos &amp; files</h2>
+    <p class="muted">Each input opens a different system sheet. Files are previewed here and never uploaded.</p>
+    <div class="field">
+      <label for="photo">Photo (library, camera, or files)</label>
+      <input id="photo" name="photo" type="file" accept="image/*">
+      <div class="previews"></div>
+    </div>
+    <div class="field">
+      <label for="photos">Several photos</label>
+      <input id="photos" name="photos" type="file" accept="image/*" multiple>
+      <div class="previews"></div>
+    </div>
+    <div class="field">
+      <label for="camera-rear">Take a photo (rear camera)</label>
+      <input id="camera-rear" name="camera-rear" type="file" accept="image/*" capture="environment">
+      <div class="previews"></div>
+    </div>
+    <div class="field">
+      <label for="camera-front">Take a selfie (front camera)</label>
+      <input id="camera-front" name="camera-front" type="file" accept="image/*" capture="user">
+      <div class="previews"></div>
+    </div>
+    <div class="field">
+      <label for="video">Video</label>
+      <input id="video" name="video" type="file" accept="video/*">
+      <div class="previews"></div>
+    </div>
+    <div class="field">
+      <label for="document">Document (PDF)</label>
+      <input id="document" name="document" type="file" accept="application/pdf,.pdf">
+      <div class="previews"></div>
+    </div>
+    <div class="field">
+      <label for="any-file">Any files</label>
+      <input id="any-file" name="any-file" type="file" multiple>
+      <div class="previews"></div>
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary">Submit files</button>
+      <button type="reset">Clear</button>
+    </div>
+  </form>
+
+  <!-- ───────────── Keyboards ───────────── -->
+  <form id="keyboards" class="card" action="#results" method="post" autocomplete="off">
+    <h2>Keyboards</h2>
+    <p class="muted">Same text box, different keyboard, return key, and capitalization.</p>
+    <div class="field">
+      <label for="kb-numeric">Digits only</label>
+      <input id="kb-numeric" name="kb-numeric" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="kb-decimal">Decimal amount</label>
+      <input id="kb-decimal" name="kb-decimal" type="text" inputmode="decimal" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="kb-number">Number (type=number)</label>
+      <input id="kb-number" name="kb-number" type="number" min="0" max="100" step="1" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="kb-search">Search</label>
+      <input id="kb-search" name="kb-search" type="search" inputmode="search" enterkeyhint="search">
+    </div>
+    <div class="field">
+      <label for="kb-words">Capitalize words</label>
+      <input id="kb-words" name="kb-words" type="text" autocapitalize="words" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="kb-characters">ALL CAPS (e.g. confirmation code)</label>
+      <input id="kb-characters" name="kb-characters" type="text" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="kb-none">No help at all (e.g. a handle)</label>
+      <input id="kb-none" name="kb-none" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="send">
+    </div>
+    <div class="field">
+      <label for="kb-message">Message</label>
+      <textarea id="kb-message" name="kb-message" rows="4" autocapitalize="sentences" spellcheck="true" enterkeyhint="enter" maxlength="500"></textarea>
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary">Submit keyboards</button>
+      <button type="reset">Clear</button>
+    </div>
+  </form>
+
+  <!-- ───────────── Pickers ───────────── -->
+  <form id="pickers" class="card" action="#results" method="post" autocomplete="off">
+    <h2>Pickers &amp; controls</h2>
+    <p class="muted">Native pickers, menus, and toggles.</p>
+    <div class="grid">
+      <div class="field">
+        <label for="pick-date">Date</label>
+        <input id="pick-date" name="pick-date" type="date">
+      </div>
+      <div class="field">
+        <label for="pick-time">Time</label>
+        <input id="pick-time" name="pick-time" type="time">
+      </div>
+    </div>
+    <div class="field">
+      <label for="pick-datetime">Date and time</label>
+      <input id="pick-datetime" name="pick-datetime" type="datetime-local">
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label for="pick-month">Month</label>
+        <input id="pick-month" name="pick-month" type="month">
+      </div>
+      <div class="field">
+        <label for="pick-week">Week</label>
+        <input id="pick-week" name="pick-week" type="week">
+      </div>
+    </div>
+    <div class="field">
+      <label for="pick-select">Menu</label>
+      <select id="pick-select" name="pick-select">
+        <optgroup label="AL West">
+          <option>Athletics</option><option>Mariners</option><option>Astros</option><option>Rangers</option><option>Angels</option>
+        </optgroup>
+        <optgroup label="NL West">
+          <option>Giants</option><option>Dodgers</option><option>Padres</option><option>Diamondbacks</option><option>Rockies</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pick-multi">Multi-select</label>
+      <select id="pick-multi" name="pick-multi" multiple>
+        <option>Coffee</option><option>Tea</option><option>Water</option><option>Juice</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pick-datalist">Text with suggestions</label>
+      <input id="pick-datalist" name="pick-datalist" type="text" list="fruits">
+      <datalist id="fruits">
+        <option value="Apple"></option><option value="Banana"></option><option value="Cherry"></option><option value="Mango"></option><option value="Peach"></option>
+      </datalist>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label for="pick-color">Color</label>
+        <input id="pick-color" name="pick-color" type="color" value="#2b6cb0">
+      </div>
+      <div class="field">
+        <label for="pick-range">Slider</label>
+        <input id="pick-range" name="pick-range" type="range" min="0" max="10" step="1" value="5">
+      </div>
+    </div>
+    <fieldset>
+      <legend>Pick one</legend>
+      <label class="check"><input type="radio" name="pick-radio" value="small"> Small</label>
+      <label class="check"><input type="radio" name="pick-radio" value="medium" checked> Medium</label>
+      <label class="check"><input type="radio" name="pick-radio" value="large"> Large</label>
+    </fieldset>
+    <fieldset>
+      <legend>Toggles</legend>
+      <label class="check"><input type="checkbox" name="pick-checkbox" value="yes"> Plain checkbox</label>
+      <label class="check"><input type="checkbox" name="pick-switch" value="on" switch> Switch (iOS 17.4+, with haptics)</label>
+    </fieldset>
+    <div class="actions">
+      <button type="submit" class="primary">Submit pickers</button>
+      <button type="reset">Clear</button>
+    </div>
+  </form>
+
+  <p class="muted"><a href="/experiments/">← experiments</a></p>
+
+  <script>
+    (function () {
+      'use strict';
+      var STORE = 'perfect-form-report';
+      var SHOWN = ['type', 'autocomplete', 'inputmode', 'enterkeyhint', 'autocapitalize', 'autocorrect', 'accept', 'capture', 'multiple', 'switch', 'passwordrules', 'list'];
+
+      function controls(form) {
+        return Array.prototype.filter.call(form.elements, function (el) {
+          return el.name && el.tagName !== 'BUTTON' && el.tagName !== 'OUTPUT' && !el.hasAttribute('data-toggle-password');
+        });
+      }
+
+      function isAutofilled(el) {
+        var sels = [':autofill', ':-webkit-autofill'];
+        for (var i = 0; i < sels.length; i++) {
+          try { if (el.matches(sels[i])) return true; } catch (e) { /* selector unsupported */ }
+        }
+        return false;
+      }
+
+      // Show each control's meaningful markup underneath it.
+      document.querySelectorAll('.field input, .field select, .field textarea').forEach(function (el) {
+        var parts = [];
+        if (el.tagName !== 'INPUT') parts.push(el.tagName.toLowerCase());
+        SHOWN.forEach(function (a) {
+          if (!el.hasAttribute(a)) return;
+          var v = el.getAttribute(a);
+          if (a === 'type' && v === 'text') return;
+          parts.push(v === '' ? a : a + '="' + v + '"');
+        });
+        if (!parts.length) return;
+        var code = document.createElement('code');
+        code.className = 'attrs';
+        code.textContent = parts.join(' ');
+        el.closest('.field').appendChild(code);
+      });
+
+      // Live count of how many fields the browser filled.
+      function updateStatus(form) {
+        var out = form.querySelector('.status');
+        if (!out) return;
+        var all = controls(form);
+        var filled = all.filter(function (el) { return el.value; }).length;
+        var auto = all.filter(isAutofilled).length;
+        out.textContent = filled + ' of ' + all.length + ' fields have a value · ' + auto + ' autofilled';
+      }
+
+      function mask(el) {
+        var v = el.value;
+        if (!v) return '';
+        if (el.type === 'password' || el.name === 'cc-csc') return '•'.repeat(v.length) + ' (' + v.length + ' chars)';
+        if (el.name === 'cc-number') {
+          var digits = v.replace(/\D/g, '');
+          return '•••• ' + digits.slice(-4) + ' (' + digits.length + ' digits)';
+        }
+        return v;
+      }
+
+      function describe(el) {
+        if (el.type === 'file') {
+          return Array.prototype.map.call(el.files, function (f) {
+            return f.name + ' (' + (f.type || 'unknown type') + ', ' + Math.round(f.size / 1024) + ' KB)';
+          }).join('; ');
+        }
+        if (el.type === 'checkbox') return el.checked ? 'checked' : 'unchecked';
+        if (el.tagName === 'SELECT' && el.multiple) {
+          return Array.prototype.map.call(el.selectedOptions, function (o) { return o.value; }).join(', ');
+        }
+        return mask(el);
+      }
+
+      function buildReport(form) {
+        var rows = [];
+        controls(form).forEach(function (el) {
+          if (el.type === 'radio' && !el.checked) return;
+          rows.push({
+            name: el.name,
+            hint: el.getAttribute('autocomplete') || '',
+            value: describe(el),
+            auto: isAutofilled(el)
+          });
+        });
+        return { form: form.id, title: form.querySelector('h2').textContent, rows: rows };
+      }
+
+      function renderReport(report) {
+        var box = document.getElementById('results');
+        box.textContent = '';
+        var h = document.createElement('h2');
+        h.textContent = 'Submitted: ' + report.title;
+        box.appendChild(h);
+        var auto = report.rows.filter(function (r) { return r.auto; }).length;
+        var p = document.createElement('p');
+        p.className = 'muted';
+        p.textContent = auto + ' of ' + report.rows.length + ' fields were autofilled by the browser. This report exists only in this tab.';
+        box.appendChild(p);
+        var table = document.createElement('table');
+        var head = table.insertRow();
+        ['Field', 'Value', 'Autofilled'].forEach(function (t) {
+          var th = document.createElement('th');
+          th.scope = 'col';
+          th.textContent = t;
+          head.appendChild(th);
+        });
+        report.rows.forEach(function (r) {
+          var tr = table.insertRow();
+          tr.insertCell().textContent = r.name;
+          tr.insertCell().textContent = r.value || '—';
+          var c = tr.insertCell();
+          c.textContent = r.auto ? 'yes' : 'no';
+          c.className = r.auto ? 'yes' : 'no';
+        });
+        box.appendChild(table);
+        var back = document.createElement('p');
+        var a = document.createElement('a');
+        a.href = '#' + report.form;
+        a.textContent = 'Back to “' + report.title + '”';
+        back.appendChild(a);
+        box.appendChild(back);
+        box.hidden = false;
+      }
+
+      document.querySelectorAll('form').forEach(function (form) {
+        ['input', 'change', 'focusin', 'focusout'].forEach(function (type) {
+          form.addEventListener(type, function () {
+            // autofill state settles just after the event
+            setTimeout(function () { updateStatus(form); }, 150);
+          });
+        });
+        form.addEventListener('reset', function () {
+          form.querySelectorAll('.previews').forEach(function (p) { p.textContent = ''; });
+          setTimeout(function () { updateStatus(form); }, 0);
+        });
+        updateStatus(form);
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var confirm = form.elements['confirm-password'];
+          if (confirm) {
+            confirm.setCustomValidity(confirm.value === form.elements['new-password'].value ? '' : 'Passwords do not match');
+            if (!form.reportValidity()) return;
+          }
+          var report = buildReport(form);
+          var saved = false;
+          try { sessionStorage.setItem(STORE, JSON.stringify(report)); saved = true; } catch (err) { /* private mode */ }
+          if (saved) {
+            // A real navigation after submit is the signal password managers
+            // use to offer "Save Password?". Only the masked report survives it.
+            location.assign(location.pathname + '?submitted=' + encodeURIComponent(form.id) + '#results');
+          } else {
+            renderReport(report);
+            document.getElementById('results').focus();
+          }
+        });
+      });
+
+      var confirmField = document.getElementById('confirm-password');
+      confirmField.addEventListener('input', function () { confirmField.setCustomValidity(''); });
+
+      document.querySelectorAll('[data-toggle-password]').forEach(function (box) {
+        box.addEventListener('change', function () {
+          box.form.querySelectorAll('input[autocomplete$="password"]').forEach(function (el) {
+            el.type = box.checked ? 'text' : 'password';
+          });
+        });
+      });
+
+      // File previews
+      document.querySelectorAll('input[type="file"]').forEach(function (input) {
+        input.addEventListener('change', function () {
+          var box = input.closest('.field').querySelector('.previews');
+          box.querySelectorAll('img, video').forEach(function (m) { URL.revokeObjectURL(m.src); });
+          box.textContent = '';
+          Array.prototype.forEach.call(input.files, function (file) {
+            var fig = document.createElement('figure');
+            var media = null;
+            if (file.type.indexOf('image/') === 0) {
+              media = document.createElement('img');
+              media.alt = file.name;
+            } else if (file.type.indexOf('video/') === 0) {
+              media = document.createElement('video');
+              media.muted = true;
+              media.playsInline = true;
+              media.preload = 'metadata';
+            }
+            if (media) {
+              media.src = URL.createObjectURL(file);
+              fig.appendChild(media);
+            }
+            var cap = document.createElement('figcaption');
+            cap.textContent = file.name + ' · ' + (file.type || 'unknown') + ' · ' + Math.round(file.size / 1024) + ' KB';
+            fig.appendChild(cap);
+            box.appendChild(fig);
+          });
+        });
+      });
+
+      // Show the report left by the previous submit.
+      if (/[?&]submitted=/.test(location.search)) {
+        try {
+          var stored = sessionStorage.getItem(STORE);
+          if (stored) {
+            renderReport(JSON.parse(stored));
+            document.getElementById('results').scrollIntoView();
+          }
+        } catch (err) { /* nothing to show */ }
+      }
+
+      // Environment readout, so screenshots say which browser produced them.
+      (function () {
+        var ua = navigator.userAgent;
+        var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var osMatch = ua.match(/OS (\d+)[_.](\d+)/);
+        var named = [[/BraveApp|Brave\//, 'Brave'], [/CriOS\//, 'Chrome'], [/FxiOS\//, 'Firefox'], [/EdgiOS\//, 'Edge'], [/DuckDuckGo\//, 'DuckDuckGo'], [/GSA\//, 'Google app']];
+        var browser = null;
+        named.forEach(function (n) { if (!browser && n[0].test(ua)) browser = n[1]; });
+        if (!browser && /Safari\//.test(ua) && /Version\//.test(ua)) browser = 'Safari (or a browser that hides its name)';
+        var rows = document.querySelector('#env dl');
+        function add(k, v) {
+          var dt = document.createElement('dt'); dt.textContent = k;
+          var dd = document.createElement('dd'); dd.textContent = v;
+          rows.appendChild(dt); rows.appendChild(dd);
+          return dd;
+        }
+        add('Browser', browser || 'unknown');
+        var braveDd = add('Brave API', navigator.brave ? 'checking…' : 'not present');
+        if (navigator.brave && navigator.brave.isBrave) {
+          navigator.brave.isBrave().then(function (r) { braveDd.textContent = r ? 'yes' : 'no'; }, function () { braveDd.textContent = 'error'; });
+        }
+        add('Platform', (ios ? 'iOS' : 'not iOS') + (osMatch ? ' ' + osMatch[1] + '.' + osMatch[2] : ''));
+        add('HTTPS', window.isSecureContext ? 'yes' : 'NO: passwords and passkeys will not work');
+        add('Home screen app', navigator.standalone || matchMedia('(display-mode: standalone)').matches ? 'yes' : 'no');
+        var sel = 'none';
+        try { document.body.matches(':autofill'); sel = ':autofill'; } catch (e) {
+          try { document.body.matches(':-webkit-autofill'); sel = ':-webkit-autofill'; } catch (e2) { /* none */ }
+        }
+        add('Autofill detection', sel);
+        add('Passkeys API', window.PublicKeyCredential ? 'yes' : 'no');
+        add('User agent', ua);
+        if (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+          var pk = add('Platform authenticator', 'checking…');
+          PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function (r) { pk.textContent = r ? 'yes' : 'no'; }, function () { pk.textContent = 'error'; });
+        }
+      })();
+
+      // Passkeys: client-only, nothing verifies the result.
+      var out = document.getElementById('passkey-out');
+      function show(text) { out.hidden = false; out.textContent = text; }
+      function b64(buf) {
+        var s = '';
+        new Uint8Array(buf).forEach(function (b) { s += String.fromCharCode(b); });
+        return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      }
+      function random(n) { return crypto.getRandomValues(new Uint8Array(n)); }
+      var supported = !!(window.PublicKeyCredential && navigator.credentials);
+      if (!supported) show('Passkeys are not supported in this browser.');
+
+      document.getElementById('passkey-create').addEventListener('click', function () {
+        if (!supported) return;
+        var name = document.getElementById('signup-username').value || document.getElementById('email').value || 'perfect-form-test';
+        navigator.credentials.create({
+          publicKey: {
+            challenge: random(32),
+            rp: { name: 'The Perfect Form' },
+            user: { id: random(16), name: name, displayName: name },
+            pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+            authenticatorSelection: { residentKey: 'required', userVerification: 'preferred' },
+            timeout: 60000
+          }
+        }).then(function (cred) {
+          show('Created passkey for "' + name + '"\ncredential id: ' + b64(cred.rawId) + '\nattachment: ' + (cred.authenticatorAttachment || 'unknown'));
+        }).catch(function (err) { show('Create failed: ' + err.name + ': ' + err.message); });
+      });
+
+      document.getElementById('passkey-get').addEventListener('click', function () {
+        if (!supported) return;
+        navigator.credentials.get({
+          publicKey: { challenge: random(32), userVerification: 'preferred', timeout: 60000 }
+        }).then(function (cred) {
+          show('Signed in with passkey\ncredential id: ' + b64(cred.rawId) + '\nuser handle: ' + (cred.response.userHandle ? b64(cred.response.userHandle) : 'none'));
+        }).catch(function (err) { show('Sign in failed: ' + err.name + ': ' + err.message); });
+      });
+    })();
+  </script>
+</body>
+</html>
