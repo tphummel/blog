@@ -29,6 +29,7 @@ header h1{font-size:18px;margin:0}
 .stats b{font-weight:600}
 button{font:inherit;border:0;border-radius:6px;padding:6px 12px;background:#fff;color:var(--ink);cursor:pointer}
 button.danger{background:#ffcdd2}
+button.accent{background:#ffeeb3}
 button:hover{filter:brightness(.93)}
 a{color:#fff}
 .board{width:calc(var(--cw)*7 + var(--gap)*6);margin:8px auto 40px}
@@ -453,14 +454,14 @@ function renderPanel(){
     <div>${summary()}</div>
     <div class="row">
       ${dailyPlayed()?'<button id="again">Play a random puzzle</button>':''}
-      ${isRandom()?'':'<button id="share">Copy result</button>'}
+      ${isRandom()?'':'<button id="share" class="accent">Copy emoji result</button>'}
+      <button id="exText">Copy full transcript</button>
       <button id="exJson">Export JSON</button>
-      <button id="exText">Copy text</button>
     </div>`;
   if($('again'))$('again').onclick=()=>startRandom();
-  if($('share'))$('share').onclick=()=>copyCard(shareCard(),'Result copied');
+  if($('share'))$('share').onclick=()=>copyCard(shareCard(),'Emoji result copied');
   $('exJson').onclick=downloadJson;
-  $('exText').onclick=()=>copy(gameText(),'Game text copied');
+  $('exText').onclick=()=>copy(gameText(),'Full transcript copied');
 }
 // spoiler-free share card: the puzzle, its date and the result are shared, never the cards.
 // text is for plain paste; html links the title to the game for rich paste
