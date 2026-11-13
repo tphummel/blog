@@ -468,7 +468,7 @@ function renderPanel(){
 function shareCard(){
   const url=new URL('/solitaire/',location.href).href;
   const n=puzzleNumber(S.d);
-  const lines=[S.d,S.e[1]==='win'?`Won in ${fmtTime(S.e[0])}`:`Surrendered at ${foundCount(g)}/52`,`${g.log.length} moves`];
+  const lines=[`🎲 ${S.d}`,S.e[1]==='win'?`Won in ${fmtTime(S.e[0])}`:`Surrendered at ${foundCount(g)}/52`,`${g.log.length} moves`];
   return {text:[`Klondike Daily #${n}`,...lines].join('\n'),html:[`<a href="${url}">Klondike Daily</a> #${n}`,...lines].join('<br>')};
 }
 async function copyCard(card,msg){
