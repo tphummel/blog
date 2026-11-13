@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>tomhummel.com - golden angle palette</title>
+<style>
+  body{font:16px system-ui,sans-serif;max-width:640px;margin:2rem auto;padding:0 1rem}
+  .row{display:flex;gap:.5rem;align-items:center;margin-bottom:1rem}
+  .sw{display:flex;gap:0;height:140px;border-radius:8px;overflow:hidden}
+  .sw div{flex:1;display:flex;align-items:flex-end;padding:.5rem;font:600 .85rem monospace}
+</style>
+<h1>Golden angle palette</h1>
+<div class="row">
+  <input type="color" id="c" value="#e4572e">
+  <label><input type="checkbox" id="ccw"> counter-clockwise</label>
+</div>
+<div class="sw" id="sw"></div>
+<script>
+const GOLDEN_ANGLE = 360 - 360 / 1.618, SAT_CUT = 0.6;
+function rgb2hsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn;
+  if(!d)return[0,0,l];const s=d/(1-Math.abs(2*l-1));let h;
+  if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;return[(h*60+360)%360,s,l];}
+function hsl2hex(h,s,l){h=((h%360)+360)%360;const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;
+  const[r,g,b]=[[c,x,0],[x,c,0],[0,c,x],[0,x,c],[x,0,c],[c,0,x]][Math.floor(h/60)%6];
+  return[r,g,b].map(v=>Math.round((v+m)*255).toString(16).padStart(2,"0")).join("").toUpperCase();}
+function palette(hex,dir){const n=parseInt(hex.slice(1),16),[h,s,l]=rgb2hsl(n>>16,n>>8&255,n&255);
+  return{primary:hex.slice(1).toUpperCase(),support:hsl2hex(h,s*(1-SAT_CUT),l),accent:hsl2hex(h+dir*GOLDEN_ANGLE,s,l)};}
+function render(){const p=palette(c.value,ccw.checked?-1:1);
+  sw.innerHTML=Object.entries(p).map(([k,v])=>{const n=parseInt(v,16),y=(.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))>150;
+    return`<div style="background:#${v};color:${y?"#000":"#fff"}">${k}<br>#${v}</div>`}).join("");}
+c.oninput=ccw.onchange=render;render();
+</script>
