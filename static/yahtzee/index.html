@@ -146,7 +146,7 @@ function shareCard() {
   const url = new URL('/yahtzee/', location.href).href;
   const t = totals(game);
   const heading = `Yahtzee Daily #${puzzle}`;
-  const lines = [`🎲 ${dateKey(new Date())}`, `Total: ${t.total}`, `Upper: ${t.upper + t.upperBonus}, Lower: ${t.lower}`];
+  const lines = [`🎲 ${dateKey(new Date())}`, `Total: ${t.total}`, `⬆️: ${t.upper + t.upperBonus}, ⬇️: ${t.lower}`];
   return {
     text: [heading, ...lines].join('\n'),
     html: [`<a href="${url}">Yahtzee Daily</a> #${puzzle}`, ...lines].join('<br>'),
