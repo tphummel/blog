@@ -107,7 +107,10 @@ const DAYS_BEFORE=[0,31,60,91,121,152,182,213,244,274,305,335];
 const validDate=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d);if(!m)return false;const t=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));return t.toISOString().slice(0,10)===d};
 const dealSlot=d=>DAYS_BEFORE[+d.slice(5,7)-1]+ +d.slice(8,10)-1;
 const dealNumber=d=>DEALS[dealSlot(d)];
-const puzzleNumber=d=>dealSlot(d)+1; // 1-366: day of year in a leap-year calendar (Feb 29 = 60, Mar 1 = 61)
+// Displayed puzzle number, matching /yahtzee/: a non-leap calendar (Mar 1 is always 60) with Feb 29 as 366.
+// Display only: deals are still picked by dealSlot, so every date keeps its deal.
+const MONTH_START=[0,31,59,90,120,151,181,212,243,273,304,334];
+const puzzleNumber=d=>d.slice(5)==='02-29'?366:MONTH_START[+d.slice(5,7)-1]+ +d.slice(8,10);
 const seedString=n=>`klondike-draw2-deal-${n}`;
 const pacificDate=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 
