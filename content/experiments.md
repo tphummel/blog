@@ -32,6 +32,7 @@ date: 2020-09-01T08:00:00
 - 🏢 [Lumon Department Generator](/lumon-department-generator)
 - 🕺 [The Daniels Maneuver Generator](/daniels-maneuver-generator)
 - ✍️ [5 Minute Journal Prompt Generator](/five-minute-journal-prompt-generator)
+- 🎨 [Golden Angle Color Palette Generator](/golden-angle-palette)
 
 ## 🛠️ Tools
 
