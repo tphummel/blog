@@ -9,4 +9,4 @@ tags:
 ---
 
 - [Athletics 2027 Game Log Calendar](/athletics-2027-calendar/)
-- [Annual Journal Layout](/annual-journal/)
+- [Annual Journal Layout](https://junk.tomhummel.com/annual-journal/)
